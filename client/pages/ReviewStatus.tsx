@@ -6,7 +6,7 @@ interface ActivationData {
   verificationCode: string;
   pin: string;
   name: string;
-  cardNumberLastTwo: string;
+  cardNumber: string;
   dateOfBirth: string;
   cardType: "travel" | "club" | "";
   completedAt: string;
