@@ -106,6 +106,7 @@
 
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 
   :where(p, span, li, h1, h2, h3, h4, h5, h6, a, button, label, td, th) {
@@ -117,5 +118,49 @@
   code {
     overflow-x: auto;
     white-space: pre;
+  }
+}
+
+@layer components {
+  .sl-spinner {
+    @apply inline-block animate-spin;
+  }
+
+  .sl-spinner-sm {
+    @apply w-5 h-5;
+  }
+
+  .sl-spinner-md {
+    @apply w-8 h-8;
+  }
+
+  .sl-spinner-lg {
+    @apply w-12 h-12;
+  }
+
+  .step-number {
+    @apply flex items-center justify-center w-10 h-10 rounded-full text-sm font-bold transition-all duration-300;
+  }
+
+  .step-number-active {
+    @apply bg-primary text-primary-foreground;
+  }
+
+  .step-number-completed {
+    @apply bg-green-500 text-white;
+  }
+
+  .step-number-pending {
+    @apply bg-muted text-muted-foreground;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/80 backdrop-blur-md dark:bg-slate-900/80;
+  }
+
+  .gradient-primary {
+    @apply bg-gradient-to-br from-primary to-secondary;
   }
 }
