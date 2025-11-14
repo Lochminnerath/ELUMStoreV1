@@ -242,11 +242,11 @@ export default function CardActivation() {
                   Verification Code
                 </Label>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Enter the 6-digit code sent to your email (format: XXXXSLCASN)
+                  Enter the verification code sent to your email
                 </p>
                 <Input
                   id="verification-code"
-                  placeholder="123456SLCASN"
+                  placeholder="Enter your verification code"
                   value={data.verificationCode}
                   onChange={(e) =>
                     handleInputChange("verificationCode", e.target.value.toUpperCase())
