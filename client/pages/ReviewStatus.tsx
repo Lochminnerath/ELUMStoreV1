@@ -92,7 +92,7 @@ export default function ReviewStatus() {
           <div
             className={`rounded-2xl p-8 text-white shadow-xl relative overflow-hidden ${
               data.cardType === "travel"
-                ? "bg-gradient-to-br from-primary to-secondary"
+                ? "bg-gradient-to-br from-gray-400 to-gray-500"
                 : "bg-gradient-to-br from-sl-club-black to-slate-700"
             }`}
           >
