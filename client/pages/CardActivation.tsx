@@ -174,10 +174,8 @@ export default function CardActivation() {
       {/* Header with Logo */}
       <div className="border-b border-border/50 bg-white/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold">
-              SL
-            </div>
+          <div className="flex items-center gap-3">
+            <img src="https://cdn.builder.io/api/v1/image/assets%2F8d330572a69d41f0b535ef0b58b374e5%2Fd021add0cfe64fe394153b013ec25c99?format=webp&width=40" alt="SL Airlines" className="h-8 w-8" />
             <span className="font-bold text-lg text-primary">SL Airlines</span>
           </div>
         </div>
