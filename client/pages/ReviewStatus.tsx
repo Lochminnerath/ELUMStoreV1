@@ -123,8 +123,8 @@ export default function ReviewStatus() {
 
               <div className="grid grid-cols-2 gap-6 mb-6">
                 <div>
-                  <p className="text-xs opacity-75 mb-1">CARD ENDING IN</p>
-                  <p className="text-xl font-mono font-bold">••{data.cardNumberLastTwo}</p>
+                  <p className="text-xs opacity-75 mb-1">CARD STATUS</p>
+                  <p className="text-xl font-mono font-bold">••••••••••</p>
                 </div>
                 <div className="text-right">
                   <p className="text-xs opacity-75 mb-1">VALID FROM</p>
