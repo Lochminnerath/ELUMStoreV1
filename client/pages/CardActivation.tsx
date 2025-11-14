@@ -301,14 +301,14 @@ export default function CardActivation() {
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="card-number" className="text-base mb-2 block">
-                    Last 2 Digits of Card Number
+                    Card Verification
                   </Label>
                   <p className="text-sm text-muted-foreground mb-3">
-                    Enter the last 2 digits of your card
+                    Confirm your card information
                   </p>
                   <Input
                     id="card-number"
-                    placeholder="42"
+                    placeholder="••••••••••"
                     value={data.cardNumberLastTwo}
                     onChange={(e) =>
                       handleInputChange("cardNumberLastTwo", e.target.value.replace(/\D/g, ""))
@@ -316,26 +316,27 @@ export default function CardActivation() {
                     className="text-lg tracking-widest font-mono"
                     maxLength={2}
                     disabled={loading}
+                    type="password"
                   />
                 </div>
 
                 <div>
                   <Label className="text-base mb-2 block">Card Type</Label>
                   <p className="text-sm text-muted-foreground mb-3">
-                    Select your card type (7 digits = Travel, 9 digits = Club)
+                    Select your card type
                   </p>
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={() => handleInputChange("cardType", "travel")}
                       className={`p-4 rounded-lg border-2 transition-all ${
                         data.cardType === "travel"
-                          ? "border-primary bg-primary/10"
-                          : "border-border hover:border-primary/50"
+                          ? "border-gray-400 bg-gray-100"
+                          : "border-border hover:border-gray-300"
                       } ${loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                       disabled={loading}
                     >
-                      <div className="font-semibold text-primary">Travel Card</div>
-                      <div className="text-sm text-muted-foreground">7 digits - Blue</div>
+                      <div className="font-semibold text-gray-700">Travel Card</div>
+                      <div className="text-sm text-muted-foreground">Standard</div>
                     </button>
                     <button
                       onClick={() => handleInputChange("cardType", "club")}
@@ -347,7 +348,7 @@ export default function CardActivation() {
                       disabled={loading}
                     >
                       <div className="font-semibold text-sl-club-black">Club Card</div>
-                      <div className="text-sm text-muted-foreground">9 digits - Black</div>
+                      <div className="text-sm text-muted-foreground">Premium</div>
                     </button>
                   </div>
                 </div>
