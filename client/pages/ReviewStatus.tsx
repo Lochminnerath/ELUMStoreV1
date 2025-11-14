@@ -32,8 +32,19 @@ export default function ReviewStatus() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-background flex items-center justify-center">
         <div className="text-center">
-          <svg className="w-12 h-12 text-primary animate-spin mx-auto mb-4" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <svg
+            className="w-12 h-12 text-primary animate-spin mx-auto mb-4"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
             <path
               className="opacity-75"
               fill="currentColor"
@@ -69,7 +80,11 @@ export default function ReviewStatus() {
       <div className="border-b border-border/50 bg-white/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 py-4">
           <div className="flex items-center gap-3">
-            <img src="https://cdn.builder.io/api/v1/image/assets%2F8d330572a69d41f0b535ef0b58b374e5%2Fd021add0cfe64fe394153b013ec25c99?format=webp&width=40" alt="SL Airlines" className="h-8 w-8" />
+            <img
+              src="https://cdn.builder.io/api/v1/image/assets%2F8d330572a69d41f0b535ef0b58b374e5%2Fd021add0cfe64fe394153b013ec25c99?format=webp&width=40"
+              alt="SL Airlines"
+              className="h-8 w-8"
+            />
             <span className="font-bold text-lg text-primary">SL Airlines</span>
           </div>
         </div>
@@ -79,12 +94,26 @@ export default function ReviewStatus() {
         {/* Success Banner */}
         <div className="bg-green-50 border border-green-200 rounded-2xl p-8 mb-8 text-center animate-slide-up">
           <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            <svg
+              className="w-8 h-8 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 13l4 4L19 7"
+              />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-green-900 mb-2">Card Activated Successfully!</h1>
-          <p className="text-green-700">Your SL Airlines card is now active and ready to use</p>
+          <h1 className="text-3xl font-bold text-green-900 mb-2">
+            Card Activated Successfully!
+          </h1>
+          <p className="text-green-700">
+            Your SL Airlines card is now active and ready to use
+          </p>
         </div>
 
         {/* Card Visual */}
@@ -111,9 +140,15 @@ export default function ReviewStatus() {
               <div className="flex justify-between items-start mb-12">
                 <div>
                   <p className="text-sm opacity-75 mb-2">CARD TYPE</p>
-                  <p className="text-2xl font-bold capitalize">{data.cardType} Card</p>
+                  <p className="text-2xl font-bold capitalize">
+                    {data.cardType} Card
+                  </p>
                 </div>
-                <img src="https://cdn.builder.io/api/v1/image/assets%2F8d330572a69d41f0b535ef0b58b374e5%2Fd021add0cfe64fe394153b013ec25c99?format=webp&width=50" alt="SL" className="h-10 w-10 opacity-90" />
+                <img
+                  src="https://cdn.builder.io/api/v1/image/assets%2F8d330572a69d41f0b535ef0b58b374e5%2Fd021add0cfe64fe394153b013ec25c99?format=webp&width=50"
+                  alt="SL"
+                  className="h-10 w-10 opacity-90"
+                />
               </div>
 
               <div className="mb-8">
@@ -144,10 +179,14 @@ export default function ReviewStatus() {
         <div className="grid md:grid-cols-2 gap-8 mb-8">
           {/* Activation Details */}
           <div className="bg-white rounded-xl shadow p-6 border border-border">
-            <h2 className="text-xl font-bold text-foreground mb-6">Activation Details</h2>
+            <h2 className="text-xl font-bold text-foreground mb-6">
+              Activation Details
+            </h2>
             <div className="space-y-4">
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Activation Date</p>
+                <p className="text-sm text-muted-foreground mb-1">
+                  Activation Date
+                </p>
                 <p className="font-semibold text-foreground">
                   {completedDate.toLocaleDateString("en-US", {
                     weekday: "long",
@@ -158,7 +197,9 @@ export default function ReviewStatus() {
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Activation Time</p>
+                <p className="text-sm text-muted-foreground mb-1">
+                  Activation Time
+                </p>
                 <p className="font-semibold text-foreground">
                   {completedDate.toLocaleTimeString("en-US", {
                     hour: "2-digit",
@@ -169,21 +210,27 @@ export default function ReviewStatus() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground mb-1">Card Type</p>
-                <p className="font-semibold text-foreground capitalize">{data.cardType} Card</p>
+                <p className="font-semibold text-foreground capitalize">
+                  {data.cardType} Card
+                </p>
               </div>
             </div>
           </div>
 
           {/* Personal Information */}
           <div className="bg-white rounded-xl shadow p-6 border border-border">
-            <h2 className="text-xl font-bold text-foreground mb-6">Personal Information</h2>
+            <h2 className="text-xl font-bold text-foreground mb-6">
+              Personal Information
+            </h2>
             <div className="space-y-4">
               <div>
                 <p className="text-sm text-muted-foreground mb-1">Full Name</p>
                 <p className="font-semibold text-foreground">{data.name}</p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Date of Birth</p>
+                <p className="text-sm text-muted-foreground mb-1">
+                  Date of Birth
+                </p>
                 <p className="font-semibold text-foreground">
                   {dob.toLocaleDateString("en-US", {
                     year: "numeric",
@@ -193,8 +240,12 @@ export default function ReviewStatus() {
                 </p>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground mb-1">Card Number (Last 2 Digits)</p>
-                <p className="font-semibold text-foreground font-mono">••{data.cardNumberLastTwo}</p>
+                <p className="text-sm text-muted-foreground mb-1">
+                  Card Number (Last 2 Digits)
+                </p>
+                <p className="font-semibold text-foreground font-mono">
+                  ••{data.cardNumberLastTwo}
+                </p>
               </div>
             </div>
           </div>
@@ -202,11 +253,15 @@ export default function ReviewStatus() {
 
         {/* What's Next Section */}
         <div className="bg-primary/5 rounded-xl p-6 mb-8 border border-primary/20">
-          <h2 className="text-lg font-bold text-foreground mb-4">What's Next?</h2>
+          <h2 className="text-lg font-bold text-foreground mb-4">
+            What's Next?
+          </h2>
           <div className="space-y-3 text-sm text-foreground">
             <p className="flex items-start gap-3">
               <span className="text-primary font-bold mt-0.5">1</span>
-              <span>Access your SL Airlines dashboard to manage your account</span>
+              <span>
+                Access your SL Airlines dashboard to manage your account
+              </span>
             </p>
             <p className="flex items-start gap-3">
               <span className="text-primary font-bold mt-0.5">2</span>
@@ -214,7 +269,9 @@ export default function ReviewStatus() {
             </p>
             <p className="flex items-start gap-3">
               <span className="text-primary font-bold mt-0.5">3</span>
-              <span>Redeem your miles for flights, upgrades, and exclusive perks</span>
+              <span>
+                Redeem your miles for flights, upgrades, and exclusive perks
+              </span>
             </p>
           </div>
         </div>
@@ -229,15 +286,39 @@ export default function ReviewStatus() {
           >
             <Button className="w-full bg-primary hover:bg-primary/90 text-white">
               Go to Dashboard
-              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4m4-6l-8 8m0 0l-4-4m4 4l4-4" />
+              <svg
+                className="w-4 h-4 ml-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4m4-6l-8 8m0 0l-4-4m4 4l4-4"
+                />
               </svg>
             </Button>
           </a>
-          <Button variant="outline" onClick={() => window.print()} className="w-full">
+          <Button
+            variant="outline"
+            onClick={() => window.print()}
+            className="w-full"
+          >
             Print Details
-            <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            <svg
+              className="w-4 h-4 ml-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+              />
             </svg>
           </Button>
         </div>

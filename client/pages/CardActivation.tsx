@@ -42,12 +42,20 @@ export default function CardActivation() {
   }, [navigate]);
 
   const steps = [
-    { number: 1, title: "Verification Code", description: "From your card package" },
+    {
+      number: 1,
+      title: "Verification Code",
+      description: "From your card package",
+    },
     { number: 2, title: "PIN", description: "From your email" },
     { number: 3, title: "Personal Info", description: "Your name" },
     { number: 4, title: "Card Details", description: "Your card number" },
     { number: 5, title: "Date of Birth", description: "Verify your age (16+)" },
-    { number: 6, title: "Confirmation", description: "Review your information" },
+    {
+      number: 6,
+      title: "Confirmation",
+      description: "Review your information",
+    },
   ];
 
   const validateVerificationCode = (code: string): boolean => {
@@ -64,9 +72,11 @@ export default function CardActivation() {
     return name.trim().length > 0;
   };
 
-  const validateAndProcessCardNumber = (cardNum: string): { valid: boolean; cardType?: "travel" | "club" } => {
+  const validateAndProcessCardNumber = (
+    cardNum: string,
+  ): { valid: boolean; cardType?: "travel" | "club" } => {
     const cleaned = cardNum.replace(/\s/g, "");
-    
+
     // Must be 10 digits
     if (!/^\d{10}$/.test(cleaned)) {
       return { valid: false };
@@ -93,7 +103,10 @@ export default function CardActivation() {
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
       age--;
     }
     return age >= 16;
@@ -129,7 +142,7 @@ export default function CardActivation() {
         if (!validation.valid) {
           const newAttempts = cardAttempts + 1;
           setCardAttempts(newAttempts);
-          
+
           if (newAttempts >= 2) {
             setError("This information was false. Activation cancelled.");
             setLoading(false);
@@ -138,12 +151,12 @@ export default function CardActivation() {
             }, 2000);
             return;
           }
-          
+
           setError("This information was false. You have 1 attempt remaining.");
           setLoading(false);
           return;
         }
-        
+
         // Auto-set card type based on validation
         setData((prev) => ({
           ...prev,
@@ -182,7 +195,10 @@ export default function CardActivation() {
         completedAt: new Date().toISOString(),
       };
 
-      localStorage.setItem("sl-airlines-activated", JSON.stringify(activationData));
+      localStorage.setItem(
+        "sl-airlines-activated",
+        JSON.stringify(activationData),
+      );
       navigate("/review-status");
     } catch (err) {
       setError("Failed to complete activation. Please try again.");
@@ -204,7 +220,11 @@ export default function CardActivation() {
       <div className="border-b border-border/50 bg-white/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-4">
           <div className="flex items-center gap-3">
-            <img src="https://cdn.builder.io/api/v1/image/assets%2F8d330572a69d41f0b535ef0b58b374e5%2Fd021add0cfe64fe394153b013ec25c99?format=webp&width=40" alt="SL Airlines" className="h-8 w-8" />
+            <img
+              src="https://cdn.builder.io/api/v1/image/assets%2F8d330572a69d41f0b535ef0b58b374e5%2Fd021add0cfe64fe394153b013ec25c99?format=webp&width=40"
+              alt="SL Airlines"
+              className="h-8 w-8"
+            />
             <span className="font-bold text-lg text-primary">SL Airlines</span>
           </div>
         </div>
@@ -250,7 +270,9 @@ export default function CardActivation() {
                     s.number
                   )}
                 </div>
-                <p className="text-xs mt-2 text-muted-foreground hidden sm:block">{s.title}</p>
+                <p className="text-xs mt-2 text-muted-foreground hidden sm:block">
+                  {s.title}
+                </p>
               </div>
             ))}
           </div>
@@ -261,7 +283,9 @@ export default function CardActivation() {
           <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
             {steps[step].title}
           </h2>
-          <p className="text-muted-foreground mb-6">{steps[step].description}</p>
+          <p className="text-muted-foreground mb-6">
+            {steps[step].description}
+          </p>
 
           {/* Step Content */}
           <div className="space-y-6">
@@ -280,8 +304,13 @@ export default function CardActivation() {
                       ?
                     </button>
                     <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded p-2 w-48 z-10">
-                      <p className="font-semibold mb-1">Where to find your verification code:</p>
-                      <p>Look on the package or insert that came with your physical card.</p>
+                      <p className="font-semibold mb-1">
+                        Where to find your verification code:
+                      </p>
+                      <p>
+                        Look on the package or insert that came with your
+                        physical card.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -293,7 +322,10 @@ export default function CardActivation() {
                   placeholder="123456SLCASN"
                   value={data.verificationCode}
                   onChange={(e) =>
-                    handleInputChange("verificationCode", e.target.value.toUpperCase())
+                    handleInputChange(
+                      "verificationCode",
+                      e.target.value.toUpperCase(),
+                    )
                   }
                   className="text-lg tracking-widest font-mono"
                   disabled={loading}
@@ -316,8 +348,13 @@ export default function CardActivation() {
                       ?
                     </button>
                     <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded p-2 w-48 z-10">
-                      <p className="font-semibold mb-1">Where to find your PIN:</p>
-                      <p>Check the activation email sent to you when your card was issued.</p>
+                      <p className="font-semibold mb-1">
+                        Where to find your PIN:
+                      </p>
+                      <p>
+                        Check the activation email sent to you when your card
+                        was issued.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -371,8 +408,13 @@ export default function CardActivation() {
                       ?
                     </button>
                     <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded p-2 w-48 z-10">
-                      <p className="font-semibold mb-1">Where to find your card number:</p>
-                      <p>The 10-digit number is printed on the front of your physical card.</p>
+                      <p className="font-semibold mb-1">
+                        Where to find your card number:
+                      </p>
+                      <p>
+                        The 10-digit number is printed on the front of your
+                        physical card.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -384,7 +426,10 @@ export default function CardActivation() {
                   placeholder="8838••••••"
                   value={data.cardNumber}
                   onChange={(e) =>
-                    handleInputChange("cardNumber", e.target.value.replace(/\D/g, ""))
+                    handleInputChange(
+                      "cardNumber",
+                      e.target.value.replace(/\D/g, ""),
+                    )
                   }
                   className="text-lg tracking-widest font-mono"
                   maxLength={10}
@@ -410,7 +455,9 @@ export default function CardActivation() {
                   id="dob"
                   type="date"
                   value={data.dateOfBirth}
-                  onChange={(e) => handleInputChange("dateOfBirth", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("dateOfBirth", e.target.value)
+                  }
                   className="text-lg"
                   disabled={loading}
                 />
@@ -426,7 +473,9 @@ export default function CardActivation() {
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Name:</span>
-                      <span className="font-semibold text-foreground">{data.name}</span>
+                      <span className="font-semibold text-foreground">
+                        {data.name}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Card Type:</span>
@@ -435,13 +484,18 @@ export default function CardActivation() {
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Card Number:</span>
+                      <span className="text-muted-foreground">
+                        Card Number:
+                      </span>
                       <span className="font-semibold text-foreground font-mono">
-                        {data.cardNumber.slice(0, 4)}****{data.cardNumber.slice(-2)}
+                        {data.cardNumber.slice(0, 4)}****
+                        {data.cardNumber.slice(-2)}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Date of Birth:</span>
+                      <span className="text-muted-foreground">
+                        Date of Birth:
+                      </span>
                       <span className="font-semibold text-foreground">
                         {new Date(data.dateOfBirth).toLocaleDateString()}
                       </span>
@@ -452,8 +506,19 @@ export default function CardActivation() {
                 {loading && (
                   <div className="text-center py-4">
                     <div className="inline-block">
-                      <svg className="w-8 h-8 text-primary animate-spin" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <svg
+                        className="w-8 h-8 text-primary animate-spin"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
                         <path
                           className="opacity-75"
                           fill="currentColor"
@@ -461,7 +526,9 @@ export default function CardActivation() {
                         />
                       </svg>
                     </div>
-                    <p className="text-muted-foreground mt-3">Activating your card...</p>
+                    <p className="text-muted-foreground mt-3">
+                      Activating your card...
+                    </p>
                   </div>
                 )}
               </div>
@@ -488,11 +555,26 @@ export default function CardActivation() {
           </Button>
 
           {step < 5 ? (
-            <Button onClick={handleNextStep} disabled={loading} className="flex-1 bg-primary">
+            <Button
+              onClick={handleNextStep}
+              disabled={loading}
+              className="flex-1 bg-primary"
+            >
               {loading ? (
                 <span className="flex items-center gap-2">
-                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <svg
+                    className="w-4 h-4 animate-spin"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
                     <path
                       className="opacity-75"
                       fill="currentColor"
@@ -506,11 +588,26 @@ export default function CardActivation() {
               )}
             </Button>
           ) : (
-            <Button onClick={handleCompleteActivation} disabled={loading} className="flex-1 bg-green-600 hover:bg-green-700">
+            <Button
+              onClick={handleCompleteActivation}
+              disabled={loading}
+              className="flex-1 bg-green-600 hover:bg-green-700"
+            >
               {loading ? (
                 <span className="flex items-center gap-2">
-                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <svg
+                    className="w-4 h-4 animate-spin"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
                     <path
                       className="opacity-75"
                       fill="currentColor"
