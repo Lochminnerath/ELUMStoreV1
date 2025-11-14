@@ -182,52 +182,48 @@ export default function CardActivation() {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-8 md:py-12">
-        {/* Progress Bar */}
+        {/* Progress Bar - Minimalist */}
         <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
+          {/* Progress Bar Line */}
+          <div className="w-full bg-muted h-1 rounded-full overflow-hidden mb-4">
+            <div
+              className="h-full bg-primary transition-all duration-500 ease-out"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+
+          {/* Step Indicators - Minimal */}
+          <div className="flex justify-between items-center">
             {steps.map((s, idx) => (
               <div key={s.number} className="flex flex-col items-center flex-1">
                 <div
-                  className={`step-number transition-all duration-300 ${
+                  className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold transition-all duration-300 ${
                     idx < step
-                      ? "step-number-completed"
+                      ? "bg-green-500 text-white"
                       : idx === step
-                        ? "step-number-active"
-                        : "step-number-pending"
+                        ? "bg-primary text-white"
+                        : "bg-muted text-muted-foreground"
                   }`}
                 >
                   {idx < step ? (
                     <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+                      className="w-3 h-3"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
                     >
                       <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
                       />
                     </svg>
                   ) : (
                     s.number
                   )}
                 </div>
-                <div className="text-xs mt-2 text-center">
-                  <p className="font-semibold text-foreground hidden sm:block">{s.title}</p>
-                  <p className="text-muted-foreground text-xs">{s.description}</p>
-                </div>
+                <p className="text-xs mt-2 text-muted-foreground hidden sm:block">{s.title}</p>
               </div>
             ))}
-          </div>
-
-          {/* Progress Bar Line */}
-          <div className="w-full bg-muted h-1 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-primary transition-all duration-500 ease-out"
-              style={{ width: `${progress}%` }}
-            />
           </div>
         </div>
 
