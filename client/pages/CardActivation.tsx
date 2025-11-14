@@ -8,7 +8,7 @@ interface ActivationData {
   verificationCode: string;
   pin: string;
   name: string;
-  cardNumberLastTwo: string;
+  cardNumber: string;
   dateOfBirth: string;
   cardType: "travel" | "club" | "";
   completedAt: string;
@@ -16,23 +16,24 @@ interface ActivationData {
 
 const VERIFICATION_CODE_SUFFIX = "SLCASN";
 const CORRECT_PIN = "4459";
+const CARD_PREFIX = "8838";
 
 export default function CardActivation() {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [cardAttempts, setCardAttempts] = useState(0);
   const [data, setData] = useState<ActivationData>({
     verificationCode: "",
     pin: "",
     name: "",
-    cardNumberLastTwo: "",
+    cardNumber: "",
     dateOfBirth: "",
     cardType: "",
     completedAt: "",
   });
 
-  // Check if already activated
   useEffect(() => {
     const activated = localStorage.getItem("sl-airlines-activated");
     if (activated) {
@@ -44,14 +45,13 @@ export default function CardActivation() {
     { number: 1, title: "Verification Code", description: "From your card package" },
     { number: 2, title: "PIN", description: "From your email" },
     { number: 3, title: "Personal Info", description: "Your name" },
-    { number: 4, title: "Card Details", description: "Card number & type" },
+    { number: 4, title: "Card Details", description: "Your card number" },
     { number: 5, title: "Date of Birth", description: "Verify your age (16+)" },
     { number: 6, title: "Confirmation", description: "Review your information" },
   ];
 
   const validateVerificationCode = (code: string): boolean => {
     const cleaned = code.replace(/\s/g, "").toUpperCase();
-    // Check for pattern: 6 digits + SLCASN suffix
     const pattern = /^\d{6}SLCASN$/;
     return pattern.test(cleaned);
   };
@@ -64,14 +64,28 @@ export default function CardActivation() {
     return name.trim().length > 0;
   };
 
-  const validateCardNumber = (cardNum: string): boolean => {
-    return /^\d{2}$/.test(cardNum);
-  };
+  const validateAndProcessCardNumber = (cardNum: string): { valid: boolean; cardType?: "travel" | "club" } => {
+    const cleaned = cardNum.replace(/\s/g, "");
+    
+    // Must be 10 digits
+    if (!/^\d{10}$/.test(cleaned)) {
+      return { valid: false };
+    }
 
-  const getCardType = (cardNum: string): "travel" | "club" => {
-    // This is simplified - in reality you'd need full card number
-    // For now, assume user will tell us via the form
-    return data.cardType as "travel" | "club";
+    // Must start with 8838
+    if (!cleaned.startsWith(CARD_PREFIX)) {
+      return { valid: false };
+    }
+
+    // Last digit must be 7 (travel) or 9 (club)
+    const lastDigit = cleaned[9];
+    if (lastDigit === "7") {
+      return { valid: true, cardType: "travel" };
+    } else if (lastDigit === "9") {
+      return { valid: true, cardType: "club" };
+    }
+
+    return { valid: false };
   };
 
   const validateDateOfBirth = (dob: string): boolean => {
@@ -90,7 +104,6 @@ export default function CardActivation() {
     setLoading(true);
 
     try {
-      // Simulate network delay
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
       if (step === 0) {
@@ -112,16 +125,30 @@ export default function CardActivation() {
           return;
         }
       } else if (step === 3) {
-        if (!validateCardNumber(data.cardNumberLastTwo)) {
-          setError("Please enter the last 2 digits of your card number");
+        const validation = validateAndProcessCardNumber(data.cardNumber);
+        if (!validation.valid) {
+          const newAttempts = cardAttempts + 1;
+          setCardAttempts(newAttempts);
+          
+          if (newAttempts >= 2) {
+            setError("This information was false. Activation cancelled.");
+            setLoading(false);
+            setTimeout(() => {
+              navigate("/");
+            }, 2000);
+            return;
+          }
+          
+          setError("This information was false. You have 1 attempt remaining.");
           setLoading(false);
           return;
         }
-        if (!data.cardType) {
-          setError("Please select your card type");
-          setLoading(false);
-          return;
-        }
+        
+        // Auto-set card type based on validation
+        setData((prev) => ({
+          ...prev,
+          cardType: validation.cardType || "",
+        }));
       } else if (step === 4) {
         if (!validateDateOfBirth(data.dateOfBirth)) {
           setError("You must be at least 16 years old to activate this card");
@@ -330,60 +357,44 @@ export default function CardActivation() {
             )}
 
             {step === 3 && (
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="card-number" className="text-base mb-2 block">
-                    Card Verification
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Label htmlFor="card-number" className="text-base">
+                    Card Number
                   </Label>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    Confirm your card information
-                  </p>
-                  <Input
-                    id="card-number"
-                    placeholder="••••••••••"
-                    value={data.cardNumberLastTwo}
-                    onChange={(e) =>
-                      handleInputChange("cardNumberLastTwo", e.target.value.replace(/\D/g, ""))
-                    }
-                    className="text-lg tracking-widest font-mono"
-                    maxLength={2}
-                    disabled={loading}
-                    type="password"
-                  />
-                </div>
-
-                <div>
-                  <Label className="text-base mb-2 block">Card Type</Label>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    Select your card type
-                  </p>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="group relative">
                     <button
-                      onClick={() => handleInputChange("cardType", "travel")}
-                      className={`p-4 rounded-lg border-2 transition-all ${
-                        data.cardType === "travel"
-                          ? "border-gray-400 bg-gray-100"
-                          : "border-border hover:border-gray-300"
-                      } ${loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-                      disabled={loading}
+                      type="button"
+                      className="w-5 h-5 rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-white flex items-center justify-center text-xs font-bold transition-colors"
+                      title="Help"
                     >
-                      <div className="font-semibold text-gray-700">Travel Card</div>
-                      <div className="text-sm text-muted-foreground">Standard</div>
+                      ?
                     </button>
-                    <button
-                      onClick={() => handleInputChange("cardType", "club")}
-                      className={`p-4 rounded-lg border-2 transition-all ${
-                        data.cardType === "club"
-                          ? "border-sl-club-black bg-sl-club-black/10"
-                          : "border-border hover:border-sl-club-black/50"
-                      } ${loading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-                      disabled={loading}
-                    >
-                      <div className="font-semibold text-sl-club-black">Club Card</div>
-                      <div className="text-sm text-muted-foreground">Premium</div>
-                    </button>
+                    <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded p-2 w-48 z-10">
+                      <p className="font-semibold mb-1">Where to find your card number:</p>
+                      <p>The 10-digit number is printed on the front of your physical card.</p>
+                    </div>
                   </div>
                 </div>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Enter your 10-digit card number
+                </p>
+                <Input
+                  id="card-number"
+                  placeholder="8838••••••"
+                  value={data.cardNumber}
+                  onChange={(e) =>
+                    handleInputChange("cardNumber", e.target.value.replace(/\D/g, ""))
+                  }
+                  className="text-lg tracking-widest font-mono"
+                  maxLength={10}
+                  disabled={loading}
+                />
+                {cardAttempts > 0 && (
+                  <p className="text-xs text-amber-600 mt-2">
+                    Attempt {cardAttempts} of 2
+                  </p>
+                )}
               </div>
             )}
 
@@ -424,8 +435,10 @@ export default function CardActivation() {
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Last 2 Digits:</span>
-                      <span className="font-semibold text-foreground">{data.cardNumberLastTwo}</span>
+                      <span className="text-muted-foreground">Card Number:</span>
+                      <span className="font-semibold text-foreground font-mono">
+                        {data.cardNumber.slice(0, 4)}****{data.cardNumber.slice(-2)}
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Date of Birth:</span>
