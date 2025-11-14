@@ -19,10 +19,8 @@ export default function Index() {
       {/* Header */}
       <div className="border-b border-border/50 bg-white/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-lg">
-              SL
-            </div>
+          <div className="flex items-center gap-3">
+            <img src="https://cdn.builder.io/api/v1/image/assets%2F8d330572a69d41f0b535ef0b58b374e5%2Fd021add0cfe64fe394153b013ec25c99?format=webp&width=50" alt="SL Airlines" className="h-10 w-10" />
             <span className="font-bold text-xl text-primary">SL Airlines</span>
           </div>
         </div>
@@ -40,7 +38,7 @@ export default function Index() {
               Activate your SL Airlines credit card in minutes to unlock exclusive benefits and start earning miles on every transaction.
             </p>
             <p className="text-lg text-muted-foreground mb-8">
-              Whether you're a <span className="font-semibold text-primary">Travel Card</span> (Blue) or <span className="font-semibold text-sl-club-black">Club Card</span> (Black) member, the activation process is quick and secure.
+              Whether you're a <span className="font-semibold text-primary">Travel Card</span> (Gray) or <span className="font-semibold text-sl-club-black">Club Card</span> (Black) member, the activation process is quick and secure.
             </p>
 
             <Button
@@ -60,43 +58,43 @@ export default function Index() {
             <div className="relative">
               {/* Travel Card */}
               <div
-                className="absolute top-0 right-0 w-72 h-44 bg-gradient-to-br from-primary to-secondary rounded-2xl shadow-xl p-6 text-white transform -rotate-6 hover:rotate-0 transition-transform duration-300 cursor-default"
+                className="absolute top-0 right-0 w-72 h-44 bg-gradient-to-br from-gray-400 to-gray-500 rounded-2xl shadow-xl p-6 text-white transform -rotate-6 hover:rotate-0 transition-transform duration-300 cursor-default"
                 style={{ perspective: "1000px" }}
               >
-                <div className="flex justify-between items-start mb-24">
+                <div className="flex justify-between items-start mb-20">
                   <div>
                     <p className="text-xs opacity-75">CARD TYPE</p>
-                    <p className="text-lg font-bold">Travel Card</p>
+                    <p className="text-base font-bold leading-tight">Travel</p>
                   </div>
-                  <span className="text-3xl">🔵</span>
+                  <img src="https://cdn.builder.io/api/v1/image/assets%2F8d330572a69d41f0b535ef0b58b374e5%2Fd021add0cfe64fe394153b013ec25c99?format=webp&width=40" alt="SL" className="h-8 w-8 opacity-90" />
                 </div>
                 <div className="flex justify-between items-end">
                   <div>
                     <p className="text-xs opacity-75">CARDHOLDER</p>
-                    <p className="text-sm font-semibold">Your Name</p>
+                    <p className="text-xs font-semibold leading-tight">Emma Richardson</p>
                   </div>
-                  <p className="text-xs opacity-75">SL AIRLINES</p>
+                  <p className="text-xs opacity-75">SL</p>
                 </div>
               </div>
 
               {/* Club Card */}
               <div
-                className="absolute bottom-0 left-0 w-72 h-44 bg-gradient-to-br from-sl-club-black to-slate-700 rounded-2xl shadow-xl p-6 text-white transform rotate-6 hover:rotate-0 transition-transform duration-300 cursor-default"
+                className="absolute top-32 left-0 w-72 h-44 bg-gradient-to-br from-sl-club-black to-slate-700 rounded-2xl shadow-xl p-6 text-white transform rotate-6 hover:rotate-0 transition-transform duration-300 cursor-default"
                 style={{ perspective: "1000px" }}
               >
-                <div className="flex justify-between items-start mb-24">
+                <div className="flex justify-between items-start mb-20">
                   <div>
                     <p className="text-xs opacity-75">CARD TYPE</p>
-                    <p className="text-lg font-bold">Club Card</p>
+                    <p className="text-base font-bold leading-tight">Club</p>
                   </div>
-                  <span className="text-3xl">⬛</span>
+                  <img src="https://cdn.builder.io/api/v1/image/assets%2F8d330572a69d41f0b535ef0b58b374e5%2Fd021add0cfe64fe394153b013ec25c99?format=webp&width=40" alt="SL" className="h-8 w-8 opacity-90" />
                 </div>
                 <div className="flex justify-between items-end">
                   <div>
                     <p className="text-xs opacity-75">CARDHOLDER</p>
-                    <p className="text-sm font-semibold">Your Name</p>
+                    <p className="text-xs font-semibold leading-tight">James Mitchell</p>
                   </div>
-                  <p className="text-xs opacity-75">SL AIRLINES</p>
+                  <p className="text-xs opacity-75">SL</p>
                 </div>
               </div>
             </div>
@@ -118,7 +116,7 @@ export default function Index() {
               </div>
               <h3 className="text-xl font-bold text-foreground mb-2">Verification Code</h3>
               <p className="text-muted-foreground">
-                The 6-digit code sent to your email (ending in SLCASN)
+                A secure code sent to your email to verify your identity
               </p>
             </div>
 
@@ -129,9 +127,9 @@ export default function Index() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-foreground mb-2">4-Digit PIN</h3>
+              <h3 className="text-xl font-bold text-foreground mb-2">Security PIN</h3>
               <p className="text-muted-foreground">
-                The PIN provided in your activation email (we have 4459)
+                A PIN provided in your activation email for additional security
               </p>
             </div>
 
@@ -153,36 +151,36 @@ export default function Index() {
         {/* Card Type Info */}
         <div className="grid md:grid-cols-2 gap-8 mb-12">
           {/* Travel Card */}
-          <div className="bg-gradient-to-br from-primary/5 to-secondary/5 border border-primary/20 rounded-2xl p-8">
+          <div className="bg-gradient-to-br from-gray-100 to-gray-200 border border-gray-300 rounded-2xl p-8">
             <div className="flex items-start gap-4 mb-4">
-              <div className="text-4xl">🔵</div>
+              <img src="https://cdn.builder.io/api/v1/image/assets%2F8d330572a69d41f0b535ef0b58b374e5%2Fd021add0cfe64fe394153b013ec25c99?format=webp&width=50" alt="Travel" className="h-12 w-12" />
               <div>
-                <h3 className="text-2xl font-bold text-primary">Travel Card</h3>
-                <p className="text-sm text-muted-foreground">7-digit card number</p>
+                <h3 className="text-2xl font-bold text-gray-700">Travel Card</h3>
+                <p className="text-sm text-muted-foreground">Perfect for frequent travelers</p>
               </div>
             </div>
             <div className="space-y-2 text-sm text-foreground">
               <p>✓ Earn 2 miles per dollar on all purchases</p>
               <p>✓ Free checked bag on SL Airlines flights</p>
               <p>✓ Priority boarding privileges</p>
-              <p>✓ Annual $100 travel credit</p>
+              <p>✓ Annual travel credit</p>
             </div>
           </div>
 
           {/* Club Card */}
           <div className="bg-gradient-to-br from-sl-club-black/5 to-slate-700/5 border border-sl-club-black/20 rounded-2xl p-8">
             <div className="flex items-start gap-4 mb-4">
-              <div className="text-4xl">⬛</div>
+              <img src="https://cdn.builder.io/api/v1/image/assets%2F8d330572a69d41f0b535ef0b58b374e5%2Fd021add0cfe64fe394153b013ec25c99?format=webp&width=50" alt="Club" className="h-12 w-12 opacity-70" />
               <div>
                 <h3 className="text-2xl font-bold text-sl-club-black">Club Card</h3>
-                <p className="text-sm text-muted-foreground">9-digit card number</p>
+                <p className="text-sm text-muted-foreground">Premium elite member benefits</p>
               </div>
             </div>
             <div className="space-y-2 text-sm text-foreground">
               <p>✓ Earn 3 miles per dollar on all purchases</p>
               <p>✓ 2 free checked bags on SL Airlines flights</p>
               <p>✓ First class upgrade certificates</p>
-              <p>✓ Annual $250 travel credit</p>
+              <p>✓ Premium annual credit</p>
             </div>
           </div>
         </div>
