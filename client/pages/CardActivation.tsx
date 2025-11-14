@@ -260,10 +260,10 @@ export default function CardActivation() {
             {step === 1 && (
               <div>
                 <Label htmlFor="pin" className="text-base mb-2 block">
-                  4-Digit PIN
+                  Security PIN
                 </Label>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Enter the PIN provided with your card activation email
+                  Enter the PIN provided in your activation email
                 </p>
                 <Input
                   id="pin"
