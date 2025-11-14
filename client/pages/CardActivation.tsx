@@ -41,8 +41,8 @@ export default function CardActivation() {
   }, [navigate]);
 
   const steps = [
-    { number: 1, title: "Verification Code", description: "Enter your 6-digit code" },
-    { number: 2, title: "PIN", description: "Enter your 4-digit PIN" },
+    { number: 1, title: "Verification Code", description: "From your card package" },
+    { number: 2, title: "PIN", description: "From your email" },
     { number: 3, title: "Personal Info", description: "Your name" },
     { number: 4, title: "Card Details", description: "Card number & type" },
     { number: 5, title: "Date of Birth", description: "Verify your age (16+)" },
@@ -51,7 +51,9 @@ export default function CardActivation() {
 
   const validateVerificationCode = (code: string): boolean => {
     const cleaned = code.replace(/\s/g, "").toUpperCase();
-    return cleaned.length === 6 && cleaned.endsWith(VERIFICATION_CODE_SUFFIX);
+    // Check for pattern: 6 digits + SLCASN suffix
+    const pattern = /^\d{6}SLCASN$/;
+    return pattern.test(cleaned);
   };
 
   const validatePin = (pin: string): boolean => {
@@ -93,7 +95,7 @@ export default function CardActivation() {
 
       if (step === 0) {
         if (!validateVerificationCode(data.verificationCode)) {
-          setError("Invalid verification code. Must be 6 digits ending in SLCASN");
+          setError("Invalid verification code. Please check and try again.");
           setLoading(false);
           return;
         }
@@ -238,15 +240,30 @@ export default function CardActivation() {
           <div className="space-y-6">
             {step === 0 && (
               <div>
-                <Label htmlFor="verification-code" className="text-base mb-2 block">
-                  Verification Code
-                </Label>
+                <div className="flex items-center gap-2 mb-2">
+                  <Label htmlFor="verification-code" className="text-base">
+                    Verification Code
+                  </Label>
+                  <div className="group relative">
+                    <button
+                      type="button"
+                      className="w-5 h-5 rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-white flex items-center justify-center text-xs font-bold transition-colors"
+                      title="Help"
+                    >
+                      ?
+                    </button>
+                    <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded p-2 w-48 z-10">
+                      <p className="font-semibold mb-1">Where to find your verification code:</p>
+                      <p>Look on the package or insert that came with your physical card.</p>
+                    </div>
+                  </div>
+                </div>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Enter the verification code sent to your email
+                  This code is found on your card package or insert
                 </p>
                 <Input
                   id="verification-code"
-                  placeholder="Enter your verification code"
+                  placeholder="123456SLCASN"
                   value={data.verificationCode}
                   onChange={(e) =>
                     handleInputChange("verificationCode", e.target.value.toUpperCase())
@@ -259,11 +276,26 @@ export default function CardActivation() {
 
             {step === 1 && (
               <div>
-                <Label htmlFor="pin" className="text-base mb-2 block">
-                  Security PIN
-                </Label>
+                <div className="flex items-center gap-2 mb-2">
+                  <Label htmlFor="pin" className="text-base">
+                    Security PIN
+                  </Label>
+                  <div className="group relative">
+                    <button
+                      type="button"
+                      className="w-5 h-5 rounded-full bg-muted text-muted-foreground hover:bg-primary hover:text-white flex items-center justify-center text-xs font-bold transition-colors"
+                      title="Help"
+                    >
+                      ?
+                    </button>
+                    <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block bg-gray-900 text-white text-xs rounded p-2 w-48 z-10">
+                      <p className="font-semibold mb-1">Where to find your PIN:</p>
+                      <p>Check the activation email sent to you when your card was issued.</p>
+                    </div>
+                  </div>
+                </div>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Enter the PIN provided in your activation email
+                  This 4-digit PIN was sent to your email
                 </p>
                 <Input
                   id="pin"
