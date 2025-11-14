@@ -243,9 +243,9 @@ export default function ReviewStatus() {
         </div>
 
         {/* Important Note */}
-        <div className="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-sm text-yellow-800">
-          <p className="font-semibold mb-2">Important Note</p>
-          <p>This card activation is now complete and cannot be reactivated. Your SL Airlines account is active and ready to use.</p>
+        <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+          <p className="font-semibold mb-2">Confirmation</p>
+          <p>We added your card to your dashboard.</p>
         </div>
       </div>
     </div>
