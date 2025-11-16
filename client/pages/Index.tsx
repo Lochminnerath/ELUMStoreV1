@@ -240,9 +240,8 @@ export default function Index() {
       <div className="border-t border-border/50 mt-12 py-8 text-center text-muted-foreground text-sm">
         <p>&copy; 2025 SL Airlines. All rights reserved.</p>
         <div className="flex justify-center gap-6 mt-4">
-          <a href="#privacy" className="hover:text-foreground transition-colors">Privacy Policy</a>
-          <a href="#terms" className="hover:text-foreground transition-colors">Terms of Service</a>
-          <a href="#support" className="hover:text-foreground transition-colors">Support</a>
+          <a href="https://sites.google.com/view/sl-airlines/our-policy" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Policies</a>
+          <a href="https://sites.google.com/view/sl-airlines/club-open-page" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Support</a>
         </div>
       </div>
     </div>
