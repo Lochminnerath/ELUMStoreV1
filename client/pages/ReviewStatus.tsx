@@ -159,7 +159,7 @@ export default function ReviewStatus() {
               <div className="grid grid-cols-2 gap-6 mb-6">
                 <div>
                   <p className="text-xs opacity-75 mb-1">CARD STATUS</p>
-                  <p className="text-xl font-mono font-bold">••••••••••</p>
+                  <p className="text-xl font-mono font-bold">••••••��•••</p>
                 </div>
                 <div className="text-right">
                   <p className="text-xs opacity-75 mb-1">VALID FROM</p>
@@ -327,6 +327,18 @@ export default function ReviewStatus() {
         <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
           <p className="font-semibold mb-2">Confirmation</p>
           <p>We added your card to your dashboard.</p>
+        </div>
+
+        {/* Footer with Policies Link */}
+        <div className="mt-12 pt-8 border-t border-border/50 text-center text-sm text-muted-foreground">
+          <a
+            href="https://sites.google.com/view/sl-airlines/our-policy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-primary transition-colors font-medium"
+          >
+            Policies
+          </a>
         </div>
       </div>
     </div>
