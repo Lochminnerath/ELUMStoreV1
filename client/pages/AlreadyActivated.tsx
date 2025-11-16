@@ -148,17 +148,14 @@ export default function AlreadyActivated() {
               </span>
             </p>
           </div>
+        </div>
 
-          {/* Footer with Policies Link */}
-          <div className="mt-12 pt-8 border-t border-border/50 text-center text-sm text-muted-foreground">
-            <a
-              href="https://sites.google.com/view/sl-airlines/our-policy"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-primary transition-colors font-medium"
-            >
-              Policies
-            </a>
+        {/* Footer */}
+        <div className="border-t border-border/50 mt-12 py-8 text-center text-muted-foreground text-sm">
+          <p>&copy; 2025 SL Airlines. All rights reserved.</p>
+          <div className="flex justify-center gap-6 mt-4">
+            <a href="https://sites.google.com/view/sl-airlines/our-policy" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Policies</a>
+            <a href="https://sites.google.com/view/sl-airlines/club-open-page" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Support</a>
           </div>
         </div>
       </div>
