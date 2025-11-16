@@ -148,6 +148,18 @@ export default function AlreadyActivated() {
               </span>
             </p>
           </div>
+
+          {/* Footer with Policies Link */}
+          <div className="mt-12 pt-8 border-t border-border/50 text-center text-sm text-muted-foreground">
+            <a
+              href="https://sites.google.com/view/sl-airlines/our-policy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors font-medium"
+            >
+              Policies
+            </a>
+          </div>
         </div>
       </div>
     </div>
