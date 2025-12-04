@@ -535,7 +535,7 @@ export default function ReviewStatus() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleToggleLock(card.id)}
+                        onClick={() => handleOpenLockDialog(card)}
                         className="h-8"
                       >
                         {card.isLocked ? (
