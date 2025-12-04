@@ -161,17 +161,6 @@ export default function ReviewStatus() {
                 : "bg-gradient-to-br from-sl-club-black to-slate-700"
             }`}
           >
-            {/* Background Pattern */}
-            <div className="absolute top-0 right-0 w-40 h-40 opacity-10">
-              <svg viewBox="0 0 200 200" className="w-full h-full">
-                <path
-                  d="M100 10 L150 40 L150 100 L100 130 L50 100 L50 40 Z"
-                  fill="white"
-                  opacity="0.3"
-                />
-              </svg>
-            </div>
-
             <div className="relative z-10">
               <div className="flex justify-between items-start mb-12">
                 <div>
