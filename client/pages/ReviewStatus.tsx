@@ -170,9 +170,9 @@ export default function ReviewStatus() {
                   </p>
                 </div>
                 <img
-                  src="https://cdn.builder.io/api/v1/image/assets%2F8d330572a69d41f0b535ef0b58b374e5%2Fd021add0cfe64fe394153b013ec25c99?format=webp&width=50"
+                  src="https://cdn.builder.io/api/v1/image/assets%2F8d330572a69d41f0b535ef0b58b374e5%2Fd021add0cfe64fe394153b013ec25c99?format=webp&width=80"
                   alt="SL"
-                  className="h-10 w-10 opacity-90"
+                  className="h-16 w-16 opacity-90"
                 />
               </div>
 
