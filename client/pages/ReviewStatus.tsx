@@ -83,7 +83,7 @@ export default function ReviewStatus() {
     );
   }
 
-  if (!data) {
+  if (!currentCard) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-background flex items-center justify-center">
         <div className="text-center">
@@ -96,9 +96,9 @@ export default function ReviewStatus() {
     );
   }
 
-  const completedDate = new Date(data.completedAt);
-  const dob = new Date(data.dateOfBirth);
-  const cardImage = data.cardType === "travel" ? "🔵" : "⬛";
+  const completedDate = new Date(currentCard.completedAt);
+  const dob = new Date(currentCard.dateOfBirth);
+  const cardImage = currentCard.cardType === "travel" ? "🔵" : "⬛";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-background">
