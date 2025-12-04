@@ -189,13 +189,29 @@ export default function CardActivation() {
 
       const activationData: ActivationData = {
         ...data,
+        id: Date.now().toString(),
         completedAt: new Date().toISOString(),
+        isLocked: false,
       };
 
+      // Get existing cards or initialize empty array
+      const existingCardsJson = localStorage.getItem("sl-airlines-cards");
+      const existingCards: ActivationData[] = existingCardsJson
+        ? JSON.parse(existingCardsJson)
+        : [];
+
+      // Add new card to array
+      existingCards.push(activationData);
+
+      // Save updated array
+      localStorage.setItem("sl-airlines-cards", JSON.stringify(existingCards));
+
+      // Set as current card for review
       localStorage.setItem(
         "sl-airlines-activated",
         JSON.stringify(activationData),
       );
+
       navigate("/review-status");
     } catch (err) {
       setError("Failed to complete activation. Please try again.");
