@@ -333,7 +333,26 @@ export default function ReviewStatus() {
         </div>
 
         {/* Action Buttons */}
-        <div className="grid sm:grid-cols-2 gap-4">
+        <div className="grid sm:grid-cols-3 gap-4 mb-8">
+          <Button
+            onClick={() => navigate("/card-activation")}
+            className="bg-secondary hover:bg-secondary/90 text-white"
+          >
+            Activate Another Card
+            <svg
+              className="w-4 h-4 ml-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+          </Button>
           <a
             href="https://slairlines.netlify.app"
             target="_blank"
@@ -378,6 +397,128 @@ export default function ReviewStatus() {
             </svg>
           </Button>
         </div>
+
+        {/* All Active Cards */}
+        {allCards.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-foreground mb-6">
+              All Active Cards ({allCards.length})
+            </h2>
+            <div className="grid gap-4">
+              {allCards.map((card) => (
+                <div
+                  key={card.id}
+                  className="bg-white rounded-xl shadow p-6 border border-border hover:shadow-lg transition-shadow"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Card Type
+                      </p>
+                      <p className="text-lg font-semibold capitalize">
+                        {card.cardType} Card
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      {card.isLocked && (
+                        <div className="flex items-center gap-2 px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-semibold">
+                          <svg
+                            className="w-4 h-4"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          Locked
+                        </div>
+                      )}
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleToggleLock(card.id)}
+                        className="h-8"
+                      >
+                        {card.isLocked ? (
+                          <>
+                            <svg
+                              className="w-4 h-4 mr-1"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-5a2 2 0 00-2-2H6a2 2 0 00-2 2v5a2 2 0 002 2z"
+                              />
+                            </svg>
+                            Unlock
+                          </>
+                        ) : (
+                          <>
+                            <svg
+                              className="w-4 h-4 mr-1"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            Lock
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 text-sm mb-4">
+                    <div>
+                      <p className="text-muted-foreground mb-1">Cardholder</p>
+                      <p className="font-semibold">{card.name}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground mb-1">Card Number</p>
+                      <p className="font-mono">
+                        8838 | {card.cardNumber.slice(4, 8)} |{" "}
+                        {card.cardNumber.slice(-2)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground mb-1">
+                        Activated Date
+                      </p>
+                      <p className="text-sm">
+                        {new Date(card.completedAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground mb-1">Status</p>
+                      <p className="text-sm">
+                        {card.isLocked ? (
+                          <span className="text-amber-600 font-semibold">
+                            Locked
+                          </span>
+                        ) : (
+                          <span className="text-green-600 font-semibold">
+                            Active
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Important Note */}
         <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
