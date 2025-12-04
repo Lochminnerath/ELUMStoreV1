@@ -142,6 +142,16 @@ export default function ReviewStatus() {
           </p>
         </div>
 
+        {/* Multiple Cards Notice */}
+        {allCards.length > 1 && (
+          <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-8">
+            <p className="text-blue-900 text-sm">
+              <strong>You have {allCards.length} active cards.</strong> View all
+              cards below.
+            </p>
+          </div>
+        )}
+
         {/* Card Visual */}
         <div className="mb-8">
           <div
