@@ -107,7 +107,7 @@ export default function ReviewStatus() {
         <div className="max-w-3xl mx-auto px-4 py-4">
           <div className="flex items-center gap-3">
             <img
-              src="https://cdn.builder.io/api/v1/image/assets%2F8d330572a69d41f0b535ef0b58b374e5%2Fd021add0cfe64fe394153b013ec25c99?format=webp&width=40"
+              src="https://cdn.builder.io/api/v1/image/assets%2F58f2265166be4d0db08ea914234affec%2F41558cec03da4b39b5bb4960324d8449?format=webp&width=64"
               alt="SL Airlines"
               className="h-8 w-8"
             />
