@@ -156,7 +156,7 @@ export default function ReviewStatus() {
         <div className="mb-8">
           <div
             className={`rounded-2xl p-8 text-white shadow-xl relative overflow-hidden ${
-              data.cardType === "travel"
+              currentCard.cardType === "travel"
                 ? "bg-gradient-to-br from-gray-400 to-gray-500"
                 : "bg-gradient-to-br from-sl-club-black to-slate-700"
             }`}
@@ -177,7 +177,7 @@ export default function ReviewStatus() {
                 <div>
                   <p className="text-sm opacity-75 mb-2">CARD TYPE</p>
                   <p className="text-2xl font-bold capitalize">
-                    {data.cardType} Card
+                    {currentCard.cardType} Card
                   </p>
                 </div>
                 <img
@@ -189,7 +189,7 @@ export default function ReviewStatus() {
 
               <div className="mb-8">
                 <p className="text-sm opacity-75 mb-2">CARDHOLDER NAME</p>
-                <p className="text-2xl font-semibold">{data.name}</p>
+                <p className="text-2xl font-semibold">{currentCard.name}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-6 mb-6">
