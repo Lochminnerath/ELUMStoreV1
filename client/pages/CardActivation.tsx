@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 interface ActivationData {
+  id: string;
   verificationCode: string;
   pin: string;
   name: string;
@@ -12,6 +13,7 @@ interface ActivationData {
   dateOfBirth: string;
   cardType: "travel" | "club" | "";
   completedAt: string;
+  isLocked: boolean;
 }
 
 const VERIFICATION_CODE_SUFFIX = "SLCASN";
@@ -25,6 +27,7 @@ export default function CardActivation() {
   const [error, setError] = useState("");
   const [cardAttempts, setCardAttempts] = useState(0);
   const [data, setData] = useState<ActivationData>({
+    id: "",
     verificationCode: "",
     pin: "",
     name: "",
@@ -32,14 +35,8 @@ export default function CardActivation() {
     dateOfBirth: "",
     cardType: "",
     completedAt: "",
+    isLocked: false,
   });
-
-  useEffect(() => {
-    const activated = localStorage.getItem("sl-airlines-activated");
-    if (activated) {
-      navigate("/already-activated");
-    }
-  }, [navigate]);
 
   const steps = [
     {
@@ -192,13 +189,29 @@ export default function CardActivation() {
 
       const activationData: ActivationData = {
         ...data,
+        id: Date.now().toString(),
         completedAt: new Date().toISOString(),
+        isLocked: false,
       };
 
+      // Get existing cards or initialize empty array
+      const existingCardsJson = localStorage.getItem("sl-airlines-cards");
+      const existingCards: ActivationData[] = existingCardsJson
+        ? JSON.parse(existingCardsJson)
+        : [];
+
+      // Add new card to array
+      existingCards.push(activationData);
+
+      // Save updated array
+      localStorage.setItem("sl-airlines-cards", JSON.stringify(existingCards));
+
+      // Set as current card for review
       localStorage.setItem(
         "sl-airlines-activated",
         JSON.stringify(activationData),
       );
+
       navigate("/review-status");
     } catch (err) {
       setError("Failed to complete activation. Please try again.");
@@ -221,7 +234,7 @@ export default function CardActivation() {
         <div className="max-w-2xl mx-auto px-4 py-4">
           <div className="flex items-center gap-3">
             <img
-              src="https://cdn.builder.io/api/v1/image/assets%2F8d330572a69d41f0b535ef0b58b374e5%2Fd021add0cfe64fe394153b013ec25c99?format=webp&width=40"
+              src="https://cdn.builder.io/api/v1/image/assets%2F58f2265166be4d0db08ea914234affec%2F41558cec03da4b39b5bb4960324d8449?format=webp&width=64"
               alt="SL Airlines"
               className="h-8 w-8"
             />

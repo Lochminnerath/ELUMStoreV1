@@ -28,17 +28,18 @@ export default function DisclaimerModal() {
     <>
       {isOpen && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-auto">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
             {/* Header */}
-            <div className="bg-gradient-to-r from-primary to-secondary p-6 text-white sticky top-0">
-              <h2 className="text-2xl font-bold">Important Disclaimer</h2>
-              <p className="text-white/90 text-sm mt-1">Please read before proceeding</p>
+            <div className="bg-gradient-to-r from-primary to-secondary p-8 text-white">
+              <h2 className="text-3xl font-bold">Important Disclaimer</h2>
+              <p className="text-white/85 mt-2">Please read before proceeding</p>
             </div>
 
             {/* Content */}
-            <div className="p-6 md:p-8 space-y-4 text-foreground">
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex gap-3">
-                <svg className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+            <div className="flex-1 overflow-y-auto p-8 space-y-6 text-foreground">
+              {/* Alert Box */}
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 flex gap-4">
+                <svg className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                 </svg>
                 <div>
@@ -47,44 +48,113 @@ export default function DisclaimerModal() {
                 </div>
               </div>
 
-              <div className="space-y-3 text-sm leading-relaxed">
-                <p>
-                  <strong>SL Airlines is a fully fictional air carrier</strong> created for demonstration and testing purposes only. This website and all associated services are not real airline or financial services.
-                </p>
+              {/* Main Points */}
+              <div className="space-y-5 text-sm leading-relaxed">
+                <div>
+                  <p>
+                    <strong>SL Airlines is a fully fictional air carrier</strong> created for demonstration and testing purposes only. This website and all associated services are not real airline or financial services.
+                  </p>
+                </div>
 
-                <p>
-                  The <strong>SL Airlines Credit Card Activation Website</strong> is designed to simulate how travelers might activate their rewards card. While this site looks and functions like a real activation portal, it exists solely for:
-                </p>
+                <div>
+                  <p className="mb-3">
+                    The <strong>SL Airlines Credit Card Activation Website</strong> is designed to simulate how travelers might activate their rewards card. This site exists solely for:
+                  </p>
+                  <div className="space-y-2 ml-4">
+                    <div className="flex items-start gap-3">
+                      <span className="text-primary font-bold flex-shrink-0">•</span>
+                      <span>Training and educational purposes</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="text-primary font-bold flex-shrink-0">•</span>
+                      <span>Testing user experience and interface design</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="text-primary font-bold flex-shrink-0">•</span>
+                      <span>Illustrative scenarios and demonstrations</span>
+                    </div>
+                  </div>
+                </div>
 
-                <ul className="list-disc list-inside space-y-2 ml-2">
-                  <li>Training and educational purposes</li>
-                  <li>Testing user experience and interface design</li>
-                  <li>Illustrative scenarios and demonstrations</li>
-                </ul>
+                {/* Divider */}
+                <div className="border-t border-border pt-5">
+                  <p className="font-semibold mb-3">This website is NOT:</p>
+                  <div className="space-y-2 ml-4">
+                    <div className="flex items-start gap-3">
+                      <svg
+                        className="w-4 h-4 text-red-500 flex-shrink-0 mt-1"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span>Connected to any real financial institution</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <svg
+                        className="w-4 h-4 text-red-500 flex-shrink-0 mt-1"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span>Connected to any real airline service</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <svg
+                        className="w-4 h-4 text-red-500 flex-shrink-0 mt-1"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span>A functioning payment or credit card system</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <svg
+                        className="w-4 h-4 text-red-500 flex-shrink-0 mt-1"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span>Authorized by any banking or regulatory authority</span>
+                    </div>
+                  </div>
+                </div>
 
-                <p>
-                  <strong>This website is NOT:</strong>
-                </p>
+                {/* Key Info Box */}
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                  <p className="text-sm text-amber-900">
+                    <strong>All data, card numbers, and personal information you enter here is not processed by any real financial system</strong> and is used only for demonstration purposes.
+                  </p>
+                </div>
 
-                <ul className="list-disc list-inside space-y-2 ml-2">
-                  <li>Connected to any real financial institution</li>
-                  <li>Connected to any real airline service</li>
-                  <li>A functioning payment or credit card system</li>
-                  <li>Authorized by any banking or regulatory authority</li>
-                </ul>
-
-                <p className="pt-2">
-                  <strong>All data, card numbers, and personal information you enter here is not processed by any real financial system and is used only for demonstration purposes.</strong>
-                </p>
-
-                <p className="pt-4 text-muted-foreground">
+                {/* Agreement */}
+                <p className="text-muted-foreground text-xs pt-2">
                   By clicking "I Agree," you acknowledge that you understand this is a fictional demonstration and agree to use this website for its intended educational and testing purposes only.
                 </p>
               </div>
             </div>
 
             {/* Footer */}
-            <div className="border-t border-border p-6 flex gap-3 bg-muted/30 sticky bottom-0">
+            <div className="border-t border-border p-6 flex gap-3 bg-muted/40 flex-shrink-0">
               <Button
                 variant="outline"
                 className="flex-1"
