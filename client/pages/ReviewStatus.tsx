@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 interface ActivationData {
+  id: string;
   verificationCode: string;
   pin: string;
   name: string;
@@ -10,11 +11,13 @@ interface ActivationData {
   dateOfBirth: string;
   cardType: "travel" | "club" | "";
   completedAt: string;
+  isLocked: boolean;
 }
 
 export default function ReviewStatus() {
   const navigate = useNavigate();
-  const [data, setData] = useState<ActivationData | null>(null);
+  const [currentCard, setCurrentCard] = useState<ActivationData | null>(null);
+  const [allCards, setAllCards] = useState<ActivationData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,9 +27,32 @@ export default function ReviewStatus() {
       return;
     }
 
+    const cardsJson = localStorage.getItem("sl-airlines-cards");
+    const cards: ActivationData[] = cardsJson ? JSON.parse(cardsJson) : [];
+    const current = JSON.parse(activated);
+
+    setCurrentCard(current);
+    setAllCards(cards);
     setLoading(false);
-    setData(JSON.parse(activated));
   }, [navigate]);
+
+  const handleToggleLock = (cardId: string) => {
+    const updatedCards = allCards.map((card) =>
+      card.id === cardId ? { ...card, isLocked: !card.isLocked } : card,
+    );
+    setAllCards(updatedCards);
+    localStorage.setItem("sl-airlines-cards", JSON.stringify(updatedCards));
+
+    // Update current card if it's the one being locked
+    if (currentCard?.id === cardId) {
+      const updatedCurrent = { ...currentCard, isLocked: !currentCard.isLocked };
+      setCurrentCard(updatedCurrent);
+      localStorage.setItem(
+        "sl-airlines-activated",
+        JSON.stringify(updatedCurrent),
+      );
+    }
+  };
 
   if (loading) {
     return (
