@@ -194,8 +194,11 @@ export default function ReviewStatus() {
 
               <div className="grid grid-cols-2 gap-6 mb-6">
                 <div>
-                  <p className="text-xs opacity-75 mb-1">CARD STATUS</p>
-                  <p className="text-xl font-mono font-bold">••••••••••</p>
+                  <p className="text-xs opacity-75 mb-1">CARD NUMBER</p>
+                  <p className="text-lg font-mono font-bold tracking-wider">
+                    8838 | {currentCard.cardNumber.slice(4, 8)} |{" "}
+                    {currentCard.cardNumber.slice(-2)}
+                  </p>
                 </div>
                 <div className="text-right">
                   <p className="text-xs opacity-75 mb-1">VALID FROM</p>
