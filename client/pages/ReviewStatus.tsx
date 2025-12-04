@@ -323,7 +323,7 @@ export default function ReviewStatus() {
         {/* Action Buttons */}
         <div className="grid sm:grid-cols-3 gap-4 mb-8">
           <Button
-            onClick={() => navigate("/card-activation")}
+            onClick={() => navigate("/activate")}
             className="bg-secondary hover:bg-secondary/90 text-white"
           >
             Activate Another Card
