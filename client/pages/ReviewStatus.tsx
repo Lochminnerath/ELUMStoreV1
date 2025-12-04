@@ -72,22 +72,94 @@ export default function ReviewStatus() {
     setLoading(false);
   }, [navigate]);
 
-  const handleToggleLock = (cardId: string) => {
+  const handleOpenLockDialog = (card: ActivationData) => {
+    // Check if card is already locked
+    if (card.isLocked) {
+      // Unlock directly without cooldown
+      handleUnlock(card.id);
+      return;
+    }
+
+    // Check cooldown
+    const cooldownTime = lockCooldowns.get(card.id);
+    if (cooldownTime) {
+      const now = Date.now();
+      const timeElapsed = now - cooldownTime;
+      const oneHourMs = 60 * 60 * 1000;
+      const remainingTime = oneHourMs - timeElapsed;
+
+      if (remainingTime > 0) {
+        const minutes = Math.ceil(remainingTime / 60000);
+        alert(`You can lock this card again in ${minutes} minute(s)`);
+        return;
+      }
+    }
+
+    setSelectedCardForLock(card);
+    setReportMessage("");
+    setLockDialogOpen(true);
+  };
+
+  const handleUnlock = (cardId: string) => {
     const updatedCards = allCards.map((card) =>
-      card.id === cardId ? { ...card, isLocked: !card.isLocked } : card,
+      card.id === cardId ? { ...card, isLocked: false } : card,
     );
     setAllCards(updatedCards);
     localStorage.setItem("sl-airlines-cards", JSON.stringify(updatedCards));
 
-    // Update current card if it's the one being locked
     if (currentCard?.id === cardId) {
-      const updatedCurrent = { ...currentCard, isLocked: !currentCard.isLocked };
+      const updatedCurrent = { ...currentCard, isLocked: false };
       setCurrentCard(updatedCurrent);
       localStorage.setItem(
         "sl-airlines-activated",
         JSON.stringify(updatedCurrent),
       );
     }
+  };
+
+  const handleLockCard = () => {
+    if (!selectedCardForLock) return;
+
+    const updatedCards = allCards.map((card) =>
+      card.id === selectedCardForLock.id
+        ? { ...card, isLocked: true, lastLockedAt: new Date().toISOString() }
+        : card,
+    );
+    setAllCards(updatedCards);
+    localStorage.setItem("sl-airlines-cards", JSON.stringify(updatedCards));
+
+    // Update current card if it's the one being locked
+    if (currentCard?.id === selectedCardForLock.id) {
+      const updatedCurrent = { ...currentCard, isLocked: true, lastLockedAt: new Date().toISOString() };
+      setCurrentCard(updatedCurrent);
+      localStorage.setItem(
+        "sl-airlines-activated",
+        JSON.stringify(updatedCurrent),
+      );
+    }
+
+    // Set cooldown
+    const now = Date.now();
+    const newCooldowns = new Map(lockCooldowns);
+    newCooldowns.set(selectedCardForLock.id, now);
+    setLockCooldowns(newCooldowns);
+
+    // Save cooldowns to localStorage
+    const cooldownsArray = Array.from(newCooldowns.entries()).map(([cardId, lockedAt]) => ({
+      cardId,
+      lockedAt,
+    }));
+    localStorage.setItem("sl-airlines-lock-cooldowns", JSON.stringify(cooldownsArray));
+
+    setLockDialogOpen(false);
+    setSelectedCardForLock(null);
+    setReportMessage("");
+  };
+
+  const handleReportAndLock = () => {
+    // In a real app, this would send the report to a server
+    console.log("Report:", reportMessage);
+    handleLockCard();
   };
 
   if (loading) {
