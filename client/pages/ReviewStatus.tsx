@@ -49,6 +49,24 @@ export default function ReviewStatus() {
     const cards: ActivationData[] = cardsJson ? JSON.parse(cardsJson) : [];
     const current = JSON.parse(activated);
 
+    // Load cooldowns
+    const cooldownsJson = localStorage.getItem("sl-airlines-lock-cooldowns");
+    if (cooldownsJson) {
+      const cooldownsData: LockCooldown[] = JSON.parse(cooldownsJson);
+      const now = Date.now();
+      const validCooldowns = new Map<string, number>();
+
+      cooldownsData.forEach((cooldown) => {
+        const timeElapsed = now - cooldown.lockedAt;
+        const oneHourMs = 60 * 60 * 1000;
+        if (timeElapsed < oneHourMs) {
+          validCooldowns.set(cooldown.cardId, cooldown.lockedAt);
+        }
+      });
+
+      setLockCooldowns(validCooldowns);
+    }
+
     setCurrentCard(current);
     setAllCards(cards);
     setLoading(false);
