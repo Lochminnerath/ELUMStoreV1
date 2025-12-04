@@ -20,6 +20,12 @@ interface ActivationData {
   cardType: "travel" | "club" | "";
   completedAt: string;
   isLocked: boolean;
+  lastLockedAt?: string;
+}
+
+interface LockCooldown {
+  cardId: string;
+  lockedAt: number;
 }
 
 export default function ReviewStatus() {
