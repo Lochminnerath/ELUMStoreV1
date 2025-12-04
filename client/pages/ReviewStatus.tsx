@@ -185,8 +185,7 @@ export default function ReviewStatus() {
                 <div>
                   <p className="text-xs opacity-75 mb-1">CARD NUMBER</p>
                   <p className="text-lg font-mono font-bold tracking-wider">
-                    8838 | {currentCard.cardNumber.slice(4, 8)} |{" "}
-                    {currentCard.cardNumber.slice(-2)}
+                    8838-{currentCard.cardNumber.slice(4, 8)}-{currentCard.cardNumber.slice(-2)}
                   </p>
                 </div>
                 <div className="text-right">
