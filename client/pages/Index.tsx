@@ -8,7 +8,9 @@ export default function Index() {
   // Check if card is already activated
   useEffect(() => {
     const activated = localStorage.getItem("sl-airlines-activated");
-    if (activated) {
+    const cards = localStorage.getItem("sl-airlines-cards");
+
+    if (activated || cards) {
       // User already activated - show review status
       navigate("/review-status");
     }
