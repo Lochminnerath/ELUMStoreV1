@@ -33,6 +33,10 @@ export default function ReviewStatus() {
   const [currentCard, setCurrentCard] = useState<ActivationData | null>(null);
   const [allCards, setAllCards] = useState<ActivationData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [lockDialogOpen, setLockDialogOpen] = useState(false);
+  const [selectedCardForLock, setSelectedCardForLock] = useState<ActivationData | null>(null);
+  const [lockCooldowns, setLockCooldowns] = useState<Map<string, number>>(new Map());
+  const [reportMessage, setReportMessage] = useState("");
 
   useEffect(() => {
     const activated = localStorage.getItem("sl-airlines-activated");
