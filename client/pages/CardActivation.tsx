@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 interface ActivationData {
+  id: string;
   verificationCode: string;
   pin: string;
   name: string;
@@ -12,6 +13,7 @@ interface ActivationData {
   dateOfBirth: string;
   cardType: "travel" | "club" | "";
   completedAt: string;
+  isLocked: boolean;
 }
 
 const VERIFICATION_CODE_SUFFIX = "SLCASN";
