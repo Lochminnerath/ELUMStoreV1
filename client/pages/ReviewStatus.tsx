@@ -521,9 +521,9 @@ export default function ReviewStatus() {
         )}
 
         {/* Important Note */}
-        <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
           <p className="font-semibold mb-2">Confirmation</p>
-          <p>We added your card to your dashboard.</p>
+          <p>Your card has been successfully activated and added to your dashboard. You can activate additional cards at any time by clicking "Activate Another Card" above.</p>
         </div>
       </div>
 
