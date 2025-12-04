@@ -27,6 +27,7 @@ export default function CardActivation() {
   const [error, setError] = useState("");
   const [cardAttempts, setCardAttempts] = useState(0);
   const [data, setData] = useState<ActivationData>({
+    id: "",
     verificationCode: "",
     pin: "",
     name: "",
@@ -34,14 +35,8 @@ export default function CardActivation() {
     dateOfBirth: "",
     cardType: "",
     completedAt: "",
+    isLocked: false,
   });
-
-  useEffect(() => {
-    const activated = localStorage.getItem("sl-airlines-activated");
-    if (activated) {
-      navigate("/already-activated");
-    }
-  }, [navigate]);
 
   const steps = [
     {
