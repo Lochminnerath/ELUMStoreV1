@@ -644,6 +644,73 @@ export default function ReviewStatus() {
           </a>
         </div>
       </div>
+
+      {/* Lock Card Dialog */}
+      <Dialog open={lockDialogOpen} onOpenChange={setLockDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Lock Card</DialogTitle>
+            <DialogDescription>
+              Locking your card will deactivate it temporarily. After locking, you won't be able to lock it again for 1 hour.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            {selectedCardForLock && (
+              <div className="p-3 bg-muted rounded-lg text-sm">
+                <p className="text-muted-foreground mb-1">Card</p>
+                <p className="font-semibold">
+                  {selectedCardForLock.cardType === "travel"
+                    ? "🔵 Travel Card"
+                    : "⬛ Club Card"}{" "}
+                  • {selectedCardForLock.cardNumber.slice(4, 8)}
+                </p>
+              </div>
+            )}
+
+            <div>
+              <label className="text-sm font-medium mb-2 block">
+                Report an Issue (Optional)
+              </label>
+              <textarea
+                placeholder="Describe any issues or reasons for locking this card..."
+                className="w-full px-3 py-2 border border-input rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                rows={3}
+                value={reportMessage}
+                onChange={(e) => setReportMessage(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setLockDialogOpen(false);
+                setSelectedCardForLock(null);
+                setReportMessage("");
+              }}
+            >
+              Cancel
+            </Button>
+            {reportMessage.trim() ? (
+              <Button
+                onClick={handleReportAndLock}
+                className="bg-orange-600 hover:bg-orange-700"
+              >
+                Report & Lock
+              </Button>
+            ) : (
+              <Button
+                onClick={handleLockCard}
+                className="bg-amber-600 hover:bg-amber-700"
+              >
+                Lock Card
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
