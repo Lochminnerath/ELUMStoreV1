@@ -194,7 +194,7 @@ export default function AlreadyActivated() {
           {/* Action Buttons */}
           <div className="grid sm:grid-cols-2 gap-4">
             <a
-              href="https://slairlines.netlify.app"
+              href="https://slairlines26.netlify.app"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block"

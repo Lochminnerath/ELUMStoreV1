@@ -450,7 +450,7 @@ export default function ReviewStatus() {
             </svg>
           </Button>
           <a
-            href="https://slairlines.netlify.app"
+            href="https://slairlines26.netlify.app"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block"
