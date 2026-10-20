@@ -10,7 +10,6 @@ import { SecurityLayer } from './security/SecurityLayer';
 import { AppPage, HomePage, LibraryPage, NotFound, SearchPage, TemplatesPage } from './store/pages';
 import { ThemeProvider } from './theme/ThemeProvider';
 import { WhatsNew } from './whatsnew/WhatsNew';
-import { QuietSignIn } from './components/QuietSignIn';
 
 export function App() {
   return (
@@ -18,7 +17,6 @@ export function App() {
       <ToastProvider>
         <AuthProvider>
           <BrowserRouter>
-            <QuietSignIn />
             <ErrorBoundary>
               <Routes>
                 <Route path="/" element={<HomePage />} />
