@@ -1,15 +1,23 @@
+# Netlify: build ELUM Store and serve it as a single-page app.
+# Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in the site's environment variables.
 [build]
-  command = "npm run build:client"
-  functions = "netlify/functions"
-  publish = "dist/spa"
+  command = "node scripts/require-supabase.mjs && npm run build"
+  publish = "dist"
 
+[build.environment]
+  NODE_VERSION = "22"
 
-[functions]
-  external_node_modules = ["express"]
-  node_bundler = "esbuild"
-  
+# Every path (/apps/make, /templates, /signin, ...) loads the app, which does its own routing.
 [[redirects]]
-  force = true
-  from = "/api/*"
+  from = "/*"
+  to = "/index.html"
   status = 200
-  to = "/.netlify/functions/api/:splat"
+
+# Only ELUM Browse and ELUM's own sites may show Store inside a frame (Browse opens ELUM apps in
+# its tabs); every other site is refused, which keeps clickjacking out.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "frame-ancestors 'self' https://elumbrowse.netlify.app https://elum.services https://*.elum.services"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Content-Type-Options = "nosniff"
