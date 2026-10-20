@@ -24,8 +24,8 @@ export function HomePage() {
       <section className="store-hero">
         <div className="store-hero__text">
           <p className="store-eyebrow">ELUM Store</p>
-          <h1>Apps and more, for your ELUM account.</h1>
-          <p className="store-lede">Every ELUM app in one place, free with your account. Made by you. Runs without AI.</p>
+          <h1>Every ELUM app, in one place.</h1>
+          <p className="store-lede">They’re all free with your ELUM account. Made by you. Runs without AI.</p>
         </div>
         <div className="store-hero__art" aria-hidden="true">
           <span className="store-orbit">
@@ -266,7 +266,7 @@ export function TemplatesPage() {
       <section className="store-intro">
         <p className="store-eyebrow">Templates</p>
         <h1>Start something in Make</h1>
-        <p className="store-lede">Pick a template and Make opens with it, ready for your words and colours.</p>
+        <p className="store-lede">Pick a template and Make opens it for you, ready for your own words and colours.</p>
       </section>
       <div className="segmented store-filter" role="group" aria-label="Kind of template">
         {[{ id: 'all' as const, name: 'All' }, ...TEMPLATE_KINDS].map((k) => (
@@ -295,9 +295,9 @@ export function LibraryPage() {
   return (
     <StorePage>
       <section className="store-intro">
-        <p className="store-eyebrow">Your apps</p>
-        <h1>In your ELUM account</h1>
-        <p className="store-lede">Open any of them signed in, here or in Browse.</p>
+        <p className="store-eyebrow">Your account</p>
+        <h1>Your apps</h1>
+        <p className="store-lede">These are the apps in your ELUM account. Open any of them here or in Browse, already signed in.</p>
       </section>
       {mine.status === 'loading' && yours.length <= 1 ? (
         <div className="store-center">
@@ -305,7 +305,7 @@ export function LibraryPage() {
         </div>
       ) : mine.status === 'error' ? (
         <div className="empty-state">
-          <h2>Store could not find your apps</h2>
+          <h2>We couldn’t load your apps</h2>
           <p>Check your connection and try again.</p>
           <button type="button" className="elum-btn elum-btn--primary" onClick={() => mine.refresh()}>
             Try again
@@ -321,7 +321,7 @@ export function LibraryPage() {
                   <AppMark id={a.id} size={44} />
                   <span>
                     <span className="library__name">ELUM {a.name}</span>
-                    <span className="library__seen muted">{a.included ? 'Comes with your account' : seen ? `Last used ${formatWhenInline(seen)}` : 'Not opened yet'}</span>
+                    <span className="library__seen muted">{a.included ? 'Comes with every account' : seen ? `Last used ${formatWhenInline(seen)}` : 'Not opened yet'}</span>
                   </span>
                 </button>
                 <HealthPill id={a.id} />
@@ -364,7 +364,7 @@ export function SearchPage() {
         <div className="empty-state">
           <StoreMark size={64} />
           <h2>Nothing in Store matches that</h2>
-          <p>Try another word, such as slides, mail or search.</p>
+          <p>Try another word, like slides, mail or search.</p>
           <Link to="/" className="elum-btn elum-btn--primary">
             See every app
           </Link>

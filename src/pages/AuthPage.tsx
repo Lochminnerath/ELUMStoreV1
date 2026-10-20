@@ -147,7 +147,7 @@ export function AuthPage({ mode }: { mode: Mode }) {
         </svg>
         <div className="auth__art-copy">
           <p className="label muted">Made by you. Runs without AI.</p>
-          <p className="auth__tagline">Apps and more, for your ELUM account.</p>
+          <p className="auth__tagline">Every ELUM app, in one place.</p>
         </div>
       </aside>
 
