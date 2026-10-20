@@ -1,14 +1,35 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello world project</title>
+    <title>ELUM Store</title>
+    <meta name="description" content="Every ELUM app in one place, free with your ELUM account. Made by you. Runs without AI." />
+    <link rel="icon" href="/favicon.ico?v=2" sizes="48x48" />
+    <!-- The mark itself, in the page: it shows even where the site sits behind a login. -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024' role='img' aria-label='ELUM Store app icon'%3E%3Ctitle%3EELUM Store app icon%3C/title%3E%3Crect width='1024' height='1024' rx='228' fill='#0E1220'/%3E%3Cg transform='translate(-16 -16) scale(8.8)'%3E%3Ccircle cx='60' cy='58' r='40' fill='#1A2033' fill-opacity='.9' stroke='#E9B949' stroke-opacity='.6' stroke-width='2'/%3E%3Ccircle cx='60' cy='78' r='16' fill='#E9B949'/%3E%3C/g%3E%3C/svg%3E" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
+    <link rel="manifest" href="/manifest.webmanifest?v=2" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1220" media="(prefers-color-scheme: dark)" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+    />
+    <script>
+      // Apply the saved theme before first paint so the page never flashes the wrong one.
+      (function () {
+        var pref = 'system';
+        try { pref = localStorage.getItem('elum.theme') || 'system'; } catch (e) {}
+        var dark = pref === 'dark' || (pref === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      })();
+    </script>
   </head>
-
   <body>
     <div id="root"></div>
-
-    <script type="module" src="/client/App.tsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

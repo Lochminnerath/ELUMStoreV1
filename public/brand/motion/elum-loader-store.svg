@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Loading"><title>Loading</title>
+<circle cx="32" cy="31" r="21" fill="none" stroke="#E9B949" stroke-width="2.5"/>
+<circle cx="32" cy="42" r="8" fill="#E9B949"><animate attributeName="cy" values="20;44;40;20" keyTimes="0;.45;.7;1" dur="1.6s" repeatCount="indefinite" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1" calcMode="spline"/><animate attributeName="r" values="5;8;8;5" keyTimes="0;.45;.7;1" dur="1.6s" repeatCount="indefinite" keySplines=".45 0 .55 1;.45 0 .55 1;.45 0 .55 1" calcMode="spline"/></circle>
+</svg>
