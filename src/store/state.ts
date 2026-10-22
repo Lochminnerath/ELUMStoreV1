@@ -10,7 +10,7 @@ import { findApp, isSoon } from './catalog';
  */
 
 /** How far along each app is before the platform has answered, or when signed out. */
-const DEFAULT_STAGES: Record<string, ServiceStage> = { write: 'active', type: 'beta', make: 'beta', browse: 'beta', store: 'beta' };
+const DEFAULT_STAGES: Record<string, ServiceStage> = { write: 'active', type: 'beta', make: 'beta', browse: 'beta', store: 'beta', inquire: 'beta' };
 
 interface Mine {
   status: 'idle' | 'loading' | 'ready' | 'error';

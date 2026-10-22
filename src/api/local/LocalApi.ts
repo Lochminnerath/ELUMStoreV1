@@ -28,6 +28,7 @@ const LOCAL_STAGES: [string, ServiceStage][] = [
   ['browse', 'beta'],
   ['make', 'beta'],
   ['store', 'beta'],
+  ['inquire', 'beta'],
 ];
 
 interface Store {

@@ -263,7 +263,7 @@ export function NotifyButton({ app, size = 'md' }: { app: StoreApp; size?: 'sm' 
       onClick={() =>
         notify.ask().then(
           () => toast(`We’ll let you know when ${app.name} is ready`, { tone: 'success' }),
-          (e) => toast(errorMessage(e), { tone: 'error' }),
+          (e) => toast(errorMessage(e), { tone: 'error', cause: e, code: 'get-failed' }),
         )
       }
     >
@@ -326,7 +326,7 @@ function GetOrOpen({ app, size }: { app: StoreApp; size: 'sm' | 'md' }) {
       await mine.get(app.id);
       toast(`${app.name} is in your ELUM account`, { tone: 'success', action: { label: 'Open', onClick: () => openApp(app, 'here') } });
     } catch (e) {
-      toast(errorMessage(e), { tone: 'error' });
+      toast(errorMessage(e), { tone: 'error', cause: e, code: 'get-failed' });
     } finally {
       setBusy(false);
     }

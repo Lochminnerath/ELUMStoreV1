@@ -8,6 +8,7 @@ import { formatWhenInline } from '../lib/time';
 import { APPS, findApp, isSoon, LIVE_APPS, searchCatalog, SOON_APPS, TEMPLATE_KINDS, TEMPLATES, type TemplateKind } from './catalog';
 import { AppCard, AppMark, appStyle, GetButton, HealthPill, openApp, StageTag, StorePage, SYMBOLS, TemplateCard, useTitle } from './parts';
 import { useMyApps } from './state';
+import { SupportLinks } from '../components/SupportLink';
 import './store.css';
 
 /** /: what Store has, with the person's own apps first once they are signed in. */
@@ -159,7 +160,7 @@ export function AppPage() {
     if (isSoon(app) || app.included || mine.has(app.id) || mine.stage(app.id) === 'planned') return;
     mine.get(app.id).then(
       () => toast(`${app.name} is in your ELUM account`, { tone: 'success', action: { label: 'Open', onClick: () => openApp(app, 'here') } }),
-      (e) => toast(errorMessage(e), { tone: 'error' }),
+      (e) => toast(errorMessage(e), { tone: 'error', cause: e, code: 'get-failed' }),
     );
   }, [app, wantsGet, status, mine, setParams, toast]);
 
@@ -477,6 +478,7 @@ export function NotFound() {
         <Link to="/" className="elum-btn elum-btn--primary">
           Go to Store
         </Link>
+        <SupportLinks app="store" code="not-found" message="We could not find that page" />
       </div>
     </StorePage>
   );

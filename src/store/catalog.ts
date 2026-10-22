@@ -1,4 +1,4 @@
-import { ACCOUNT_HOME, BROWSE_URL, MAKE_URL, TYPE_URL, WRITE_URL } from '../lib/elum';
+import { ACCOUNT_HOME, BROWSE_URL, INQUIRE_URL, MAKE_URL, TYPE_URL, WRITE_URL } from '../lib/elum';
 
 /**
  * What ELUM Store offers: the ELUM apps, and templates for Make. Words and links only; whether
@@ -6,7 +6,7 @@ import { ACCOUNT_HOME, BROWSE_URL, MAKE_URL, TYPE_URL, WRITE_URL } from '../lib/
  * elum-status function. Keep every line to something the app does today.
  */
 
-export type AppId = 'write' | 'type' | 'make' | 'browse' | 'account' | 'tune';
+export type AppId = 'write' | 'type' | 'make' | 'browse' | 'inquire' | 'account' | 'tune';
 
 /**
  * Where an app is: 'live' can be got and opened; 'soon' is announced but not open yet, so it has
@@ -135,6 +135,24 @@ export const APPS: StoreApp[] = [
       { symbol: 'private', title: 'Approve new sign-ins', text: 'A new device can’t get in until you pick its number on a device you trust.' },
     ],
     news: [{ date: '20 October 2026', text: 'You can now open Browse from the apps window.' }],
+  },
+  {
+    id: 'inquire',
+    name: 'Inquire',
+    color: '#f06a5f',
+    mist: '#fff0ee',
+    kind: 'Forms',
+    tagline: 'Design forms and share them with a link.',
+    about: 'Design forms and share them with a link. Made by you. Runs without AI. Add the questions you want, choose how each one is answered, and send the link to anyone. Answers come back to you in one place.',
+    url: INQUIRE_URL,
+    host: 'inquire.elum.services',
+    highlights: [
+      { symbol: 'compose', title: 'Ask what you need', text: 'Short answers, long answers, choices, dates and more. Put the questions in the order you like.' },
+      { symbol: 'link', title: 'Share with a link', text: 'Send the link to anyone. They can fill your form without needing an account.' },
+      { symbol: 'saved', title: 'Answers in one place', text: 'Every answer comes back to you, and you can read them whenever you like.' },
+      { symbol: 'visible', title: 'Runs without AI', text: 'Nothing reads or rewrites your questions or answers. It is just your form.' },
+    ],
+    news: [{ date: '22 October 2026', text: 'Inquire is here. Design a form and share it with a link.' }],
   },
   {
     id: 'account',

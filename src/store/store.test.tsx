@@ -14,7 +14,7 @@ import { resetStoreState } from './state';
 
 describe('the catalogue', () => {
   it('lists every ELUM app once, each with something to say', () => {
-    expect(APPS.map((a) => a.id).sort()).toEqual(['account', 'browse', 'make', 'tune', 'type', 'write']);
+    expect(APPS.map((a) => a.id).sort()).toEqual(['account', 'browse', 'inquire', 'make', 'tune', 'type', 'write']);
     for (const a of APPS) {
       expect(a.highlights.length, a.id).toBeGreaterThanOrEqual(3);
       expect(a.host).toBe(`${a.id}.elum.services`);
@@ -25,7 +25,7 @@ describe('the catalogue', () => {
 
   it('keeps coming-soon apps apart from the ones you can get today', () => {
     expect(SOON_APPS.map((a) => a.id)).toEqual(['tune']);
-    expect(LIVE_APPS.map((a) => a.id).sort()).toEqual(['account', 'browse', 'make', 'type', 'write']);
+    expect(LIVE_APPS.map((a) => a.id).sort()).toEqual(['account', 'browse', 'inquire', 'make', 'type', 'write']);
     expect(LIVE_APPS.some(isSoon)).toBe(false);
     expect(LIVE_APPS.length + SOON_APPS.length).toBe(APPS.length);
     for (const a of SOON_APPS) expect(a.included || a.featured, a.id).toBeFalsy();
@@ -35,6 +35,14 @@ describe('the catalogue', () => {
     expect(searchCatalog('tune').apps.map((a) => a.id)).toEqual(['tune']);
     expect(searchCatalog('music').apps.map((a) => a.id)).toEqual(['tune']);
     expect(searchCatalog('coming soon').apps.map((a) => a.id)).toEqual(['tune']);
+  });
+
+  it('lists Inquire as an app you can get', () => {
+    const inquire = APPS.find((a) => a.id === 'inquire');
+    expect(inquire?.about).toContain('Design forms and share them with a link. Made by you. Runs without AI.');
+    expect(inquire?.host).toBe('inquire.elum.services');
+    expect(isSoon(inquire!)).toBe(false);
+    expect(searchCatalog('forms').apps.map((a) => a.id)).toEqual(['inquire']);
   });
 
   it('opens templates in Make by the ids Make knows', () => {
