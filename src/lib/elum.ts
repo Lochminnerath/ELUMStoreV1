@@ -64,6 +64,26 @@ export function signInThroughAccount(next: string) {
   return true;
 }
 
+const QUIET = 'elum.quiet-checked';
+
+/**
+ * Pages here are open to everyone, so nothing sends a signed-out visitor through ELUM Account.
+ * Once per tab, check quietly: signed in to ELUM, they come back signed in here too; if not,
+ * Account sends them straight back to this page with no sign-in screen.
+ */
+export function checkSignedInElsewhere(): boolean {
+  if (!accountsSignIn || location.pathname.startsWith('/auth/')) return false;
+  try {
+    if (sessionStorage.getItem(QUIET)) return false;
+    sessionStorage.setItem(QUIET, '1');
+  } catch {
+    return false;
+  }
+  const query = new URLSearchParams({ to: `${location.origin}/auth/handoff`, next: location.pathname + location.search, quiet: '1' });
+  window.location.replace(`${ACCOUNT_URL}/continue?${query.toString()}`);
+  return true;
+}
+
 /**
  * Opens a link in another ELUM app already signed in: Type threads (/t/<id>), the account pages.
  * Other links open as they are.

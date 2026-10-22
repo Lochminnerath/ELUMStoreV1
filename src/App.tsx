@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { AuthProvider } from './auth/AuthProvider';
+import { QuietSignIn } from './auth/QuietSignIn';
 import { RedirectIfSignedIn, RequireAuth } from './auth/guards';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ToastProvider } from './components/Toast';
@@ -16,6 +17,7 @@ export function App() {
     <ThemeProvider>
       <ToastProvider>
         <AuthProvider>
+          <QuietSignIn />
           <BrowserRouter>
             <ErrorBoundary>
               <Routes>
