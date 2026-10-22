@@ -6,7 +6,13 @@ import { ACCOUNT_HOME, BROWSE_URL, MAKE_URL, TYPE_URL, WRITE_URL } from '../lib/
  * elum-status function. Keep every line to something the app does today.
  */
 
-export type AppId = 'write' | 'type' | 'make' | 'browse' | 'account';
+export type AppId = 'write' | 'type' | 'make' | 'browse' | 'account' | 'tune';
+
+/**
+ * Where an app is: 'live' can be got and opened; 'soon' is announced but not open yet, so it has
+ * Notify me instead of Get or Open, and never counts as one of someone's apps.
+ */
+export type AppStatus = 'live' | 'soon';
 
 /** Which ELUM symbol a highlight shows (see components/icons/ElumIcons.tsx). */
 export type Symbol = 'compose' | 'download' | 'duplicate' | 'saved' | 'verified' | 'spam' | 'archive' | 'private' | 'present' | 'visible' | 'open' | 'star' | 'invite' | 'warning' | 'share' | 'link';
@@ -38,6 +44,10 @@ export interface StoreApp {
    * is added to the account with Get.
    */
   included?: boolean;
+  /** 'live' when left out. */
+  status?: AppStatus;
+  /** For apps coming soon: a sentence on what it will be, shown under Coming soon on Home. */
+  teaser?: string;
   /** Shown first on Store's home page. */
   featured?: boolean;
   highlights: Highlight[];
@@ -145,7 +155,36 @@ export const APPS: StoreApp[] = [
     ],
     news: [{ date: '20 October 2026', text: 'Your picture now has a ring showing the ELUM apps in your account.' }, { date: '20 October 2026', text: 'You can now choose Browse as the app you start in.' }],
   },
+  {
+    id: 'tune',
+    name: 'Tune',
+    color: '#48bfe3',
+    mist: '#e3f5fb',
+    kind: 'Music',
+    tagline: 'Music, made for ELUM. Coming soon.',
+    about: 'Tune is the music app we’re making for ELUM. Play what you love, keep it in playlists you put together yourself, and pick up on any device. No AI picking songs for you, and nothing about what you listen to is sold.',
+    teaser: 'Music for your ELUM account. Your playlists, your picks, no AI.',
+    url: 'https://tune.elum.services',
+    host: 'tune.elum.services',
+    status: 'soon',
+    highlights: [
+      { symbol: 'star', title: 'Your playlists', text: 'Put songs together in playlists you name and order yourself.' },
+      { symbol: 'saved', title: 'On every device', text: 'Start on your computer and keep listening on your phone.' },
+      { symbol: 'visible', title: 'Chosen by you', text: 'No AI deciding what plays next. What you hear is up to you.' },
+      { symbol: 'private', title: 'Your listening stays yours', text: 'What you play is kept in your ELUM account and never sold.' },
+    ],
+    news: [{ date: '22 October 2026', text: 'Tune is coming to ELUM. Tap Notify me and we’ll let you know when it’s ready.' }],
+  },
 ];
+
+/** The app is announced but not open yet. */
+export const isSoon = (app: Pick<StoreApp, 'status'>) => app.status === 'soon';
+
+/** Apps people can get and open today: the ones that count in Your apps and the app ring. */
+export const LIVE_APPS: StoreApp[] = APPS.filter((a) => !isSoon(a));
+
+/** Apps on their way. */
+export const SOON_APPS: StoreApp[] = APPS.filter(isSoon);
 
 export function findApp(id: string | undefined): StoreApp | null {
   return APPS.find((a) => a.id === id) ?? null;
@@ -229,7 +268,7 @@ export function searchCatalog(query: string): { apps: StoreApp[]; templates: Sto
   if (!words.length) return { apps: APPS, templates: TEMPLATES };
   const matches = (text: string) => words.every((w) => text.toLowerCase().includes(w));
   return {
-    apps: APPS.filter((a) => matches([a.name, a.kind, a.tagline, a.about, ...a.highlights.map((h) => h.title)].join(' '))),
+    apps: APPS.filter((a) => matches([a.name, a.kind, a.tagline, a.about, a.teaser ?? '', isSoon(a) ? 'coming soon' : '', ...a.highlights.map((h) => h.title)].join(' '))),
     templates: TEMPLATES.filter((t) => matches([t.name, t.description, t.kind, 'template make'].join(' '))),
   };
 }

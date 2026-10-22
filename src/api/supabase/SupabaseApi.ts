@@ -265,6 +265,16 @@ export class SupabaseApi implements StoreApi {
     return { ...toUser(data), pictureUrl: await this.pictureUrl(data.id) };
   }
 
+  async userData(): Promise<Record<string, unknown>> {
+    const { data } = await this.sb.auth.getUser();
+    return (data.user?.user_metadata as Record<string, unknown> | undefined) ?? {};
+  }
+
+  async setUserData(data: Record<string, unknown>): Promise<void> {
+    const { error } = await this.sb.auth.updateUser({ data });
+    if (error) throw new ApiError('server', error.message);
+  }
+
   private async me(): Promise<string> {
     const { data } = await this.sb.auth.getSession();
     const id = data.session?.user.id;

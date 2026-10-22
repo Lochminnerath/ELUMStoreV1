@@ -1,12 +1,15 @@
 import { ArrowLeft, ArrowRight, X } from 'lucide-react';
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { api } from '../api';
 import { useAuth } from '../auth/AuthProvider';
 import { StoreMark } from '../components/Brand';
-import { APP_NAME, RELEASES, tourSteps, unseenReleases, type Step } from './releases';
+import { APP_NAME, newerSeen, RELEASES, tourSteps, whatsNewFor, type Step } from './releases';
 import { Scene } from './scenes';
 import './WhatsNew.css';
 
 const SEEN_KEY = 'elum.store.whats-new';
+/** The same, kept on the ELUM account so it follows the person to every browser and device. */
+const ACCOUNT_KEY = 'whatsnew_store';
 const OPEN_EVENT = 'elum:whats-new';
 const ACCENT = '#e9b949';
 
@@ -18,11 +21,24 @@ function lastSeen(): string | null {
   }
 }
 
-function markSeen() {
+/** Remembers a release as seen, in this browser and on the account. */
+function markSeen(id: string | undefined = RELEASES[0]?.id, account = true) {
+  if (!id) return;
   try {
-    if (RELEASES[0]) localStorage.setItem(SEEN_KEY, RELEASES[0].id);
+    localStorage.setItem(SEEN_KEY, id);
   } catch {
-    // Without storage the tour shows again next time, which is harmless.
+    // The account copy still holds it.
+  }
+  if (account && api.setUserData) void api.setUserData({ [ACCOUNT_KEY]: id }).catch(() => undefined);
+}
+
+async function accountSeen(): Promise<string | null> {
+  if (!api.userData) return null;
+  try {
+    const value = (await api.userData())[ACCOUNT_KEY];
+    return typeof value === 'string' ? value : null;
+  } catch {
+    return null;
   }
 }
 
@@ -38,8 +54,19 @@ export function WhatsNew() {
 
   useEffect(() => {
     if (status !== 'signed-in') return;
-    const unseen = unseenReleases(RELEASES, lastSeen());
-    if (unseen.length) setSteps(tourSteps(unseen));
+    let live = true;
+    void accountSeen().then((onAccount) => {
+      if (!live) return;
+      const local = lastSeen();
+      const seen = newerSeen(RELEASES, onAccount, local);
+      const { show, record } = whatsNewFor(RELEASES, seen);
+      if (record) markSeen(record);
+      else if (seen && (seen !== onAccount || seen !== local)) markSeen(seen, seen !== onAccount);
+      if (show.length) setSteps(tourSteps(show));
+    });
+    return () => {
+      live = false;
+    };
   }, [status]);
 
   useEffect(() => {

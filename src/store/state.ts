@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
 import { api, type AppUse, type ElumStatus, type Health, type ServiceStage } from '../api';
 import { useAuth } from '../auth/AuthProvider';
+import { findApp, isSoon } from './catalog';
 
 /**
  * What Store knows beyond its catalogue: which apps the person has (from the platform), and how
@@ -27,6 +28,12 @@ const emit = (next: Mine) => {
 const subscribe = (l: () => void) => {
   listeners.add(l);
   return () => listeners.delete(l);
+};
+
+/** Coming-soon apps are never someone's, whatever the platform says. */
+const soon = (id: string) => {
+  const app = findApp(id);
+  return !!app && isSoon(app);
 };
 
 async function loadMine(userId: string) {
@@ -80,8 +87,8 @@ export function useMyApps(): MyApps {
   const ours = userId && state.userId === userId ? state : { status: 'idle' as const, apps: {} as Record<string, AppUse> };
   return {
     status: ours.status,
-    has: (id) => !!ours.apps[id]?.joined,
-    stage: (id) => ours.apps[id]?.stage ?? DEFAULT_STAGES[id] ?? 'beta',
+    has: (id) => !soon(id) && !!ours.apps[id]?.joined,
+    stage: (id) => (soon(id) ? 'planned' : (ours.apps[id]?.stage ?? DEFAULT_STAGES[id] ?? 'beta')),
     lastSeen: (id) => ours.apps[id]?.lastSeenAt ?? null,
     get,
     refresh: () => userId && void loadMine(userId),
@@ -140,4 +147,67 @@ export function useRunning(): { status: Running['status']; health(id: string): {
 export function resetStoreState() {
   mine = { status: 'idle', apps: {}, userId: null };
   running = { status: 'idle', report: null, at: 0 };
+}
+
+// ----------------------------------------------------------------- notify me
+
+/** The flag on the account, such as notify_tune. */
+export const notifyKey = (id: string) => `notify_${id}`;
+const notifyLocal = (id: string) => `elum.store.notify.${id}`;
+
+function readLocal(key: string): boolean {
+  try {
+    return localStorage.getItem(key) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function writeLocal(key: string) {
+  try {
+    localStorage.setItem(key, '1');
+  } catch {
+    // Without storage the wish lasts as long as this page, which is the best we can do signed out.
+  }
+}
+
+/**
+ * Whether they asked to hear when a coming-soon app opens. Signed in, the wish is kept on their
+ * ELUM account so it follows them; signed out, in this browser.
+ */
+export function useNotifyMe(id: string): { wanted: boolean; busy: boolean; ask(): Promise<void> } {
+  const { status } = useAuth();
+  const [wanted, setWanted] = useState(() => readLocal(notifyLocal(id)));
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    setWanted(readLocal(notifyLocal(id)));
+    if (status !== 'signed-in' || !api.userData) return;
+    let live = true;
+    api.userData().then(
+      (data) => {
+        if (live && data[notifyKey(id)] === true) {
+          writeLocal(notifyLocal(id));
+          setWanted(true);
+        }
+      },
+      () => undefined,
+    );
+    return () => {
+      live = false;
+    };
+  }, [id, status]);
+
+  const ask = useCallback(async () => {
+    setBusy(true);
+    try {
+      if (status === 'signed-in' && api.setUserData) await api.setUserData({ [notifyKey(id)]: true });
+      writeLocal(notifyLocal(id));
+      setWanted(true);
+    } finally {
+      setBusy(false);
+    }
+  }, [id, status]);
+
+  return { wanted, busy, ask };
 }

@@ -29,6 +29,17 @@ export const APP_NAME = 'Store';
 
 export const RELEASES: Release[] = [
   {
+    id: '2026-10-22',
+    date: '22 October 2026',
+    title: 'Tune is coming',
+    intro: 'Music is on its way to ELUM. Tune is the music app we’re making for you, without AI.',
+    features: [
+      { title: 'Meet Tune', text: 'Play what you love and keep it in playlists you put together yourself. Find it under Coming soon on Store’s home page.', art: 'mark' },
+      { title: 'Hear first', text: 'Tap Notify me on Tune’s page and we’ll let you know the day it opens.', art: 'check' },
+      { title: 'Smoother Store', text: 'Pages ease in, cards lift when you point at them, and your apps show a gentle placeholder while they load.', art: 'spark' },
+    ],
+  },
+  {
     id: '2026-10-20',
     date: '20 October 2026',
     title: 'ELUM Store is here',
@@ -42,11 +53,28 @@ export const RELEASES: Release[] = [
   },
 ];
 
-/** The releases someone has not seen yet, given the last one they saw. New visitors see the latest. */
-export function unseenReleases(releases: Release[], lastSeen: string | null): Release[] {
-  if (!releases.length) return [];
-  const at = lastSeen ? releases.findIndex((r) => r.id === lastSeen) : -1;
-  return at === -1 ? releases.slice(0, 1) : releases.slice(0, at);
+/** The newer of two release ids, by their place in the list (newest first). Unknown ids lose. */
+export function newerSeen(releases: Release[], a: string | null, b: string | null): string | null {
+  const at = (id: string | null) => (id ? releases.findIndex((r) => r.id === id) : -1);
+  const ia = at(a);
+  const ib = at(b);
+  if (ia === -1) return ib === -1 ? (a ?? b) : b;
+  if (ib === -1) return a;
+  return ia <= ib ? a : b;
+}
+
+/**
+ * What to show, given the last release someone saw, and what to remember as seen without showing.
+ * Someone with nothing recorded (new, or never had this kept) is shown nothing: we quietly record
+ * the latest, so the tour only ever brings news. An id we no longer know shows the latest release.
+ */
+export function whatsNewFor(releases: Release[], lastSeen: string | null): { show: Release[]; record: string | null } {
+  const latest = releases[0]?.id ?? null;
+  if (!latest) return { show: [], record: null };
+  if (!lastSeen) return { show: [], record: latest };
+  const at = releases.findIndex((r) => r.id === lastSeen);
+  if (at === 0) return { show: [], record: null };
+  return { show: at === -1 ? releases.slice(0, 1) : releases.slice(0, at), record: null };
 }
 
 export interface Step {
