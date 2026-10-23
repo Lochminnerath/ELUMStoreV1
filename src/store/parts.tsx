@@ -1,4 +1,4 @@
-import { Search } from 'lucide-react';
+import { Bell, Check, Search } from 'lucide-react';
 import { useEffect, useRef, useState, type ComponentType, type CSSProperties, type FormEvent, type ReactNode } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router';
 import { errorMessage } from '../api';
@@ -13,8 +13,8 @@ import { useToast } from '../components/Toast';
 import { UserMenu } from '../components/UserMenu';
 import { accountsSignIn, BROWSE_URL, openElsewhere, signInThroughAccount } from '../lib/elum';
 import { ThemeToggle } from '../theme/ThemeToggle';
-import { templateUrl, type StoreApp, type StoreTemplate, type Symbol } from './catalog';
-import { useMyApps, useRunning } from './state';
+import { findApp, isSoon, templateUrl, type StoreApp, type StoreTemplate, type Symbol } from './catalog';
+import { useMyApps, useNotifyMe, useRunning } from './state';
 
 export const SYMBOLS: Record<Symbol, ComponentType<IconProps>> = {
   compose: Icons.ComposeIcon,
@@ -179,10 +179,14 @@ export function StoreFooter() {
 }
 
 export function StorePage({ children, className }: { children: ReactNode; className?: string }) {
+  const { pathname } = useLocation();
   return (
     <div className="store">
       <StoreHeader />
-      <main className={`store-main${className ? ` ${className}` : ''}`}>{children}</main>
+      {/* Keyed by the address so each page eases in, even from one app's page to another's. */}
+      <main key={pathname} className={`store-main${className ? ` ${className}` : ''}`}>
+        {children}
+      </main>
       <StoreFooter />
     </div>
   );
@@ -191,7 +195,17 @@ export function StorePage({ children, className }: { children: ReactNode; classN
 /** How an app is running right now, from the status check. */
 export function HealthPill({ id }: { id: string }) {
   const running = useRunning();
+  const app = findApp(id);
+  if (app && isSoon(app)) {
+    return (
+      <span className="health health--soon">
+        <span className="health__dot" aria-hidden="true" />
+        Coming soon
+      </span>
+    );
+  }
   const h = running.health(id);
+  if (!h && running.status === 'loading') return <span className="health health--loading skeleton" aria-label="Checking how it’s running" />;
   if (!h) return null;
   const words = h.health === 'up' ? 'Working' : h.health === 'slow' ? 'Slow right now' : 'Not answering';
   return (
@@ -205,6 +219,7 @@ export function HealthPill({ id }: { id: string }) {
 export function StageTag({ app }: { app: StoreApp }) {
   const mine = useMyApps();
   const stage = mine.stage(app.id);
+  if (isSoon(app)) return <span className="stage-tag stage-tag--soon">Coming soon</span>;
   if (app.included) return <span className="stage-tag">Included</span>;
   if (stage === 'beta') return <span className="stage-tag stage-tag--beta">Beta</span>;
   if (stage === 'planned') return <span className="stage-tag stage-tag--soon">Coming soon</span>;
@@ -213,6 +228,7 @@ export function StageTag({ app }: { app: StoreApp }) {
 
 /** Opens an app signed in: in this window, or in an ELUM Browse tab. */
 export function openApp(app: StoreApp, where: 'here' | 'browse' | 'window') {
+  if (isSoon(app)) return;
   if (where === 'browse' && app.id !== 'browse') void openElsewhere(`${BROWSE_URL}/app/${app.id}`);
   else void openElsewhere(app.url, where === 'window');
 }
@@ -222,6 +238,42 @@ export function openApp(app: StoreApp, where: 'here' | 'browse' | 'window') {
  * app's page. Apps that are not open yet say so.
  */
 export function GetButton({ app, size = 'md' }: { app: StoreApp; size?: 'sm' | 'md' }) {
+  if (isSoon(app)) return <NotifyButton app={app} size={size} />;
+  return <GetOrOpen app={app} size={size} />;
+}
+
+/** For an app that is not open yet: ask to hear when it is. */
+export function NotifyButton({ app, size = 'md' }: { app: StoreApp; size?: 'sm' | 'md' }) {
+  const notify = useNotifyMe(app.id);
+  const toast = useToast();
+  const sm = size === 'sm' ? ' elum-btn--sm' : '';
+  if (notify.wanted) {
+    return (
+      <span className={`notify-done${sm ? ' notify-done--sm' : ''}`} role="status">
+        <Check size={16} aria-hidden="true" />
+        We’ll let you know
+      </span>
+    );
+  }
+  return (
+    <button
+      type="button"
+      className={`elum-btn elum-btn--primary get-btn${sm}`}
+      disabled={notify.busy}
+      onClick={() =>
+        notify.ask().then(
+          () => toast(`We’ll let you know when ${app.name} is ready`, { tone: 'success' }),
+          (e) => toast(errorMessage(e), { tone: 'error', cause: e, code: 'get-failed' }),
+        )
+      }
+    >
+      <Bell size={16} aria-hidden="true" />
+      Notify me
+    </button>
+  );
+}
+
+function GetOrOpen({ app, size }: { app: StoreApp; size: 'sm' | 'md' }) {
   const { status } = useAuth();
   const mine = useMyApps();
   const toast = useToast();
@@ -274,7 +326,7 @@ export function GetButton({ app, size = 'md' }: { app: StoreApp; size?: 'sm' | '
       await mine.get(app.id);
       toast(`${app.name} is in your ELUM account`, { tone: 'success', action: { label: 'Open', onClick: () => openApp(app, 'here') } });
     } catch (e) {
-      toast(errorMessage(e), { tone: 'error' });
+      toast(errorMessage(e), { tone: 'error', cause: e, code: 'get-failed' });
     } finally {
       setBusy(false);
     }

@@ -3,12 +3,12 @@ import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-r
 import { errorMessage } from '../api';
 import { useAuth } from '../auth/AuthProvider';
 import { StoreMark } from '../components/Brand';
-import { Loader } from '../components/Loader';
 import { useToast } from '../components/Toast';
 import { formatWhenInline } from '../lib/time';
-import { APPS, findApp, searchCatalog, TEMPLATE_KINDS, TEMPLATES, type TemplateKind } from './catalog';
+import { APPS, findApp, isSoon, LIVE_APPS, searchCatalog, SOON_APPS, TEMPLATE_KINDS, TEMPLATES, type TemplateKind } from './catalog';
 import { AppCard, AppMark, appStyle, GetButton, HealthPill, openApp, StageTag, StorePage, SYMBOLS, TemplateCard, useTitle } from './parts';
 import { useMyApps } from './state';
+import { SupportLinks } from '../components/SupportLink';
 import './store.css';
 
 /** /: what Store has, with the person's own apps first once they are signed in. */
@@ -16,21 +16,21 @@ export function HomePage() {
   useTitle('ELUM Store');
   const { status } = useAuth();
   const mine = useMyApps();
-  const featured = APPS.filter((a) => a.featured);
-  const yours = APPS.filter((a) => a.included || mine.has(a.id));
+  const featured = LIVE_APPS.filter((a) => a.featured);
+  const yours = LIVE_APPS.filter((a) => a.included || mine.has(a.id));
 
   return (
     <StorePage>
       <section className="store-hero">
         <div className="store-hero__text">
           <p className="store-eyebrow">ELUM Store</p>
-          <h1>Apps and more, for your ELUM account.</h1>
-          <p className="store-lede">Every ELUM app in one place, free with your account. Made by you. Runs without AI.</p>
+          <h1>Every ELUM app, in one place.</h1>
+          <p className="store-lede">They’re all free with your ELUM account. Made by you. Runs without AI.</p>
         </div>
         <div className="store-hero__art" aria-hidden="true">
           <span className="store-orbit">
-            {APPS.map((a, i) => (
-              <span key={a.id} className="store-orbit__disc" style={{ '--i': i, '--n': APPS.length } as CSSProperties}>
+            {LIVE_APPS.map((a, i) => (
+              <span key={a.id} className="store-orbit__disc" style={{ '--i': i, '--n': LIVE_APPS.length } as CSSProperties}>
                 <AppMark id={a.id} size={48} />
               </span>
             ))}
@@ -46,8 +46,8 @@ export function HomePage() {
           New in ELUM
         </h2>
         <ul className="feature-row">
-          {featured.map((a) => (
-            <li key={a.id} className="feature-card" style={appStyle(a)}>
+          {featured.map((a, i) => (
+            <li key={a.id} className="feature-card" style={{ ...appStyle(a), '--i': i } as CSSProperties}>
               <Link to={`/apps/${a.id}`} className="feature-card__link">
                 <AppMark id={a.id} size={72} />
                 <span className="feature-card__kind">{a.kind}</span>
@@ -85,12 +85,37 @@ export function HomePage() {
         </section>
       )}
 
+      {SOON_APPS.length > 0 && (
+        <section aria-labelledby="store-soon" className="store-section">
+          <h2 id="store-soon" className="store-h2">
+            Coming soon
+          </h2>
+          <ul className="soon-row">
+            {SOON_APPS.map((a, i) => (
+              <li key={a.id} className="soon-card" style={{ ...appStyle(a), '--i': i } as CSSProperties}>
+                <Link to={`/apps/${a.id}`} className="soon-card__link">
+                  <SoonTeaser id={a.id} size={84} />
+                  <span className="soon-card__text">
+                    <span className="feature-card__kind">{a.kind}</span>
+                    <span className="feature-card__name">ELUM {a.name}</span>
+                    <span className="feature-card__about">{a.teaser ?? a.tagline}</span>
+                  </span>
+                </Link>
+                <span className="soon-card__action">
+                  <GetButton app={a} />
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <section aria-labelledby="store-all" className="store-section">
         <h2 id="store-all" className="store-h2">
           Every ELUM app
         </h2>
         <ul className="app-grid">
-          {APPS.map((a, i) => (
+          {LIVE_APPS.map((a, i) => (
             <AppCard key={a.id} app={a} index={i} />
           ))}
         </ul>
@@ -132,23 +157,30 @@ export function AppPage() {
     if (!app || !wantsGet || status !== 'signed-in' || mine.status !== 'ready' || tried.current) return;
     tried.current = true;
     setParams({}, { replace: true });
-    if (app.included || mine.has(app.id) || mine.stage(app.id) === 'planned') return;
+    if (isSoon(app) || app.included || mine.has(app.id) || mine.stage(app.id) === 'planned') return;
     mine.get(app.id).then(
       () => toast(`${app.name} is in your ELUM account`, { tone: 'success', action: { label: 'Open', onClick: () => openApp(app, 'here') } }),
-      (e) => toast(errorMessage(e), { tone: 'error' }),
+      (e) => toast(errorMessage(e), { tone: 'error', cause: e, code: 'get-failed' }),
     );
   }, [app, wantsGet, status, mine, setParams, toast]);
 
   if (!app) return <Navigate to="/" replace />;
   const others = APPS.filter((a) => a.id !== app.id);
+  const soon = isSoon(app);
 
   return (
     <StorePage className="app-page">
       <div style={appStyle(app)}>
         <section className="app-hero">
           <span className="app-hero__art" aria-hidden="true">
-            <span className="app-hero__ring" />
-            <AppMark id={app.id} size={120} />
+            {soon ? (
+              <SoonTeaser id={app.id} size={120} />
+            ) : (
+              <>
+                <span className="app-hero__ring" />
+                <AppMark id={app.id} size={120} />
+              </>
+            )}
           </span>
           <div className="app-hero__text">
             <p className="store-eyebrow app-hero__kind">{app.kind}</p>
@@ -156,6 +188,7 @@ export function AppPage() {
               ELUM {app.name} <StageTag app={app} />
             </h1>
             <p className="store-lede">{app.tagline}</p>
+            {soon && <p className="app-hero__soon">We’re still making it. Tap Notify me and we’ll tell you the day it opens.</p>}
             <div className="app-hero__actions">
               <GetButton app={app} />
               <HealthPill id={app.id} />
@@ -174,7 +207,7 @@ export function AppPage() {
 
             <section aria-labelledby="app-highlights" className="store-section">
               <h2 id="app-highlights" className="store-h2">
-                What it does
+                {soon ? 'What it will do' : 'What it does'}
               </h2>
               <ul className="highlights">
                 {app.highlights.map((h) => {
@@ -212,10 +245,17 @@ export function AppPage() {
                 <dt>Price</dt>
                 <dd>Free with your ELUM account</dd>
               </div>
-              <div>
-                <dt>Address</dt>
-                <dd>{app.host}</dd>
-              </div>
+              {soon ? (
+                <div>
+                  <dt>When</dt>
+                  <dd>Coming soon. We’ll let you know</dd>
+                </div>
+              ) : (
+                <div>
+                  <dt>Address</dt>
+                  <dd>{app.host}</dd>
+                </div>
+              )}
               <div>
                 <dt>Works on</dt>
                 <dd>Any up-to-date browser, on your computer or your phone</dd>
@@ -266,7 +306,7 @@ export function TemplatesPage() {
       <section className="store-intro">
         <p className="store-eyebrow">Templates</p>
         <h1>Start something in Make</h1>
-        <p className="store-lede">Pick a template and Make opens with it, ready for your words and colours.</p>
+        <p className="store-lede">Pick a template and Make opens it for you, ready for your own words and colours.</p>
       </section>
       <div className="segmented store-filter" role="group" aria-label="Kind of template">
         {[{ id: 'all' as const, name: 'All' }, ...TEMPLATE_KINDS].map((k) => (
@@ -289,23 +329,32 @@ export function LibraryPage() {
   useTitle('Your apps · ELUM Store');
   const mine = useMyApps();
   const navigate = useNavigate();
-  const yours = APPS.filter((a) => a.included || mine.has(a.id));
-  const rest = APPS.filter((a) => !a.included && !mine.has(a.id));
+  const yours = LIVE_APPS.filter((a) => a.included || mine.has(a.id));
+  const rest = LIVE_APPS.filter((a) => !a.included && !mine.has(a.id));
 
   return (
     <StorePage>
       <section className="store-intro">
-        <p className="store-eyebrow">Your apps</p>
-        <h1>In your ELUM account</h1>
-        <p className="store-lede">Open any of them signed in, here or in Browse.</p>
+        <p className="store-eyebrow">Your account</p>
+        <h1>Your apps</h1>
+        <p className="store-lede">These are the apps in your ELUM account. Open any of them here or in Browse, already signed in.</p>
       </section>
       {mine.status === 'loading' && yours.length <= 1 ? (
-        <div className="store-center">
-          <Loader size={40} label="Finding your apps" />
-        </div>
+        <ul className="library" aria-busy="true" aria-label="Finding your apps">
+          {[0, 1, 2, 3].map((i) => (
+            <li key={i} className="library__row library__row--skeleton" style={{ '--i': i } as CSSProperties}>
+              <span className="skeleton skeleton--mark" />
+              <span className="library__skeleton-text">
+                <span className="skeleton skeleton--line" />
+                <span className="skeleton skeleton--line skeleton--short" />
+              </span>
+              <span className="skeleton skeleton--button" />
+            </li>
+          ))}
+        </ul>
       ) : mine.status === 'error' ? (
         <div className="empty-state">
-          <h2>Store could not find your apps</h2>
+          <h2>We couldn’t load your apps</h2>
           <p>Check your connection and try again.</p>
           <button type="button" className="elum-btn elum-btn--primary" onClick={() => mine.refresh()}>
             Try again
@@ -321,7 +370,7 @@ export function LibraryPage() {
                   <AppMark id={a.id} size={44} />
                   <span>
                     <span className="library__name">ELUM {a.name}</span>
-                    <span className="library__seen muted">{a.included ? 'Comes with your account' : seen ? `Last used ${formatWhenInline(seen)}` : 'Not opened yet'}</span>
+                    <span className="library__seen muted">{a.included ? 'Comes with every account' : seen ? `Last used ${formatWhenInline(seen)}` : 'Not opened yet'}</span>
                   </span>
                 </button>
                 <HealthPill id={a.id} />
@@ -364,7 +413,7 @@ export function SearchPage() {
         <div className="empty-state">
           <StoreMark size={64} />
           <h2>Nothing in Store matches that</h2>
-          <p>Try another word, such as slides, mail or search.</p>
+          <p>Try another word, like slides, mail or search.</p>
           <Link to="/" className="elum-btn elum-btn--primary">
             See every app
           </Link>
@@ -401,6 +450,23 @@ export function SearchPage() {
   );
 }
 
+/**
+ * A coming-soon app's mark, gently pulsing with sound-wave rings around it. Still for anyone who
+ * prefers less motion.
+ */
+function SoonTeaser({ id, size }: { id: string; size: number }) {
+  return (
+    <span className="soon-teaser" style={{ '--size': `${size}px` } as CSSProperties} aria-hidden="true">
+      <span className="soon-teaser__wave" />
+      <span className="soon-teaser__wave" />
+      <span className="soon-teaser__wave" />
+      <span className="soon-teaser__mark">
+        <AppMark id={id} size={size} />
+      </span>
+    </span>
+  );
+}
+
 export function NotFound() {
   useTitle('ELUM Store');
   return (
@@ -412,6 +478,7 @@ export function NotFound() {
         <Link to="/" className="elum-btn elum-btn--primary">
           Go to Store
         </Link>
+        <SupportLinks app="store" code="not-found" message="We could not find that page" />
       </div>
     </StorePage>
   );

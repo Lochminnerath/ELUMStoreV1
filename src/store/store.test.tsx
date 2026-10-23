@@ -6,7 +6,7 @@ import { api } from '../api';
 import { AuthProvider } from '../auth/AuthProvider';
 import { ToastProvider } from '../components/Toast';
 import { ThemeProvider } from '../theme/ThemeProvider';
-import { APPS, searchCatalog, templateUrl, TEMPLATES } from './catalog';
+import { APPS, isSoon, LIVE_APPS, searchCatalog, SOON_APPS, templateUrl, TEMPLATES } from './catalog';
 import { AppPage, SearchPage } from './pages';
 import { resetStoreState } from './state';
 
@@ -14,7 +14,7 @@ import { resetStoreState } from './state';
 
 describe('the catalogue', () => {
   it('lists every ELUM app once, each with something to say', () => {
-    expect(APPS.map((a) => a.id).sort()).toEqual(['account', 'browse', 'make', 'type', 'write']);
+    expect(APPS.map((a) => a.id).sort()).toEqual(['account', 'browse', 'inquire', 'make', 'tune', 'type', 'write']);
     for (const a of APPS) {
       expect(a.highlights.length, a.id).toBeGreaterThanOrEqual(3);
       expect(a.host).toBe(`${a.id}.elum.services`);
@@ -23,10 +23,32 @@ describe('the catalogue', () => {
     expect(APPS.filter((a) => a.included).map((a) => a.id)).toEqual(['account']);
   });
 
+  it('keeps coming-soon apps apart from the ones you can get today', () => {
+    expect(SOON_APPS.map((a) => a.id)).toEqual(['tune']);
+    expect(LIVE_APPS.map((a) => a.id).sort()).toEqual(['account', 'browse', 'inquire', 'make', 'type', 'write']);
+    expect(LIVE_APPS.some(isSoon)).toBe(false);
+    expect(LIVE_APPS.length + SOON_APPS.length).toBe(APPS.length);
+    for (const a of SOON_APPS) expect(a.included || a.featured, a.id).toBeFalsy();
+  });
+
+  it('finds Tune, which is coming soon', () => {
+    expect(searchCatalog('tune').apps.map((a) => a.id)).toEqual(['tune']);
+    expect(searchCatalog('music').apps.map((a) => a.id)).toEqual(['tune']);
+    expect(searchCatalog('coming soon').apps.map((a) => a.id)).toEqual(['tune']);
+  });
+
+  it('lists Inquire as an app you can get', () => {
+    const inquire = APPS.find((a) => a.id === 'inquire');
+    expect(inquire?.about).toContain('Design forms and share them with a link. Made by you. Runs without AI.');
+    expect(inquire?.host).toBe('inquire.elum.services');
+    expect(isSoon(inquire!)).toBe(false);
+    expect(searchCatalog('forms').apps.map((a) => a.id)).toEqual(['inquire']);
+  });
+
   it('opens templates in Make by the ids Make knows', () => {
     expect(TEMPLATES.map((t) => t.id)).toEqual(['pitch', 'lesson', 'event-poster', 'quote-post']);
-    expect(templateUrl('event-poster')).toBe('https://elummake.netlify.app/?template=event-poster');
-    expect(templateUrl('pitch', 'c1')).toBe('https://elummake.netlify.app/?template=pitch&from=c1');
+    expect(templateUrl('event-poster')).toBe('https://makebyelum.netlify.app/?template=event-poster');
+    expect(templateUrl('pitch', 'c1')).toBe('https://makebyelum.netlify.app/?template=pitch&from=c1');
   });
 
   it('finds apps and templates by any of their words', () => {
@@ -141,5 +163,29 @@ describe('search', () => {
   it('says so when nothing matches', async () => {
     await show('/search?q=zzzz');
     expect(host.textContent).toContain('Nothing in Store matches that');
+  });
+});
+
+describe('an app that is coming soon', () => {
+  it('offers Notify me instead of Get or Open, and says Coming soon', async () => {
+    localStorage.removeItem('elum.store.notify.tune');
+    await show('/apps/tune');
+    expect(host.textContent).toContain('ELUM Tune');
+    expect(host.textContent).toContain('Coming soon');
+    expect(host.textContent).not.toContain('Working');
+    expect(heroButton()?.textContent).toBe('Notify me');
+    expect(host.querySelector('.app-hero__actions')?.textContent).not.toContain('Open');
+    await act(async () => heroButton()!.click());
+    await flush();
+    expect(host.querySelector('.app-hero__actions')?.textContent).toContain('We’ll let you know');
+    expect(localStorage.getItem('elum.store.notify.tune')).toBe('1');
+  });
+
+  it('is never one of your apps, even if the platform says so', async () => {
+    await api.signUp({ name: 'Cy', email: 'cy.soon@example.org', password: 'long-password-1' });
+    await show('/apps/tune?get=1');
+    await flush();
+    expect((await api.myApps()).find((a) => a.id === 'tune')?.joined ?? false).toBe(false);
+    expect(heroButton()?.textContent).not.toBe('Open');
   });
 });

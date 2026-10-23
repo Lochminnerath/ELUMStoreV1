@@ -11,6 +11,10 @@ export interface StoreApi {
   signIn(input: SignInInput): Promise<Session>;
   signOut(): Promise<void>;
   updateProfile(input: { name: string }): Promise<User>;
+  /** Small flags kept on the account itself (auth user metadata), so they follow the person to every device. */
+  userData?(): Promise<Record<string, unknown>>;
+  /** Merges flat keys into the account's flags. */
+  setUserData?(data: Record<string, unknown>): Promise<void>;
   /** Called when the session ends somewhere else. */
   onUnauthorized(handler: () => void): () => void;
 

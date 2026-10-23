@@ -54,5 +54,5 @@ Store may be shown inside ELUM Browse's tabs, and by no other site
 Store adds nothing to the database of its own. It needs the `store` and `browse` rows in
 `elum.services` to be open (`beta` or `active`), so they can be got: ELUMAccountsV1
 `supabase/migrations/20261028000000_open_store_and_browse.sql`. Signing in to Store from the other
-apps needs `https://elumstore.netlify.app` among ELUM Account's handoff origins (its default list
+apps needs `https://storebyelum.netlify.app` among ELUM Account's handoff origins (its default list
 includes it).
