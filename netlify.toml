@@ -18,6 +18,6 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Content-Security-Policy = "frame-ancestors 'self' https://elumbrowse.netlify.app https://elum.services https://*.elum.services"
+    Content-Security-Policy = "frame-ancestors 'self' https://browsebyelum.netlify.app https://elumbrowse.netlify.app https://elum.services https://*.elum.services"
     Referrer-Policy = "strict-origin-when-cross-origin"
     X-Content-Type-Options = "nosniff"

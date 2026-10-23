@@ -47,8 +47,8 @@ describe('the catalogue', () => {
 
   it('opens templates in Make by the ids Make knows', () => {
     expect(TEMPLATES.map((t) => t.id)).toEqual(['pitch', 'lesson', 'event-poster', 'quote-post']);
-    expect(templateUrl('event-poster')).toBe('https://elummake.netlify.app/?template=event-poster');
-    expect(templateUrl('pitch', 'c1')).toBe('https://elummake.netlify.app/?template=pitch&from=c1');
+    expect(templateUrl('event-poster')).toBe('https://makebyelum.netlify.app/?template=event-poster');
+    expect(templateUrl('pitch', 'c1')).toBe('https://makebyelum.netlify.app/?template=pitch&from=c1');
   });
 
   it('finds apps and templates by any of their words', () => {
