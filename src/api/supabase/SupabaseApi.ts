@@ -1,3 +1,4 @@
+import type { ServiceState } from '../../lib/platform';
 import { createClient, type Session as AuthSession, type SupabaseClient } from '@supabase/supabase-js';
 import type { StoreApi, NotificationsApi } from '../client';
 import { ApiError } from '../errors';
@@ -397,6 +398,21 @@ export class SupabaseApi implements StoreApi {
     const { data, error } = await this.sb.functions.invoke<{ data?: ElumStatus }>('elum-status', { body: {} });
     if (error || !data?.data) throw new ApiError('server', 'The status check is not answering. Try again in a moment.');
     return data.data;
+  }
+
+  // ------------------------------------------------------------------- the ELUM platform
+
+  async elumApps(): Promise<string[] | null> {
+    const { data: session } = await this.sb.auth.getSession();
+    if (!session.session) return null;
+    const { data, error } = await this.sb.rpc('elum_me');
+    if (error || !data) return null;
+    return ((data as { services?: { id: string; joined: boolean }[] }).services ?? []).filter((s) => s.joined).map((s) => s.id);
+  }
+
+  async serviceState(service: string): Promise<ServiceState | null> {
+    const { data, error } = await this.sb.rpc('elum_service_state', { p_service: service });
+    return error || !data ? null : (data as ServiceState);
   }
 }
 

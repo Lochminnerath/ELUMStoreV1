@@ -1,4 +1,7 @@
 import { ACCOUNT_HOME, BROWSE_URL, MAKE_URL, TYPE_URL, WRITE_URL } from '../lib/elum';
+import { ELUM_APPS } from '../lib/platform';
+
+const urlOf = (id: string) => ELUM_APPS.find((a) => a.id === id)!.url;
 
 /**
  * What ELUM Store offers: the ELUM apps, and templates for Make. Words and links only; whether
@@ -6,7 +9,7 @@ import { ACCOUNT_HOME, BROWSE_URL, MAKE_URL, TYPE_URL, WRITE_URL } from '../lib/
  * elum-status function. Keep every line to something the app does today.
  */
 
-export type AppId = 'write' | 'type' | 'make' | 'browse' | 'account';
+export type AppId = 'write' | 'type' | 'make' | 'browse' | 'account' | 'inquire' | 'tune' | 'code' | 'capture';
 
 /** Which ELUM symbol a highlight shows (see components/icons/ElumIcons.tsx). */
 export type Symbol = 'compose' | 'download' | 'duplicate' | 'saved' | 'verified' | 'spam' | 'archive' | 'private' | 'present' | 'visible' | 'open' | 'star' | 'invite' | 'warning' | 'share' | 'link';
@@ -46,6 +49,83 @@ export interface StoreApp {
 }
 
 export const APPS: StoreApp[] = [
+  {
+    id: 'capture',
+    name: 'Capture',
+    color: '#5ec46f',
+    mist: '#e8f7ea',
+    kind: 'Photos and videos',
+    tagline: 'Your photos and videos, kept, edited and shared.',
+    about: 'Keep your photos, videos and almost any other file in one library, sorted by the day they were taken. Edit without losing the original, gather albums, and share them with people or by link.',
+    url: urlOf('capture'),
+    host: 'capture.elum.services',
+    featured: true,
+    highlights: [
+      { symbol: 'saved', title: 'Everything in one library', text: 'Photos from any camera (HEIC and raw too), videos and files, sorted by day.' },
+      { symbol: 'compose', title: 'Edit, keep the original', text: 'Light, colour, crop and filters, and Revert brings the original back any time.' },
+      { symbol: 'share', title: 'Albums to share', text: 'Share an album with people, let them add theirs, or send a link.' },
+      { symbol: 'private', title: 'Private by default', text: 'Your files are yours. Links open only what you share, and stop when you say.' },
+    ],
+    news: [
+      { date: '2 November 2026', text: 'Add almost any file, not only photos and videos.' },
+      { date: '2 November 2026', text: 'Big videos upload in pieces, so they arrive whole.' },
+    ],
+  },
+  {
+    id: 'code',
+    name: 'Code',
+    color: '#d27fe0',
+    mist: '#f8ecfa',
+    kind: 'Coding',
+    tagline: 'Write and run code in any language.',
+    about: 'Projects in every popular language, with an editor that colours your code and runs it right in the browser. Share a project, look back through its versions, and keep it in step with GitHub.',
+    url: urlOf('code'),
+    host: 'code.elum.services',
+    featured: true,
+    highlights: [
+      { symbol: 'compose', title: 'Every language', text: 'JavaScript, Python, C, Rust, Go, SQL and dozens more, with colours for each.' },
+      { symbol: 'open', title: 'Run it now', text: 'Press Run and see the output, without installing anything.' },
+      { symbol: 'duplicate', title: 'Versions', text: 'Every save is a version you can look at and bring back.' },
+      { symbol: 'share', title: 'Share a project', text: 'Invite people to edit, or share a link to read it.' },
+    ],
+    news: [{ date: '2 November 2026', text: 'Code is open. Start a project in any language.' }],
+  },
+  {
+    id: 'tune',
+    name: 'Tune',
+    color: '#48bfe3',
+    mist: '#e6f6fb',
+    kind: 'Music',
+    tagline: 'Music, picked by people.',
+    about: 'Albums and songs from artists across genres, put together by people rather than an algorithm. Save what you love, make playlists, and send an album to a friend.',
+    url: urlOf('tune'),
+    host: 'tune.elum.services',
+    highlights: [
+      { symbol: 'star', title: 'Picked by people', text: 'Genre pages and features chosen by curators, not by AI.' },
+      { symbol: 'saved', title: 'Your library', text: 'Save albums and songs, and make playlists of your own.' },
+      { symbol: 'share', title: 'Share music', text: 'Send an album or a playlist to someone with an ELUM account.' },
+      { symbol: 'open', title: 'Plays smoothly', text: 'Crossfade between songs, and playback that carries on through a weak connection.' },
+    ],
+    news: [{ date: '30 October 2026', text: 'Crossfade between songs.' }],
+  },
+  {
+    id: 'inquire',
+    name: 'Inquire',
+    color: '#f06a5f',
+    mist: '#fdeceb',
+    kind: 'Forms',
+    tagline: 'Forms and surveys anyone can answer.',
+    about: 'Build forms, surveys and sign-up sheets, share them by link, and read every answer as it arrives. Questions can show or hide depending on earlier answers.',
+    url: urlOf('inquire'),
+    host: 'inquire.elum.services',
+    highlights: [
+      { symbol: 'compose', title: 'Every kind of question', text: 'Short and long answers, choices, scales, dates and more.' },
+      { symbol: 'link', title: 'Share by link', text: 'Anyone with the link can answer, with or without an ELUM account.' },
+      { symbol: 'visible', title: 'Answers as they come', text: 'Read each answer, or see them all summed up.' },
+      { symbol: 'invite', title: 'Work together', text: 'Share a form with people who help you build it.' },
+    ],
+    news: [{ date: '25 October 2026', text: 'Questions can follow earlier answers.' }],
+  },
   {
     id: 'make',
     name: 'Make',
