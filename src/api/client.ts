@@ -1,3 +1,4 @@
+import type { ServiceState } from '../lib/platform';
 import type { AppNotification, AppUse, ElumStatus, Session, SignInInput, SignUpInput, User } from './types';
 
 /** The contract every Store backend fulfils: Supabase in production, the browser when unconnected. */
@@ -29,6 +30,11 @@ export interface StoreApi {
   getApp(id: string): Promise<void>;
   /** How every ELUM service is doing, or null without the ELUM platform. */
   status(): Promise<ElumStatus | null>;
+
+  /** The ELUM apps this account has added (in ELUM Store). Null when signed out, or unknown. */
+  elumApps?(): Promise<string[] | null>;
+  /** This app as the ELUM Console set it: mode, message, open incidents and flags. */
+  serviceState?(service: string): Promise<ServiceState | null>;
 }
 
 export interface NotificationsApi {

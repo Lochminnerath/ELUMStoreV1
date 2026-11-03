@@ -14,7 +14,7 @@ import { resetStoreState } from './state';
 
 describe('the catalogue', () => {
   it('lists every ELUM app once, each with something to say', () => {
-    expect(APPS.map((a) => a.id).sort()).toEqual(['account', 'browse', 'make', 'type', 'write']);
+    expect(APPS.map((a) => a.id).sort()).toEqual(['account', 'browse', 'capture', 'code', 'inquire', 'make', 'tune', 'type', 'write']);
     for (const a of APPS) {
       expect(a.highlights.length, a.id).toBeGreaterThanOrEqual(3);
       expect(a.host).toBe(`${a.id}.elum.services`);
