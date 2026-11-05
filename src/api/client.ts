@@ -10,6 +10,8 @@ export interface StoreApi {
   restoreSession(): Promise<Session | null>;
   signUp(input: SignUpInput): Promise<Session>;
   signIn(input: SignInInput): Promise<Session>;
+  /** Signs in with a passkey. Only on ELUM's own domain (elum.space), where passkeys work. */
+  signInWithPasskey?(): Promise<Session>;
   signOut(): Promise<void>;
   updateProfile(input: { name: string }): Promise<User>;
   /** Called when the session ends somewhere else. */
