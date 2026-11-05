@@ -17,7 +17,7 @@ describe('the catalogue', () => {
     expect(APPS.map((a) => a.id).sort()).toEqual(['account', 'browse', 'capture', 'code', 'inquire', 'make', 'tune', 'type', 'write']);
     for (const a of APPS) {
       expect(a.highlights.length, a.id).toBeGreaterThanOrEqual(3);
-      expect(a.host).toBe(`${a.id}.elum.services`);
+      expect(a.host).toBe(`${a.id}.elum.space`);
       expect(a.url).toMatch(/^https:\/\//);
     }
     expect(APPS.filter((a) => a.included).map((a) => a.id)).toEqual(['account']);

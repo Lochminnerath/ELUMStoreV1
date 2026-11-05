@@ -15,7 +15,7 @@ Browsing Store needs no account; getting an app does.
   function (the call every ELUM app makes when someone signs in to it). Signed out, Get goes
   through sign-in and finishes on the app's page (`/apps/make?get=1`).
 - **Open** opens the app signed in (ELUM Account hands the sign-in over), in this window, in a new
-  window, or in an ELUM Browse tab under its elum.services address.
+  window, or in an ELUM Browse tab under its elum.space address.
 - **Templates for Make** (`/templates`): "Use in Make" opens Make with `?template=<id>`, and Make
   starts a new design from that template.
 - **Your apps** (`/library`): the apps in your account and when you last used each.
@@ -52,7 +52,7 @@ Store may be shown inside ELUM Browse's tabs, and by no other site
 ## The platform
 
 Store adds nothing to the database of its own. It needs the `store` and `browse` rows in
-`elum.services` to be open (`beta` or `active`), so they can be got: ELUMAccountsV1
+`elum.space` to be open (`beta` or `active`), so they can be got: ELUMAccountsV1
 `supabase/migrations/20261028000000_open_store_and_browse.sql`. Signing in to Store from the other
 apps needs `https://elumstore.netlify.app` among ELUM Account's handoff origins (its default list
 includes it).

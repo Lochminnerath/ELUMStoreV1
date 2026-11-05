@@ -34,7 +34,7 @@ export interface StoreApp {
   about: string;
   /** Where it lives. */
   url: string;
-  /** Its address on elum.services. */
+  /** Its address on elum.space. */
   host: string;
   /**
    * Comes with every ELUM account, so there is nothing to get (ELUM Account). Everything else
@@ -58,7 +58,7 @@ export const APPS: StoreApp[] = [
     tagline: 'Your photos and videos, kept, edited and shared.',
     about: 'Keep your photos, videos and almost any other file in one library, sorted by the day they were taken. Edit without losing the original, gather albums, and share them with people or by link.',
     url: urlOf('capture'),
-    host: 'capture.elum.services',
+    host: 'capture.elum.space',
     featured: true,
     highlights: [
       { symbol: 'saved', title: 'Everything in one library', text: 'Photos from any camera (HEIC and raw too), videos and files, sorted by day.' },
@@ -80,7 +80,7 @@ export const APPS: StoreApp[] = [
     tagline: 'Write and run code in any language.',
     about: 'Projects in every popular language, with an editor that colours your code and runs it right in the browser. Share a project, look back through its versions, and keep it in step with GitHub.',
     url: urlOf('code'),
-    host: 'code.elum.services',
+    host: 'code.elum.space',
     featured: true,
     highlights: [
       { symbol: 'compose', title: 'Every language', text: 'JavaScript, Python, C, Rust, Go, SQL and dozens more, with colours for each.' },
@@ -99,7 +99,7 @@ export const APPS: StoreApp[] = [
     tagline: 'Music, picked by people.',
     about: 'Albums and songs from artists across genres, put together by people rather than an algorithm. Save what you love, make playlists, and send an album to a friend.',
     url: urlOf('tune'),
-    host: 'tune.elum.services',
+    host: 'tune.elum.space',
     highlights: [
       { symbol: 'star', title: 'Picked by people', text: 'Genre pages and features chosen by curators, not by AI.' },
       { symbol: 'saved', title: 'Your library', text: 'Save albums and songs, and make playlists of your own.' },
@@ -117,7 +117,7 @@ export const APPS: StoreApp[] = [
     tagline: 'Forms and surveys anyone can answer.',
     about: 'Build forms, surveys and sign-up sheets, share them by link, and read every answer as it arrives. Questions can show or hide depending on earlier answers.',
     url: urlOf('inquire'),
-    host: 'inquire.elum.services',
+    host: 'inquire.elum.space',
     highlights: [
       { symbol: 'compose', title: 'Every kind of question', text: 'Short and long answers, choices, scales, dates and more.' },
       { symbol: 'link', title: 'Share by link', text: 'Anyone with the link can answer, with or without an ELUM account.' },
@@ -135,7 +135,7 @@ export const APPS: StoreApp[] = [
     tagline: 'Slides, posters and posts on a real canvas.',
     about: 'Design presentations, posters, flyers and social posts on a canvas that snaps things into line. Present full screen, share with anyone who has an ELUM account, or download PNG and PDF.',
     url: MAKE_URL,
-    host: 'make.elum.services',
+    host: 'make.elum.space',
     featured: true,
     highlights: [
       { symbol: 'present', title: 'Present', text: 'Fills the screen until you press Esc. Arrows, space or a click move through your pages.' },
@@ -157,7 +157,7 @@ export const APPS: StoreApp[] = [
     tagline: 'The web, with Google results and no AI answers.',
     about: 'Search the web with results from Google, without AI Overviews or Gemini. Pages open in Browse tabs, with tab groups you can name, colour and mark with a symbol, and every ELUM app a word away.',
     url: BROWSE_URL,
-    host: 'browse.elum.services',
+    host: 'browse.elum.space',
     featured: true,
     highlights: [
       { symbol: 'visible', title: 'Just the web', text: 'Results from Google, without AI Overviews or Gemini.' },
@@ -179,7 +179,7 @@ export const APPS: StoreApp[] = [
     tagline: 'Documents that save as you type.',
     about: 'Write documents that save as you type and look the same on every device. Shape them with styles, lists, pictures and citations, then share them and talk it over in comments.',
     url: WRITE_URL,
-    host: 'write.elum.services',
+    host: 'write.elum.space',
     highlights: [
       { symbol: 'compose', title: 'Styles and citations', text: 'Headings, quotes, lists and checklists, and citations Write keeps in step.' },
       { symbol: 'share', title: 'Share and comment', text: 'Share with anyone who has an ELUM account and reply to comments in threads.' },
@@ -197,7 +197,7 @@ export const APPS: StoreApp[] = [
     tagline: 'Messages and email in one calm inbox.',
     about: 'Messages and email together, with your own ELUM Type address. Read whole conversations in one place, keep spam out, and approve new sign-ins from a device you trust.',
     url: TYPE_URL,
-    host: 'type.elum.services',
+    host: 'type.elum.space',
     highlights: [
       { symbol: 'verified', title: 'From ELUM', text: 'Messages from other ELUM accounts carry the verified symbol.' },
       { symbol: 'spam', title: 'Spam stays out', text: 'Report spam and it leaves your inbox. Not spam brings it back.' },
@@ -215,7 +215,7 @@ export const APPS: StoreApp[] = [
     tagline: 'One account for every ELUM app.',
     about: 'Your name and picture, the people you know, and how you sign in, in one place for every ELUM app. Every ELUM account comes with it.',
     url: ACCOUNT_HOME,
-    host: 'account.elum.services',
+    host: 'account.elum.space',
     included: true,
     highlights: [
       { symbol: 'private', title: 'Security', text: 'Approve new sign-ins and sign out devices you no longer use.' },

@@ -17,7 +17,7 @@ import { PENDING_ROLE, tokenRole } from '../../security/approvals';
 
 const PROFILE = 'id, name, email, color, account_type, created_at';
 /** Where Type addresses live when the database cannot say. */
-const DEFAULT_TYPE_DOMAIN = 'type.elum.services';
+const DEFAULT_TYPE_DOMAIN = 'elum.space';
 
 interface ProfileRow extends PublicUser {
   account_type: 'type' | 'external' | null;
@@ -94,7 +94,7 @@ export class SupabaseApi implements StoreApi {
   private domainLookup: Promise<string> | null = null;
 
   constructor(url: string, anonKey: string, client?: SupabaseClient) {
-    // With VITE_ELUM_COOKIE_DOMAIN set (such as .elum.services), the session lives in cookies on
+    // With VITE_ELUM_COOKIE_DOMAIN set (such as .elum.space), the session lives in cookies on
     // that domain, so one sign-in covers every ELUM service. Otherwise it stays in this site's storage.
     const cookieDomain = typeof location === 'undefined' ? null : usableCookieDomain(import.meta.env.VITE_ELUM_COOKIE_DOMAIN, location.hostname);
     this.sb =
