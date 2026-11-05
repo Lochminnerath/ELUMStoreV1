@@ -2,6 +2,7 @@ import { CircleCheck, X } from 'lucide-react';
 import { WarningIcon } from './icons/ElumIcons';
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import './Toast.css';
+import { friendly } from '../lib/friendly';
 
 type Tone = 'info' | 'success' | 'error';
 
@@ -25,6 +26,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   const show = useCallback<ShowToast>(
     (message, { tone = 'info', action, duration = 4500 } = {}) => {
       const id = nextId.current++;
+      // Errors never show the inside of ELUM, whatever the caller passed.
+      if (tone === 'error') message = friendly(message);
       setToasts((list) => [...list.slice(-2), { id, message, tone, action }]);
       window.setTimeout(() => dismiss(id), duration);
     },

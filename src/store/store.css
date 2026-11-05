@@ -350,7 +350,8 @@
 }
 .app-card__kind {
   font-size: 13px;
-  color: color-mix(in srgb, var(--app) 65%, var(--ink));
+  /* Enough ink in the app colour to keep 4.5:1 on white and on dark. */
+  color: color-mix(in srgb, var(--app) 55%, var(--ink));
   font-weight: 600;
 }
 .app-card__tagline {
