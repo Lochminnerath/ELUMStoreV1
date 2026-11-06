@@ -23,16 +23,21 @@ describe('the catalogue', () => {
     expect(APPS.filter((a) => a.included).map((a) => a.id)).toEqual(['account']);
   });
 
-  it('opens templates in Make by the ids Make knows', () => {
-    expect(TEMPLATES.map((t) => t.id)).toEqual(['pitch', 'lesson', 'event-poster', 'quote-post']);
-    expect(templateUrl('event-poster')).toBe('https://elummake.netlify.app/?template=event-poster');
-    expect(templateUrl('pitch', 'c1')).toBe('https://elummake.netlify.app/?template=pitch&from=c1');
+  it('opens templates in Make and Write by the ids each app knows', () => {
+    // Every template in Make (ELUMMakeV1 src/editor/templates.ts), and no others.
+    expect(TEMPLATES.filter((t) => t.app === 'make').map((t) => t.id).sort()).toEqual(['annual-report', 'birthday', 'conference-poster', 'event-poster', 'header', 'invitation', 'invoice', 'lesson', 'menu', 'minimal-deck', 'newsletter', 'pitch', 'product-launch', 'proposal', 'quote-post', 'recipe', 'resume', 'thumbnail', 'workshop', 'workshop-flyer']);
+    // Every template in Write (ELUMWritev1 src/lib/templates.ts).
+    expect(TEMPLATES.filter((t) => t.app === 'write').map((t) => t.id).sort()).toEqual(['agenda', 'brief', 'cover-letter', 'essay', 'invoice', 'lesson', 'letter', 'newsletter', 'notes', 'recipe', 'resume', 'thanks', 'trip', 'week']);
+    expect(templateUrl({ id: 'event-poster', app: 'make' })).toBe('https://elummake.netlify.app/?template=event-poster');
+    expect(templateUrl({ id: 'pitch', app: 'make' }, 'c1')).toBe('https://elummake.netlify.app/?template=pitch&from=c1');
+    expect(templateUrl({ id: 'letter', app: 'write' }, 'c2')).toMatch(/\/\?template=letter&from=c2$/);
   });
 
   it('finds apps and templates by any of their words', () => {
     expect(searchCatalog('slides').apps.map((a) => a.id)).toEqual(['make']);
     expect(searchCatalog('mail').apps.map((a) => a.id)).toEqual(['type']);
-    expect(searchCatalog('poster').templates.map((t) => t.id)).toEqual(['event-poster']);
+    expect(searchCatalog('recipe').templates.map((t) => `${t.app}:${t.id}`)).toEqual(['make:recipe', 'write:recipe']);
+    expect(searchCatalog('letter write').templates.every((t) => t.app === 'write')).toBe(true);
     expect(searchCatalog('nothing like this')).toEqual({ apps: [], templates: [] });
     expect(searchCatalog('  ').apps).toHaveLength(APPS.length);
   });

@@ -21,3 +21,10 @@
     Content-Security-Policy = "frame-ancestors 'self' https://elumbrowse.netlify.app https://elum.space https://*.elum.space"
     Referrer-Policy = "strict-origin-when-cross-origin"
     X-Content-Type-Options = "nosniff"
+
+# What Store's home page says and shows, as built in: the ELUM Console reads it to edit Store.
+[[headers]]
+  for = "/content.json"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Cache-Control = "public, max-age=60"
