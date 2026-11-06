@@ -13,7 +13,8 @@
   --make: #ec7fa9;
   --make-deep: #a8335f;
   --store: #e9b949;
-  --store-deep: #7f5c00;
+  --store-deep: #9a6e00;
+  --store-bright: #b88700;
   --surface: #ffffff;
   --surface-glass: #f4f5f8;
   --ink: #141a2e;
@@ -40,6 +41,7 @@
   --make-deep: #f6a9c6;
   --store: #e9b949;
   --store-deep: #f5d58a;
+  --store-bright: #f2c75e;
   --surface: #0e1220;
   --surface-glass: #171c2e;
   --ink: #eef1fa;

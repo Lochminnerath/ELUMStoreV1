@@ -24,7 +24,8 @@ describe('the catalogue', () => {
   });
 
   it('opens templates in Make by the ids Make knows', () => {
-    expect(TEMPLATES.map((t) => t.id)).toEqual(['pitch', 'lesson', 'event-poster', 'quote-post']);
+    // Every template in Make (ELUMMakeV1 src/editor/templates.ts), and no others.
+    expect(TEMPLATES.map((t) => t.id).sort()).toEqual(['annual-report', 'birthday', 'conference-poster', 'event-poster', 'header', 'invitation', 'invoice', 'lesson', 'menu', 'minimal-deck', 'newsletter', 'pitch', 'product-launch', 'proposal', 'quote-post', 'recipe', 'resume', 'thumbnail', 'workshop', 'workshop-flyer']);
     expect(templateUrl('event-poster')).toBe('https://elummake.netlify.app/?template=event-poster');
     expect(templateUrl('pitch', 'c1')).toBe('https://elummake.netlify.app/?template=pitch&from=c1');
   });
@@ -32,7 +33,7 @@ describe('the catalogue', () => {
   it('finds apps and templates by any of their words', () => {
     expect(searchCatalog('slides').apps.map((a) => a.id)).toEqual(['make']);
     expect(searchCatalog('mail').apps.map((a) => a.id)).toEqual(['type']);
-    expect(searchCatalog('poster').templates.map((t) => t.id)).toEqual(['event-poster']);
+    expect(searchCatalog('recipe').templates.map((t) => t.id)).toEqual(['recipe']);
     expect(searchCatalog('nothing like this')).toEqual({ apps: [], templates: [] });
     expect(searchCatalog('  ').apps).toHaveLength(APPS.length);
   });

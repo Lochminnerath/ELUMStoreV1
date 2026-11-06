@@ -30,15 +30,6 @@ export interface LatestCard {
   image: string;
 }
 
-export interface PickCard {
-  id: string;
-  app: AppId;
-  eyebrow: string;
-  title: string;
-  text: string;
-  note: string;
-}
-
 export const DEFAULTS = {
   'store.hero': {
     title: 'Store',
@@ -150,47 +141,13 @@ export const DEFAULTS = {
   },
   'store.picks': {
     title: 'Make it yours.',
-    subtitle: 'Start from a template and keep it your own.',
+    subtitle: 'Every template in Make, ready for your words.',
     promo: {
       eyebrow: 'Free templates',
       title: 'Your idea, with a head start.',
       text: 'Pick a template in Make, change every word and colour, and it is yours.',
       color: '#f06a5f',
     },
-    cards: [
-      {
-        id: 'make-templates',
-        app: 'make',
-        eyebrow: 'Templates',
-        title: 'Slides, posters and posts',
-        text: 'Pitch decks, lessons, event posters and more, ready to change.',
-        note: 'Opens in ELUM Make',
-      },
-      {
-        id: 'write-templates',
-        app: 'write',
-        eyebrow: 'Templates',
-        title: 'Letters, notes and plans',
-        text: 'Meeting notes, a letter, a project brief or a resume to start from.',
-        note: 'Opens in ELUM Write',
-      },
-      {
-        id: 'inquire-templates',
-        app: 'inquire',
-        eyebrow: 'Templates',
-        title: 'Forms that ask clearly',
-        text: 'Sign-ups, feedback and event forms with the right questions in place.',
-        note: 'Opens in ELUM Inquire',
-      },
-      {
-        id: 'tune-playlists',
-        app: 'tune',
-        eyebrow: 'Playlists',
-        title: 'Playlists by genre',
-        text: 'Hand-picked playlists for each genre, put together by people.',
-        note: 'Opens in ELUM Tune',
-      },
-    ] as PickCard[],
   },
 };
 
@@ -202,5 +159,5 @@ export const SECTIONS: { key: SectionKey; label: string; note: string; path: str
   { key: 'store.hero', label: 'Store: heading', note: 'The big Store title, the headline beside it and its links.', path: '/' },
   { key: 'store.row', label: 'Store: app circles', note: 'Which apps sit to the left and right of Store, in order. Keep the same number on each side.', path: '/' },
   { key: 'store.latest', label: 'Store: the latest', note: 'The large colourful cards: words, colours and pictures for each app.', path: '/' },
-  { key: 'store.picks', label: 'Store: make it yours', note: 'The red card and the template cards after it.', path: '/' },
+  { key: 'store.picks', label: 'Store: make it yours', note: 'The red card before the templates. The templates themselves come from Make.', path: '/' },
 ];

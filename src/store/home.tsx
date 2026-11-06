@@ -3,63 +3,12 @@ import { useCallback, useEffect, useRef, useState, type CSSProperties, type Reac
 import { Link } from 'react-router';
 import { StoreMark } from '../components/Brand';
 import { safeColor, safeImage, safeLink, useStoreContent } from '../content/content';
-import type { AppId, LatestCard, PickCard } from '../content/defaults';
-import { APPS, findApp } from './catalog';
-import { AppMark, SYMBOLS } from './parts';
+import type { AppId, LatestCard } from '../content/defaults';
+import { openElsewhere } from '../lib/elum';
+import { findApp, TEMPLATE_KINDS, TEMPLATES, templateUrl, type StoreTemplate } from './catalog';
+import { AppMark, TemplateCover } from './parts';
 
-const COLOUR: Record<string, { color: string; mist: string }> = Object.fromEntries(APPS.map((a) => [a.id, { color: a.color, mist: a.mist }]));
-const nameOf = (id: string) => findApp(id)?.name ?? id;
-
-/**
- * The Store bloom: eight circles, one in each app's colour and each with its own pattern, around
- * the Store mark. Drawn here, so it is sharp at any size and needs no picture.
- */
-function StoreBloom() {
-  const ids: AppId[] = ['write', 'type', 'make', 'browse', 'inquire', 'tune', 'code', 'capture'];
-  const r = 84;
-  return (
-    <svg className="store-bloom" viewBox="-150 -150 300 300" role="img" aria-label="ELUM Store, with every ELUM app around it">
-      <defs>
-        {ids.map((id, i) => {
-          const c = COLOUR[id]?.color ?? '#7093f8';
-          const kind = i % 4;
-          return (
-            <pattern key={id} id={`bloom-${id}`} width="12" height="12" patternUnits="userSpaceOnUse" patternTransform={`rotate(${i * 22})`}>
-              <rect width="12" height="12" fill={c} />
-              {kind === 0 && <rect width="5" height="12" fill="#ffffff" opacity="0.28" />}
-              {kind === 1 && <circle cx="6" cy="6" r="2.6" fill="#ffffff" opacity="0.4" />}
-              {kind === 2 && <path d="M0 12 12 0" stroke="#ffffff" strokeWidth="3" opacity="0.32" />}
-              {kind === 3 && <circle cx="6" cy="6" r="4.5" fill="none" stroke="#ffffff" strokeWidth="1.6" opacity="0.4" />}
-            </pattern>
-          );
-        })}
-        <radialGradient id="bloom-glow">
-          <stop offset="0" stopColor="#ffffff" stopOpacity="0.95" />
-          <stop offset="1" stopColor="#ffffff" stopOpacity="0" />
-        </radialGradient>
-      </defs>
-      <circle r="140" fill="url(#bloom-glow)" />
-      {ids.map((id, i) => {
-        const a = (i / ids.length) * Math.PI * 2 - Math.PI / 2;
-        return (
-          <circle
-            key={id}
-            className="store-bloom__petal"
-            style={{ '--i': i } as CSSProperties}
-            cx={Math.cos(a) * r}
-            cy={Math.sin(a) * r}
-            r={i % 2 ? 40 : 46}
-            fill={`url(#bloom-${id})`}
-          />
-        );
-      })}
-      <circle r="58" fill="var(--surface)" />
-      <circle r="58" fill="none" stroke="var(--store)" strokeWidth="3" />
-    </svg>
-  );
-}
-
-/** The top of Store: the name, the bloom in the middle, and a headline with links. */
+/** The top of Store: the name, the Store logo in the middle, and a headline with links. */
 export function StoreHeading() {
   const c = useStoreContent('store.hero');
   return (
@@ -68,10 +17,7 @@ export function StoreHeading() {
         {c.title}
       </h1>
       <div className="sh-head__art">
-        <StoreBloom />
-        <span className="sh-head__mark">
-          <StoreMark size={64} />
-        </span>
+        <StoreMark size={200} />
       </div>
       <div className="sh-head__side">
         <p className="sh-head__headline">{c.headline}</p>
@@ -93,11 +39,13 @@ export function StoreHeading() {
 }
 
 /** One app as a circle with its name under it. */
-function AppCircle({ id }: { id: AppId }) {
+function AppCircle({ id, from }: { id: AppId; from: number }) {
   const app = findApp(id);
   if (!app) return null;
+  // `from` is how many places it slides out from Store: positive on the left, negative on the right.
+  const style = { '--app': app.color, '--app-mist': app.mist, '--from': from, '--step': Math.abs(from) } as CSSProperties;
   return (
-    <li className="sh-circle" style={{ '--app': app.color, '--app-mist': app.mist } as CSSProperties}>
+    <li className="sh-circle" style={style}>
       <Link to={`/apps/${id}`} className="sh-circle__link">
         <span className="sh-circle__disc">
           <AppMark id={id} size={56} light />
@@ -108,7 +56,7 @@ function AppCircle({ id }: { id: AppId }) {
   );
 }
 
-/** Every app as a circle, the same number on each side of Store. */
+/** Every app as a circle, the same number on each side of Store, sliding out from it along one line. */
 export function AppCircles() {
   const c = useStoreContent('store.row');
   const known = (list: string[]) => list.filter((id): id is AppId => !!findApp(id) && id !== 'account');
@@ -120,9 +68,9 @@ export function AppCircles() {
   right = right.slice(0, n);
   return (
     <nav className="sh-row" aria-label="ELUM apps">
-      <ul className="sh-row__list">
-        {left.map((id) => (
-          <AppCircle key={id} id={id} />
+      <ul className="sh-row__list" style={{ '--count': n * 2 + 1 } as CSSProperties}>
+        {left.map((id, i) => (
+          <AppCircle key={id} id={id} from={n - i} />
         ))}
         <li className="sh-circle sh-circle--store">
           <a href="#store-all" className="sh-circle__link" aria-label={`${c.centre}: every app in ELUM Store`}>
@@ -132,8 +80,8 @@ export function AppCircles() {
             <span className="sh-circle__name">{c.centre}</span>
           </a>
         </li>
-        {right.map((id) => (
-          <AppCircle key={id} id={id} />
+        {right.map((id, i) => (
+          <AppCircle key={id} id={id} from={-(i + 1)} />
         ))}
       </ul>
     </nav>
@@ -236,34 +184,41 @@ export function LatestShelf() {
   );
 }
 
-const PROMO_SYMBOLS = ['compose', 'star', 'share', 'present', 'saved', 'invite', 'visible', 'link', 'download'] as const;
+const KIND_NAME = Object.fromEntries(TEMPLATE_KINDS.map((k) => [k.id, k.name])) as Record<string, string>;
 
-function PickItem({ card }: { card: PickCard }) {
-  const app = findApp(card.app);
-  if (!app) return null;
-  const to = card.app === 'make' ? '/templates' : `/apps/${app.id}`;
+/** One template from Make, at its own shape. It opens Make with the template ready to edit. */
+function TemplateItem({ template }: { template: StoreTemplate }) {
   return (
-    <li className="sh-pick" style={{ '--app': app.color, '--app-mist': app.mist } as CSSProperties}>
-      <Link to={to} className="sh-pick__link">
-        <span className="sh-pick__art" aria-hidden="true">
-          <span className="sh-pick__halo" />
-          <AppMark id={app.id} size={88} light />
+    <li className="sh-tpl">
+      <a
+        href={templateUrl(template.id)}
+        className="sh-tpl__link"
+        onClick={(e) => {
+          e.preventDefault();
+          void openElsewhere(templateUrl(template.id, crypto.randomUUID().slice(0, 8)));
+        }}
+      >
+        <span className="sh-tpl__frame">
+          <TemplateCover template={template} />
         </span>
-        {card.eyebrow && <span className="sh-pick__eyebrow">{card.eyebrow}</span>}
-        <span className="sh-pick__title">{card.title}</span>
-        {card.text && <span className="sh-pick__body">{card.text}</span>}
-        <span className="sh-pick__foot">
-          <span className="sh-pick__note">{card.note || `Opens in ELUM ${nameOf(app.id)}`}</span>
+        <span className="sh-tpl__kind">{KIND_NAME[template.kind]}</span>
+        <span className="sh-tpl__name">{template.name}</span>
+        <span className="sh-tpl__body">{template.description}</span>
+        <span className="sh-tpl__foot">
+          <span className="sh-tpl__note">Use in ELUM Make</span>
           <span className="sh-go" aria-hidden="true">
             <ChevronRight size={18} strokeWidth={2.25} />
           </span>
         </span>
-      </Link>
+      </a>
     </li>
   );
 }
 
-/** "Make it yours.": a bold card of ELUM symbols in circles, then a card for each kind of template. */
+/** The three templates fanned out on the red card. */
+const FAN = ['event-poster', 'pitch', 'quote-post'].map((id) => TEMPLATES.find((t) => t.id === id)).filter((t): t is StoreTemplate => !!t);
+
+/** "Make it yours.": a bold card with a few templates fanned out, then every template in Make. */
 export function PicksShelf() {
   const c = useStoreContent('store.picks');
   return (
@@ -273,23 +228,20 @@ export function PicksShelf() {
           <span className="sh-promo__eyebrow">{c.promo.eyebrow}</span>
           <span className="sh-promo__title">{c.promo.title}</span>
           {c.promo.text && <span className="sh-promo__body">{c.promo.text}</span>}
-          <span className="sh-promo__grid" aria-hidden="true">
-            {PROMO_SYMBOLS.map((s) => {
-              const Icon = SYMBOLS[s];
-              return (
-                <span key={s} className="sh-promo__disc">
-                  <Icon size={30} strokeWidth={1.6} />
-                </span>
-              );
-            })}
+          <span className="sh-promo__fan" aria-hidden="true">
+            {FAN.map((t, i) => (
+              <span key={t.id} className={`sh-promo__sheet sh-promo__sheet--${i}`}>
+                <TemplateCover template={t} />
+              </span>
+            ))}
           </span>
           <span className="sh-go sh-go--light" aria-hidden="true">
             <ArrowUpRight size={18} strokeWidth={2.25} />
           </span>
         </Link>
       </li>
-      {c.cards.map((card) => (
-        <PickItem key={card.id} card={card} />
+      {TEMPLATES.map((t) => (
+        <TemplateItem key={t.id} template={t} />
       ))}
     </Shelf>
   );

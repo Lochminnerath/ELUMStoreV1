@@ -246,8 +246,8 @@ export interface StoreTemplate {
   kind: TemplateKind;
   /** Width over height. */
   ratio: number;
-  /** How its cover looks, for the card: the ground, the ink, and the accent. */
-  look: { ground: string; ink: string; accent: string; layout: 'title' | 'lesson' | 'poster' | 'quote' };
+  /** How its cover looks, for the card: the ground, the ink, the accent, the layout and the big words on it. */
+  look: { ground: string; ink: string; accent: string; layout: 'title' | 'lesson' | 'poster' | 'quote' | 'document' | 'banner'; words: string; sub?: string; font?: 'serif' | 'tall' };
 }
 
 export const TEMPLATE_KINDS: { id: TemplateKind; name: string }[] = [
@@ -263,7 +263,7 @@ export const TEMPLATES: StoreTemplate[] = [
     description: 'A title, the problem, the idea and next steps.',
     kind: 'presentation',
     ratio: 16 / 9,
-    look: { ground: 'linear-gradient(135deg, #141a2e, #3b5bd6)', ink: '#ffffff', accent: '#ec7fa9', layout: 'title' },
+    look: { ground: 'linear-gradient(135deg, #141a2e, #3b5bd6)', ink: '#ffffff', accent: '#ec7fa9', layout: 'title', words: 'Your big idea', sub: 'A short line on why it matters' },
   },
   {
     id: 'lesson',
@@ -271,7 +271,39 @@ export const TEMPLATES: StoreTemplate[] = [
     description: 'Clean slides for teaching or a talk.',
     kind: 'presentation',
     ratio: 16 / 9,
-    look: { ground: '#ffffff', ink: '#141a2e', accent: '#ec7fa9', layout: 'lesson' },
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#ec7fa9', layout: 'lesson', words: 'Lesson title', sub: 'Your name · Date' },
+  },
+  {
+    id: 'minimal-deck',
+    name: 'Minimal presentation',
+    description: 'Lots of white space and one idea per slide.',
+    kind: 'presentation',
+    ratio: 16 / 9,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#ec7fa9', layout: 'title', words: 'A quiet title', sub: 'Subtitle or your name' },
+  },
+  {
+    id: 'annual-report',
+    name: 'Annual report',
+    description: 'The year in numbers, highlights and what comes next.',
+    kind: 'presentation',
+    ratio: 16 / 9,
+    look: { ground: '#141a2e', ink: '#ffffff', accent: '#ec7fa9', layout: 'title', words: '2026 in review', sub: 'Annual report' },
+  },
+  {
+    id: 'workshop',
+    name: 'Workshop slides',
+    description: 'An agenda, exercises and a wrap-up.',
+    kind: 'presentation',
+    ratio: 16 / 9,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#3fc4a0', layout: 'lesson', words: 'Workshop title', sub: 'Date · Room' },
+  },
+  {
+    id: 'product-launch',
+    name: 'Product launch',
+    description: 'Introduce something new and why people will love it.',
+    kind: 'presentation',
+    ratio: 16 / 9,
+    look: { ground: 'linear-gradient(135deg, #141a2e, #2a3a8f)', ink: '#ffffff', accent: '#e9b949', layout: 'title', words: 'Meet the new thing', sub: 'Available today' },
   },
   {
     id: 'event-poster',
@@ -279,7 +311,79 @@ export const TEMPLATES: StoreTemplate[] = [
     description: 'Bold heading, date and place.',
     kind: 'poster',
     ratio: 0.707,
-    look: { ground: 'linear-gradient(160deg, #ec7fa9, #f59a52)', ink: '#ffffff', accent: '#141a2e', layout: 'poster' },
+    look: { ground: 'linear-gradient(160deg, #f59a52, #ec7fa9)', ink: '#ffffff', accent: '#141a2e', layout: 'poster', words: 'Summer night market', sub: 'Friday 14 June · 6 pm', font: 'tall' },
+  },
+  {
+    id: 'conference-poster',
+    name: 'Conference poster',
+    description: 'A research poster with the key finding up top.',
+    kind: 'poster',
+    ratio: 0.707,
+    look: { ground: 'linear-gradient(180deg, #141a2e, #3b5bd6)', ink: '#ffffff', accent: '#bacafc', layout: 'poster', words: 'Your key finding', sub: 'Method · Results', font: 'tall' },
+  },
+  {
+    id: 'recipe',
+    name: 'Recipe card',
+    description: 'Ingredients and steps for a favourite dish.',
+    kind: 'poster',
+    ratio: 0.707,
+    look: { ground: '#fdf0e4', ink: '#141a2e', accent: '#f59a52', layout: 'poster', words: 'Lemon pasta', sub: 'Serves 2 · 20 minutes', font: 'serif' },
+  },
+  {
+    id: 'workshop-flyer',
+    name: 'Workshop flyer',
+    description: 'Get people to sign up for a class or workshop.',
+    kind: 'poster',
+    ratio: 1275 / 1650,
+    look: { ground: 'linear-gradient(150deg, #3fc4a0, #3b5bd6)', ink: '#ffffff', accent: '#ffffff', layout: 'poster', words: 'Learn something new', sub: 'Saturday · Free', font: 'tall' },
+  },
+  {
+    id: 'menu',
+    name: 'Menu',
+    description: 'A café or restaurant menu.',
+    kind: 'poster',
+    ratio: 0.707,
+    look: { ground: '#141a2e', ink: '#fdf0e4', accent: '#e9b949', layout: 'poster', words: 'Menu', sub: 'Starters · Mains · Desserts', font: 'serif' },
+  },
+  {
+    id: 'invitation',
+    name: 'Wedding invitation',
+    description: 'An elegant invitation with names, date and place.',
+    kind: 'poster',
+    ratio: 0.707,
+    look: { ground: '#fbf7f2', ink: '#5a4a3a', accent: '#c9a77c', layout: 'poster', words: 'Alex & Sam', sub: 'Saturday 12 June 2027', font: 'serif' },
+  },
+  {
+    id: 'proposal',
+    name: 'Proposal',
+    description: 'A one-page project proposal.',
+    kind: 'poster',
+    ratio: 1275 / 1650,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#3b5bd6', layout: 'document', words: 'Project proposal' },
+  },
+  {
+    id: 'resume',
+    name: 'Resume',
+    description: 'A clean one-page resume.',
+    kind: 'poster',
+    ratio: 1275 / 1650,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#141a2e', layout: 'document', words: 'Your Name' },
+  },
+  {
+    id: 'invoice',
+    name: 'Invoice',
+    description: 'A simple invoice for freelance work.',
+    kind: 'poster',
+    ratio: 1275 / 1650,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#3fc4a0', layout: 'document', words: 'Invoice' },
+  },
+  {
+    id: 'newsletter',
+    name: 'Newsletter',
+    description: 'A monthly update with a few short stories.',
+    kind: 'poster',
+    ratio: 1275 / 1650,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#ec7fa9', layout: 'document', words: 'The Monthly' },
   },
   {
     id: 'quote-post',
@@ -287,7 +391,31 @@ export const TEMPLATES: StoreTemplate[] = [
     description: 'A square post for a quote or announcement.',
     kind: 'social',
     ratio: 1,
-    look: { ground: '#fdeef4', ink: '#141a2e', accent: '#ec7fa9', layout: 'quote' },
+    look: { ground: '#141a2e', ink: '#ffffff', accent: '#ec7fa9', layout: 'quote', words: 'Make something people want to share.', font: 'serif' },
+  },
+  {
+    id: 'birthday',
+    name: 'Birthday card',
+    description: 'A bright card to say happy birthday.',
+    kind: 'social',
+    ratio: 1,
+    look: { ground: 'linear-gradient(135deg, #e9b949, #ec7fa9)', ink: '#ffffff', accent: '#ffffff', layout: 'poster', words: 'Happy birthday!', sub: 'With love from us', font: 'tall' },
+  },
+  {
+    id: 'header',
+    name: 'Profile header',
+    description: 'A wide header for your profile or page.',
+    kind: 'social',
+    ratio: 3,
+    look: { ground: 'linear-gradient(120deg, #141a2e, #3b5bd6)', ink: '#ffffff', accent: '#ec7fa9', layout: 'banner', words: 'Your Name', sub: 'What you make, in a few words' },
+  },
+  {
+    id: 'thumbnail',
+    name: 'Video thumbnail',
+    description: 'A bold 16:9 thumbnail that reads at a glance.',
+    kind: 'social',
+    ratio: 16 / 9,
+    look: { ground: '#141a2e', ink: '#ffffff', accent: '#e9b949', layout: 'banner', words: 'How I did it', sub: 'In 10 minutes' },
   },
 ];
 

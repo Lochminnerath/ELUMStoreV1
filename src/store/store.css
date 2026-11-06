@@ -555,6 +555,86 @@
   line-height: 0.6;
   color: var(--accent);
 }
+.tpl-cover__sub {
+  font-size: 0.42em;
+  line-height: 1.3;
+  opacity: 0.75;
+}
+.tpl-cover--title .tpl-cover__accent {
+  margin: 0 auto;
+}
+.tpl-cover--tall .tpl-cover__title {
+  font-family: 'Bebas Neue', var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 0.95;
+}
+.tpl-cover--serif .tpl-cover__title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 600;
+}
+.tpl-cover--quote .tpl-cover__title {
+  font-size: 0.8em;
+  font-style: italic;
+  font-weight: 400;
+}
+/* A one-page document: a coloured band with the title, then three headed parts. */
+.tpl-cover--document {
+  justify-content: flex-start;
+  gap: 0.55em;
+  padding: 0 0 1em;
+}
+.tpl-cover__band {
+  display: flex;
+  align-items: flex-end;
+  min-height: 2.2em;
+  padding: 0.5em 0.8em;
+  background: var(--accent);
+  color: #ffffff;
+}
+.tpl-cover--document .tpl-cover__title {
+  font-size: 0.8em;
+}
+.tpl-cover__part {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  padding: 0 0.8em;
+}
+.tpl-cover__head {
+  display: block;
+  width: 35%;
+  height: 0.32em;
+  border-radius: 99px;
+  background: currentColor;
+  opacity: 0.85;
+}
+.tpl-cover--document .tpl-cover__line {
+  height: 0.2em;
+  width: 85%;
+  opacity: 0.22;
+}
+.tpl-cover--document .tpl-cover__line--short {
+  width: 60%;
+}
+/* A wide header or thumbnail: an accent bar beside one bold line. */
+.tpl-cover--banner {
+  gap: 0.3em;
+  padding-left: 1.4em;
+}
+.tpl-cover__bar {
+  position: absolute;
+  left: 0.6em;
+  top: 20%;
+  bottom: 20%;
+  width: 0.14em;
+  border-radius: 99px;
+  background: var(--accent);
+}
+.tpl-cover--banner .tpl-cover__title {
+  font-size: 0.9em;
+}
 .store-filter {
   margin: 24px 0 20px;
 }
@@ -912,7 +992,7 @@
   max-width: 1320px;
 }
 
-/* The top: Store on the left, the bloom in the middle, a headline and links on the right. */
+/* The top: Store on the left, the Store logo in the middle, a headline and links on the right. */
 .sh-head {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
@@ -928,36 +1008,30 @@
   font-size: clamp(64px, 9vw, 120px);
   line-height: 1;
   letter-spacing: -0.035em;
-  color: var(--store-deep);
+  color: var(--store-bright);
 }
 .sh-head__art {
-  position: relative;
-  width: clamp(200px, 22vw, 280px);
-  aspect-ratio: 1;
-}
-.store-bloom {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-.store-bloom__petal {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: bloom-in 900ms var(--ease) both;
-  animation-delay: calc(var(--i) * 70ms);
-}
-@keyframes bloom-in {
-  from {
-    opacity: 0;
-    transform: scale(0.4);
-  }
-}
-.sh-head__mark {
-  position: absolute;
-  inset: 0;
   display: grid;
   place-items: center;
+  width: clamp(180px, 20vw, 240px);
+  aspect-ratio: 1;
+}
+.sh-head__art .brand-mark {
+  display: block;
+  width: 100%;
+  height: auto !important;
+}
+.sh-head__art img {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 22px 34px color-mix(in srgb, var(--store) 35%, transparent));
+  animation: store-logo-in 900ms var(--ease) both;
+}
+@keyframes store-logo-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
 }
 .sh-head__side {
   justify-self: end;
@@ -971,7 +1045,7 @@
   font-size: clamp(26px, 2.6vw, 36px);
   line-height: 1.2;
   letter-spacing: -0.015em;
-  color: var(--store-deep);
+  color: var(--store-bright);
 }
 .sh-head__links {
   margin: 0;
@@ -997,9 +1071,11 @@
 .sh-row {
   margin: 24px 0 8px;
 }
+/* One line runs through the middle of every circle; the apps slide out of Store along it. */
 .sh-row__list {
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(9, minmax(96px, 1fr));
+  grid-template-columns: repeat(var(--count, 9), minmax(96px, 1fr));
   gap: 8px;
   margin: 0;
   padding: 8px 0 12px;
@@ -1007,8 +1083,40 @@
   overflow-x: auto;
   scroll-snap-type: x proximity;
 }
+.sh-row__list::before {
+  content: '';
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  top: 68px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--store) 55%, var(--hairline)) 20% 80%, transparent);
+  transform-origin: center;
+  animation: sh-line 700ms var(--ease) both;
+}
+@keyframes sh-line {
+  from {
+    transform: scaleX(0);
+  }
+}
 .sh-circle {
+  position: relative;
+  /* The apps nearest Store pass in front of the ones further out as they slide. */
+  z-index: calc(10 - var(--step, 0));
   scroll-snap-align: center;
+  animation: sh-slide 800ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(250ms + var(--step, 0) * 70ms);
+}
+/* Each app starts tucked behind Store and slides out to its place. */
+@keyframes sh-slide {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--from, 0) * (100% + 8px))) scale(0.6);
+  }
+  40% {
+    opacity: 1;
+  }
 }
 .sh-circle__link {
   display: flex;
@@ -1047,27 +1155,22 @@
   font-weight: 600;
   font-size: 15px;
 }
-/* Store in the middle: larger, with a ring in every app's colour. */
+/* Store in the middle: a little larger, in front, so the apps come out from behind it. */
+.sh-circle--store {
+  z-index: 20;
+  animation: none;
+}
 .sh-circle--store .sh-circle__disc {
   width: 116px;
   height: 116px;
   margin-top: -6px;
   background: var(--surface);
-  box-shadow: 0 12px 30px -12px color-mix(in srgb, var(--store) 70%, transparent);
-}
-.sh-circle--store .sh-circle__disc::before {
-  content: '';
-  position: absolute;
-  inset: -5px;
-  border-radius: 50%;
-  padding: 5px;
-  background: conic-gradient(#f59a52, #3fc4a0, #ec7fa9, #9b84ee, #e9b949, #f06a5f, #48bfe3, #d27fe0, #5ec46f, #f59a52);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+  box-shadow:
+    inset 0 0 0 1px var(--store-line),
+    0 12px 30px -12px color-mix(in srgb, var(--store) 70%, transparent);
 }
 .sh-circle--store .sh-circle__name {
-  color: var(--store-deep);
+  color: var(--store-bright);
 }
 
 /* Shelves: a heading, a sideways row of cards, and back and forward buttons. */
@@ -1083,7 +1186,7 @@
   letter-spacing: -0.01em;
 }
 .sh-shelf__title strong {
-  color: var(--store-deep);
+  color: var(--store-bright);
   font-weight: 600;
 }
 .sh-shelf__title span {
@@ -1322,43 +1425,72 @@
   line-height: 22px;
   opacity: 0.92;
 }
-.sh-promo__grid {
-  position: absolute;
-  left: -16px;
-  right: -16px;
-  top: 232px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  justify-items: center;
+.sh-promo__link .sh-go {
+  z-index: 3;
 }
-.sh-promo__disc {
+/* A few of Make's templates, fanned out like sheets on a table. */
+.sh-promo__fan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 210px;
+}
+.sh-promo__sheet {
+  container-type: size;
+  position: absolute;
   display: grid;
   place-items: center;
-  width: 92px;
-  height: 92px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #ffffff, #eef0f6);
-  color: color-mix(in srgb, #141a2e 70%, var(--promo));
-  box-shadow: inset 0 -6px 12px rgba(20, 26, 46, 0.08);
   transition: transform var(--dur-panel) var(--ease);
 }
-.sh-promo__link:hover .sh-promo__disc:nth-child(odd) {
-  transform: translateY(-6px) rotate(-6deg);
+.sh-promo__sheet .tpl-cover {
+  --w: min(100cqw, calc(100cqh * var(--ratio)));
+  box-shadow: 0 18px 30px -14px rgba(20, 26, 46, 0.55);
 }
-.sh-promo__link:hover .sh-promo__disc:nth-child(even) {
-  transform: translateY(-3px) rotate(6deg);
+.sh-promo__sheet--0 {
+  left: 8%;
+  bottom: -24px;
+  width: 150px;
+  height: 212px;
+  transform: rotate(-9deg);
 }
-.sh-pick {
+.sh-promo__sheet--1 {
+  left: 24%;
+  bottom: 92px;
+  z-index: 1;
+  width: 230px;
+  height: 130px;
+  transform: rotate(4deg);
+}
+.sh-promo__sheet--2 {
+  right: 6%;
+  bottom: -10px;
+  z-index: 2;
+  width: 140px;
+  height: 140px;
+  transform: rotate(8deg);
+}
+.sh-promo__link:hover .sh-promo__sheet--0 {
+  transform: rotate(-12deg) translateY(-8px);
+}
+.sh-promo__link:hover .sh-promo__sheet--1 {
+  transform: rotate(2deg) translateY(-10px);
+}
+.sh-promo__link:hover .sh-promo__sheet--2 {
+  transform: rotate(11deg) translateY(-8px);
+}
+
+/* Each template in Make, at its own shape. */
+.sh-tpl {
   width: 280px;
 }
-.sh-pick__link {
+.sh-tpl__link {
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 6px;
   height: 460px;
-  padding: 28px 24px;
+  padding: 20px 20px 24px;
   border-radius: 28px;
   background: var(--surface);
   color: var(--ink);
@@ -1366,58 +1498,52 @@
   box-shadow: 0 2px 6px rgba(20, 26, 46, 0.06), inset 0 0 0 1px var(--hairline);
   transition: transform var(--dur-panel) var(--ease), box-shadow var(--dur-panel) var(--ease);
 }
-.sh-pick__link:hover,
-.sh-pick__link:focus-visible {
+.sh-tpl__link:hover,
+.sh-tpl__link:focus-visible {
   transform: translateY(-4px);
   box-shadow: 0 22px 44px -24px rgba(20, 26, 46, 0.4), inset 0 0 0 1px var(--hairline);
 }
-.sh-pick__art {
-  position: relative;
+.sh-tpl__frame {
+  container-type: size;
   display: grid;
   place-items: center;
-  height: 200px;
-  margin-bottom: 18px;
-}
-.sh-promo__link .sh-go {
-  z-index: 1;
-}
-.sh-pick__halo {
-  position: absolute;
-  width: 168px;
-  height: 168px;
-  border-radius: 50%;
+  height: 230px;
+  margin-bottom: 14px;
+  border-radius: 18px;
   background:
-    radial-gradient(circle at 30% 25%, #ffffff 0 20%, transparent 60%),
-    var(--app-mist);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--app) 30%, transparent);
+    radial-gradient(circle at 30% 20%, color-mix(in srgb, #ffffff 70%, transparent), transparent 60%),
+    color-mix(in srgb, var(--make) 16%, var(--surface));
 }
-.sh-pick__art .app-mark {
-  position: relative;
+.sh-tpl__frame .tpl-cover {
+  transition: transform var(--dur-panel) var(--ease);
 }
-.sh-pick__eyebrow {
+.sh-tpl__link:hover .tpl-cover {
+  transform: scale(1.04) rotate(-1.5deg);
+}
+.sh-tpl__kind {
   font-size: 12px;
   font-weight: 700;
-  color: color-mix(in srgb, var(--ink) 55%, var(--app));
+  color: var(--make-deep);
 }
-.sh-pick__title {
+.sh-tpl__name {
   font-weight: 700;
   font-size: 18px;
   line-height: 24px;
 }
-.sh-pick__body {
+.sh-tpl__body {
   color: var(--ink-muted);
   font-size: 14px;
   line-height: 21px;
 }
-.sh-pick__foot {
+.sh-tpl__foot {
   margin-top: auto;
   padding-right: 48px;
 }
-.sh-pick__note {
+.sh-tpl__note {
   color: var(--ink-muted);
   font-size: 13px;
 }
-.sh-pick .sh-go {
+.sh-tpl .sh-go {
   background: var(--surface-glass);
   color: var(--ink);
   box-shadow: none;
@@ -1435,9 +1561,10 @@
   }
   .sh-head__art {
     order: -1;
+    width: 140px;
   }
   .sh-row__list {
-    grid-template-columns: repeat(9, 104px);
+    grid-template-columns: repeat(var(--count, 9), 104px);
   }
 }
 @media (max-width: 640px) {
@@ -1451,7 +1578,9 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .store-bloom__petal {
+  .sh-head__art img,
+  .sh-row__list::before,
+  .sh-circle {
     animation: none;
   }
 }

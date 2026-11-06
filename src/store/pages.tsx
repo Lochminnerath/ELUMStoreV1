@@ -60,21 +60,6 @@ export function HomePage() {
         </ul>
       </section>
 
-      <section aria-labelledby="store-templates" className="store-section">
-        <div className="store-h2-row">
-          <h2 id="store-templates" className="store-h2">
-            Templates for Make
-          </h2>
-          <Link to="/templates" className="store-more">
-            See all
-          </Link>
-        </div>
-        <ul className="tpl-grid">
-          {TEMPLATES.map((t, i) => (
-            <TemplateCard key={t.id} template={t} index={i} />
-          ))}
-        </ul>
-      </section>
     </StorePage>
   );
 }

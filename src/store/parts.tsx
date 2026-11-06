@@ -318,19 +318,21 @@ export function AppCard({ app, index = 0 }: { app: StoreApp; index?: number }) {
 
 /** A template's cover, drawn from its look: the shapes of its first page. */
 export function TemplateCover({ template }: { template: StoreTemplate }) {
-  const { ground, ink, accent, layout } = template.look;
+  const { ground, ink, accent, layout, words, sub, font } = template.look;
+  const cls = `tpl-cover tpl-cover--${layout}${font ? ` tpl-cover--${font}` : ''}`;
   return (
-    <span className={`tpl-cover tpl-cover--${layout}`} style={{ background: ground, color: ink, '--ratio': template.ratio, '--accent': accent } as CSSProperties} aria-hidden="true">
+    <span className={cls} style={{ background: ground, color: ink, '--ratio': template.ratio, '--accent': accent } as CSSProperties} aria-hidden="true">
       {layout === 'title' && (
         <>
           <span className="tpl-cover__accent" />
-          <span className="tpl-cover__title">{template.name}</span>
-          <span className="tpl-cover__line" />
+          <span className="tpl-cover__title">{words}</span>
+          {sub && <span className="tpl-cover__sub">{sub}</span>}
         </>
       )}
       {layout === 'lesson' && (
         <>
-          <span className="tpl-cover__title">Lesson one</span>
+          <span className="tpl-cover__title">{words}</span>
+          {sub && <span className="tpl-cover__sub">{sub}</span>}
           <span className="tpl-cover__line" />
           <span className="tpl-cover__line tpl-cover__line--short" />
           <span className="tpl-cover__disc" />
@@ -338,18 +340,37 @@ export function TemplateCover({ template }: { template: StoreTemplate }) {
       )}
       {layout === 'poster' && (
         <>
-          <span className="tpl-cover__title">Big night</span>
+          <span className="tpl-cover__title">{words}</span>
           <span className="tpl-cover__accent" />
-          <span className="tpl-cover__line" />
-          <span className="tpl-cover__line tpl-cover__line--short" />
+          {sub && <span className="tpl-cover__sub">{sub}</span>}
         </>
       )}
       {layout === 'quote' && (
         <>
           <span className="tpl-cover__mark">“</span>
-          <span className="tpl-cover__line" />
-          <span className="tpl-cover__line" />
+          <span className="tpl-cover__title">{words}</span>
           <span className="tpl-cover__line tpl-cover__line--short" />
+        </>
+      )}
+      {layout === 'document' && (
+        <>
+          <span className="tpl-cover__band">
+            <span className="tpl-cover__title">{words}</span>
+          </span>
+          {[0, 1, 2].map((i) => (
+            <span key={i} className="tpl-cover__part">
+              <span className="tpl-cover__head" />
+              <span className="tpl-cover__line" />
+              <span className="tpl-cover__line tpl-cover__line--short" />
+            </span>
+          ))}
+        </>
+      )}
+      {layout === 'banner' && (
+        <>
+          <span className="tpl-cover__bar" />
+          <span className="tpl-cover__title">{words}</span>
+          {sub && <span className="tpl-cover__sub">{sub}</span>}
         </>
       )}
     </span>
