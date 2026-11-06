@@ -45,7 +45,15 @@ export function useTitle(title: string) {
 export const appStyle = (app: Pick<StoreApp, 'color' | 'mist'>) => ({ '--app': app.color, '--mist': app.mist }) as CSSProperties;
 
 /** An ELUM app's mark, in light or dark. */
-export function AppMark({ id, size }: { id: string; size: number }) {
+export function AppMark({ id, size, light }: { id: string; size: number; light?: boolean }) {
+  // On a light circle or card the mark stays light, whatever the theme.
+  if (light) {
+    return (
+      <span className="app-mark" style={{ width: size, height: size }} aria-hidden="true">
+        <img src={`/brand/apps/${id}.svg`} width={size} height={size} alt="" />
+      </span>
+    );
+  }
   return (
     <span className="app-mark" style={{ width: size, height: size }} aria-hidden="true">
       <img className="theme-light-only" src={`/brand/apps/${id}.svg`} width={size} height={size} alt="" />

@@ -905,3 +905,553 @@
     animation: none;
   }
 }
+
+/* ======================================================= Store home (2026) */
+
+.store-main--wide {
+  max-width: 1320px;
+}
+
+/* The top: Store on the left, the bloom in the middle, a headline and links on the right. */
+.sh-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 32px;
+  padding: 40px 0 16px;
+  animation: store-rise var(--dur-hero) var(--ease) both;
+}
+.sh-head__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(64px, 9vw, 120px);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  color: var(--store-deep);
+}
+.sh-head__art {
+  position: relative;
+  width: clamp(200px, 22vw, 280px);
+  aspect-ratio: 1;
+}
+.store-bloom {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.store-bloom__petal {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: bloom-in 900ms var(--ease) both;
+  animation-delay: calc(var(--i) * 70ms);
+}
+@keyframes bloom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+.sh-head__mark {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+.sh-head__side {
+  justify-self: end;
+  max-width: 420px;
+  text-align: right;
+}
+.sh-head__headline {
+  margin: 0 0 18px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(26px, 2.6vw, 36px);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--store-deep);
+}
+.sh-head__links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+.sh-head__links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 24px;
+  color: var(--action);
+  font-weight: 600;
+  text-decoration: none;
+}
+.sh-head__links a:hover {
+  text-decoration: underline;
+}
+
+/* The app circles: the same number of apps on each side of Store. */
+.sh-row {
+  margin: 24px 0 8px;
+}
+.sh-row__list {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(96px, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 8px 0 12px;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+}
+.sh-circle {
+  scroll-snap-align: center;
+}
+.sh-circle__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 4px;
+  border-radius: var(--radius-md);
+  color: inherit;
+  text-decoration: none;
+}
+.sh-circle__disc {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 25%, #ffffff 0 18%, transparent 60%),
+    radial-gradient(circle at 70% 80%, color-mix(in srgb, var(--app) 30%, transparent) 0 30%, transparent 70%),
+    var(--app-mist);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--app) 30%, transparent),
+    0 10px 24px -14px color-mix(in srgb, var(--app) 70%, transparent);
+  transition: transform var(--dur-hover) var(--ease), box-shadow var(--dur-hover) var(--ease);
+}
+.sh-circle__link:hover .sh-circle__disc,
+.sh-circle__link:focus-visible .sh-circle__disc {
+  transform: translateY(-4px) scale(1.04);
+  box-shadow:
+    inset 0 0 0 2px var(--app),
+    0 16px 30px -14px color-mix(in srgb, var(--app) 80%, transparent);
+}
+.sh-circle__name {
+  font-weight: 600;
+  font-size: 15px;
+}
+/* Store in the middle: larger, with a ring in every app's colour. */
+.sh-circle--store .sh-circle__disc {
+  width: 116px;
+  height: 116px;
+  margin-top: -6px;
+  background: var(--surface);
+  box-shadow: 0 12px 30px -12px color-mix(in srgb, var(--store) 70%, transparent);
+}
+.sh-circle--store .sh-circle__disc::before {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  padding: 5px;
+  background: conic-gradient(#f59a52, #3fc4a0, #ec7fa9, #9b84ee, #e9b949, #f06a5f, #48bfe3, #d27fe0, #5ec46f, #f59a52);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+.sh-circle--store .sh-circle__name {
+  color: var(--store-deep);
+}
+
+/* Shelves: a heading, a sideways row of cards, and back and forward buttons. */
+.sh-shelf {
+  margin-top: 56px;
+}
+.sh-shelf__title {
+  margin: 0 0 20px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(24px, 2.4vw, 30px);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.sh-shelf__title strong {
+  color: var(--store-deep);
+  font-weight: 600;
+}
+.sh-shelf__title span {
+  color: var(--ink-muted);
+}
+.sh-shelf__list {
+  display: flex;
+  gap: 20px;
+  margin: 0 -32px;
+  padding: 8px 32px 24px;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 32px;
+  scrollbar-width: none;
+}
+.sh-shelf__list::-webkit-scrollbar {
+  display: none;
+}
+.sh-shelf__list > li {
+  flex: none;
+  scroll-snap-align: start;
+}
+.sh-shelf__nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+.sh-shelf__btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface-glass);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease);
+}
+.sh-shelf__btn:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--ink) 12%, var(--surface));
+}
+.sh-shelf__btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* The round arrow in a card's corner. */
+.sh-go {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: color-mix(in srgb, #ffffff 92%, transparent);
+  color: #141a2e;
+  box-shadow: 0 4px 14px -6px rgba(20, 26, 46, 0.4);
+  transition: transform var(--dur-hover) var(--ease);
+}
+.sh-go--light {
+  background: #ffffff;
+}
+
+/* The latest: a tall colourful card for each app. */
+.sh-latest {
+  width: min(400px, 80vw);
+}
+.sh-latest__link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  overflow: hidden;
+  border-radius: 28px;
+  background: var(--card);
+  color: #141a2e;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(20, 26, 46, 0.06);
+  transition: transform var(--dur-panel) var(--ease), box-shadow var(--dur-panel) var(--ease);
+}
+.sh-latest__link:hover,
+.sh-latest__link:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 44px -22px rgba(20, 26, 46, 0.45);
+}
+.sh-latest__link:hover .sh-go {
+  transform: translateX(3px);
+}
+.sh-latest__text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 28px 28px 0;
+}
+.sh-latest__eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, #141a2e 70%, var(--band));
+}
+.sh-latest__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.sh-latest__body {
+  font-size: 15px;
+  line-height: 22px;
+  color: #2b3149;
+}
+.sh-latest__note {
+  font-size: 13px;
+  font-weight: 600;
+  color: color-mix(in srgb, #141a2e 75%, var(--band));
+}
+.sh-latest__picture {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  margin-top: 20px;
+  background:
+    linear-gradient(to bottom, var(--card) 0 34%, transparent 34%),
+    var(--band);
+}
+.sh-latest__picture img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The drawn picture: the app's mark on a white disc, with circles around it. */
+.sh-art {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+.sh-art__disc {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 188px;
+  height: 188px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffffff, #f1f3f9);
+  box-shadow: 0 24px 50px -20px rgba(20, 26, 46, 0.55), inset 0 0 0 1px rgba(20, 26, 46, 0.06);
+  transition: transform var(--dur-panel) var(--spring, var(--ease));
+}
+.sh-latest__link:hover .sh-art__disc {
+  transform: scale(1.05) rotate(-4deg);
+}
+.sh-art__ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, #ffffff 55%, transparent);
+}
+.sh-art__ring--a {
+  width: 250px;
+  height: 250px;
+}
+.sh-art__ring--b {
+  width: 320px;
+  height: 320px;
+  border-style: dashed;
+  border-color: color-mix(in srgb, #ffffff 35%, transparent);
+}
+.sh-art__dot {
+  position: absolute;
+  border-radius: 50%;
+  background: #ffffff;
+}
+.sh-art__dot--a {
+  width: 22px;
+  height: 22px;
+  top: 22%;
+  left: 14%;
+  opacity: 0.8;
+}
+.sh-art__dot--b {
+  width: 14px;
+  height: 14px;
+  bottom: 14%;
+  right: 18%;
+  opacity: 0.6;
+}
+.sh-art__dot--c {
+  width: 40px;
+  height: 40px;
+  top: 30%;
+  right: 8%;
+  background: color-mix(in srgb, #ffffff 40%, var(--band));
+}
+
+/* Make it yours: one bold card, then lighter cards. */
+.sh-promo {
+  width: min(400px, 80vw);
+}
+.sh-promo__link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 460px;
+  padding: 28px;
+  overflow: hidden;
+  border-radius: 28px;
+  background: var(--promo);
+  color: #ffffff;
+  text-decoration: none;
+}
+.sh-promo__eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.sh-promo__title {
+  max-width: 14ch;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 1.15;
+}
+.sh-promo__body {
+  max-width: 30ch;
+  font-size: 15px;
+  line-height: 22px;
+  opacity: 0.92;
+}
+.sh-promo__grid {
+  position: absolute;
+  left: -16px;
+  right: -16px;
+  top: 232px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  justify-items: center;
+}
+.sh-promo__disc {
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ffffff, #eef0f6);
+  color: color-mix(in srgb, #141a2e 70%, var(--promo));
+  box-shadow: inset 0 -6px 12px rgba(20, 26, 46, 0.08);
+  transition: transform var(--dur-panel) var(--ease);
+}
+.sh-promo__link:hover .sh-promo__disc:nth-child(odd) {
+  transform: translateY(-6px) rotate(-6deg);
+}
+.sh-promo__link:hover .sh-promo__disc:nth-child(even) {
+  transform: translateY(-3px) rotate(6deg);
+}
+.sh-pick {
+  width: 280px;
+}
+.sh-pick__link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  height: 460px;
+  padding: 28px 24px;
+  border-radius: 28px;
+  background: var(--surface);
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(20, 26, 46, 0.06), inset 0 0 0 1px var(--hairline);
+  transition: transform var(--dur-panel) var(--ease), box-shadow var(--dur-panel) var(--ease);
+}
+.sh-pick__link:hover,
+.sh-pick__link:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 44px -24px rgba(20, 26, 46, 0.4), inset 0 0 0 1px var(--hairline);
+}
+.sh-pick__art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 200px;
+  margin-bottom: 18px;
+}
+.sh-promo__link .sh-go {
+  z-index: 1;
+}
+.sh-pick__halo {
+  position: absolute;
+  width: 168px;
+  height: 168px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 25%, #ffffff 0 20%, transparent 60%),
+    var(--app-mist);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--app) 30%, transparent);
+}
+.sh-pick__art .app-mark {
+  position: relative;
+}
+.sh-pick__eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  color: color-mix(in srgb, var(--ink) 55%, var(--app));
+}
+.sh-pick__title {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 24px;
+}
+.sh-pick__body {
+  color: var(--ink-muted);
+  font-size: 14px;
+  line-height: 21px;
+}
+.sh-pick__foot {
+  margin-top: auto;
+  padding-right: 48px;
+}
+.sh-pick__note {
+  color: var(--ink-muted);
+  font-size: 13px;
+}
+.sh-pick .sh-go {
+  background: var(--surface-glass);
+  color: var(--ink);
+  box-shadow: none;
+}
+
+@media (max-width: 960px) {
+  .sh-head {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+  .sh-head__side {
+    justify-self: center;
+    text-align: center;
+  }
+  .sh-head__art {
+    order: -1;
+  }
+  .sh-row__list {
+    grid-template-columns: repeat(9, 104px);
+  }
+}
+@media (max-width: 640px) {
+  .sh-shelf__list {
+    margin: 0 -16px;
+    padding: 8px 16px 20px;
+    scroll-padding: 0 16px;
+  }
+  .sh-latest__link {
+    height: 460px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .store-bloom__petal {
+    animation: none;
+  }
+}

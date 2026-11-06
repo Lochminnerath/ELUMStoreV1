@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router';
 import { errorMessage } from '../api';
 import { useAuth } from '../auth/AuthProvider';
@@ -9,6 +9,7 @@ import { formatWhenInline } from '../lib/time';
 import { APPS, findApp, searchCatalog, TEMPLATE_KINDS, TEMPLATES, type TemplateKind } from './catalog';
 import { AppCard, AppMark, appStyle, GetButton, HealthPill, openApp, StageTag, StorePage, SYMBOLS, TemplateCard, useTitle } from './parts';
 import { useMyApps } from './state';
+import { AppCircles, LatestShelf, PicksShelf, StoreHeading } from './home';
 import './store.css';
 
 /** /: what Store has, with the person's own apps first once they are signed in. */
@@ -16,51 +17,14 @@ export function HomePage() {
   useTitle('ELUM Store');
   const { status } = useAuth();
   const mine = useMyApps();
-  const featured = APPS.filter((a) => a.featured);
   const yours = APPS.filter((a) => a.included || mine.has(a.id));
 
   return (
-    <StorePage>
-      <section className="store-hero">
-        <div className="store-hero__text">
-          <p className="store-eyebrow">ELUM Store</p>
-          <h1>Apps and more, for your ELUM account.</h1>
-          <p className="store-lede">Every ELUM app in one place, free with your account. Made by you. Runs without AI.</p>
-        </div>
-        <div className="store-hero__art" aria-hidden="true">
-          <span className="store-orbit">
-            {APPS.map((a, i) => (
-              <span key={a.id} className="store-orbit__disc" style={{ '--i': i, '--n': APPS.length } as CSSProperties}>
-                <AppMark id={a.id} size={48} />
-              </span>
-            ))}
-            <span className="store-orbit__centre">
-              <StoreMark size={88} />
-            </span>
-          </span>
-        </div>
-      </section>
-
-      <section aria-labelledby="store-featured" className="store-section">
-        <h2 id="store-featured" className="store-h2">
-          New in ELUM
-        </h2>
-        <ul className="feature-row">
-          {featured.map((a) => (
-            <li key={a.id} className="feature-card" style={appStyle(a)}>
-              <Link to={`/apps/${a.id}`} className="feature-card__link">
-                <AppMark id={a.id} size={72} />
-                <span className="feature-card__kind">{a.kind}</span>
-                <span className="feature-card__name">ELUM {a.name}</span>
-                <span className="feature-card__about">{a.tagline}</span>
-              </Link>
-              <span className="feature-card__action">
-                <GetButton app={a} />
-              </span>
-            </li>
-          ))}
-        </ul>
-      </section>
+    <StorePage className="store-main--wide">
+      <StoreHeading />
+      <AppCircles />
+      <LatestShelf />
+      <PicksShelf />
 
       {status === 'signed-in' && yours.length > 0 && (
         <section aria-labelledby="store-yours" className="store-section">
