@@ -1,16 +1,29 @@
-import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { Link } from 'react-router';
+import { useAuth } from '../auth/AuthProvider';
 import { StoreMark } from '../components/Brand';
 import { safeColor, safeImage, safeLink, useStoreContent } from '../content/content';
 import type { AppId, LatestCard } from '../content/defaults';
 import { openElsewhere } from '../lib/elum';
-import { findApp, TEMPLATE_KINDS, TEMPLATES, templateUrl, type StoreTemplate } from './catalog';
+import { findApp, TEMPLATE_KINDS, templateAppName, templateKey, TEMPLATES, templateUrl, type StoreTemplate } from './catalog';
 import { AppMark, TemplateCover } from './parts';
+import { useMyApps } from './state';
+
+/** Whether an app is already in the signed-in person's ELUM account. */
+function useHas() {
+  const { status } = useAuth();
+  const mine = useMyApps();
+  return (id: string) => status === 'signed-in' && mine.status === 'ready' && mine.has(id);
+}
 
 /** The top of Store: the name, the Store logo in the middle, and a headline with links. */
 export function StoreHeading() {
   const c = useStoreContent('store.hero');
+  const { status, user } = useAuth();
+  const first = user?.name?.trim().split(/\s+/)[0];
+  // Signed in, Store greets them by name; the Console can change the words around it.
+  const headline = status === 'signed-in' && first && c.welcome ? c.welcome.replace('{name}', first) : c.headline;
   return (
     <section className="sh-head" aria-labelledby="store-title">
       <h1 id="store-title" className="sh-head__title">
@@ -20,7 +33,7 @@ export function StoreHeading() {
         <StoreMark size={200} />
       </div>
       <div className="sh-head__side">
-        <p className="sh-head__headline">{c.headline}</p>
+        <p className="sh-head__headline">{headline}</p>
         <ul className="sh-head__links">
           {c.links.map((l, i) => {
             const href = safeLink(l.url);
@@ -41,14 +54,21 @@ export function StoreHeading() {
 /** One app as a circle with its name under it. */
 function AppCircle({ id, from }: { id: AppId; from: number }) {
   const app = findApp(id);
+  const has = useHas();
   if (!app) return null;
+  const yours = has(id);
   // `from` is how many places it slides out from Store: positive on the left, negative on the right.
   const style = { '--app': app.color, '--app-mist': app.mist, '--from': from, '--step': Math.abs(from) } as CSSProperties;
   return (
     <li className="sh-circle" style={style}>
-      <Link to={`/apps/${id}`} className="sh-circle__link">
+      <Link to={`/apps/${id}`} className="sh-circle__link" aria-label={yours ? `${app.name}, in your apps` : app.name}>
         <span className="sh-circle__disc">
-          <AppMark id={id} size={56} light />
+          <AppMark id={id} size={72} light fit />
+          {yours && (
+            <span className="sh-circle__yours" aria-hidden="true">
+              <Check size={14} strokeWidth={3} />
+            </span>
+          )}
         </span>
         <span className="sh-circle__name">{app.name}</span>
       </Link>
@@ -138,7 +158,7 @@ function CardArt({ app }: { app: AppId }) {
       <span className="sh-art__dot sh-art__dot--b" />
       <span className="sh-art__dot sh-art__dot--c" />
       <span className="sh-art__disc">
-        <AppMark id={app} size={128} light />
+        <AppMark id={app} size={160} light fit />
       </span>
     </span>
   );
@@ -146,7 +166,11 @@ function CardArt({ app }: { app: AppId }) {
 
 function LatestItem({ card }: { card: LatestCard }) {
   const app = findApp(card.app);
+  const has = useHas();
+  const { status } = useAuth();
   if (!app) return null;
+  // Signed out, the card says it is free for ELUM Account users; signed in, it says whether it is theirs.
+  const note = status !== 'signed-in' ? card.note : has(app.id) || app.included ? 'In your apps. Open it any time.' : 'Free to add to your account.';
   const image = safeImage(card.image);
   const style = {
     '--card': safeColor(card.color, app.mist),
@@ -159,7 +183,7 @@ function LatestItem({ card }: { card: LatestCard }) {
           {card.eyebrow && <span className="sh-latest__eyebrow">{card.eyebrow}</span>}
           <span className="sh-latest__title">{card.title || `ELUM ${app.name}`}</span>
           {card.text && <span className="sh-latest__body">{card.text}</span>}
-          {card.note && <span className="sh-latest__note">{card.note}</span>}
+          {note && <span className="sh-latest__note">{note}</span>}
         </span>
         <span className="sh-latest__picture">
           {image ? <img src={image} alt="" loading="lazy" /> : <CardArt app={app.id as AppId} />}
@@ -186,26 +210,28 @@ export function LatestShelf() {
 
 const KIND_NAME = Object.fromEntries(TEMPLATE_KINDS.map((k) => [k.id, k.name])) as Record<string, string>;
 
-/** One template from Make, at its own shape. It opens Make with the template ready to edit. */
+/** One template from Make or Write, at its own shape. It opens the app with the template ready to edit. */
 function TemplateItem({ template }: { template: StoreTemplate }) {
   return (
     <li className="sh-tpl">
       <a
-        href={templateUrl(template.id)}
+        href={templateUrl(template)}
         className="sh-tpl__link"
         onClick={(e) => {
           e.preventDefault();
-          void openElsewhere(templateUrl(template.id, crypto.randomUUID().slice(0, 8)));
+          void openElsewhere(templateUrl(template, crypto.randomUUID().slice(0, 8)));
         }}
       >
-        <span className="sh-tpl__frame">
+        <span className="sh-tpl__frame" data-app={template.app}>
           <TemplateCover template={template} />
         </span>
-        <span className="sh-tpl__kind">{KIND_NAME[template.kind]}</span>
+        <span className="sh-tpl__kind" data-app={template.app}>
+          {KIND_NAME[template.kind]} · ELUM {templateAppName(template)}
+        </span>
         <span className="sh-tpl__name">{template.name}</span>
         <span className="sh-tpl__body">{template.description}</span>
         <span className="sh-tpl__foot">
-          <span className="sh-tpl__note">Use in ELUM Make</span>
+          <span className="sh-tpl__note">Use in ELUM {templateAppName(template)}</span>
           <span className="sh-go" aria-hidden="true">
             <ChevronRight size={18} strokeWidth={2.25} />
           </span>
@@ -215,10 +241,13 @@ function TemplateItem({ template }: { template: StoreTemplate }) {
   );
 }
 
+const pick = (app: 'make' | 'write', id: string) => TEMPLATES.find((t) => t.app === app && t.id === id);
 /** The three templates fanned out on the red card. */
-const FAN = ['event-poster', 'pitch', 'quote-post'].map((id) => TEMPLATES.find((t) => t.id === id)).filter((t): t is StoreTemplate => !!t);
+const FAN = [pick('make', 'event-poster'), pick('make', 'pitch'), pick('write', 'letter')].filter((t): t is StoreTemplate => !!t);
+/** The five templates on the home page, from both apps; See more opens the rest. */
+const FIVE = [pick('make', 'pitch'), pick('write', 'notes'), pick('make', 'event-poster'), pick('write', 'resume'), pick('make', 'quote-post')].filter((t): t is StoreTemplate => !!t);
 
-/** "Make it yours.": a bold card with a few templates fanned out, then every template in Make. */
+/** "Make it yours.": a bold card with templates fanned out, five templates, then See more. */
 export function PicksShelf() {
   const c = useStoreContent('store.picks');
   return (
@@ -230,7 +259,7 @@ export function PicksShelf() {
           {c.promo.text && <span className="sh-promo__body">{c.promo.text}</span>}
           <span className="sh-promo__fan" aria-hidden="true">
             {FAN.map((t, i) => (
-              <span key={t.id} className={`sh-promo__sheet sh-promo__sheet--${i}`}>
+              <span key={templateKey(t)} className={`sh-promo__sheet sh-promo__sheet--${i}`}>
                 <TemplateCover template={t} />
               </span>
             ))}
@@ -240,9 +269,26 @@ export function PicksShelf() {
           </span>
         </Link>
       </li>
-      {TEMPLATES.map((t) => (
-        <TemplateItem key={t.id} template={t} />
+      {FIVE.map((t) => (
+        <TemplateItem key={templateKey(t)} template={t} />
       ))}
+      <li className="sh-more">
+        <Link to="/templates" className="sh-more__link">
+          <span className="sh-more__stack" aria-hidden="true">
+            {TEMPLATES.filter((t) => !FIVE.includes(t))
+              .slice(0, 3)
+              .map((t, i) => (
+                <span key={templateKey(t)} className={`sh-more__sheet sh-more__sheet--${i}`}>
+                  <TemplateCover template={t} />
+                </span>
+              ))}
+          </span>
+          <span className="sh-more__count">{TEMPLATES.length - FIVE.length} more</span>
+          <span className="sh-more__label">
+            {c.more} <ArrowRight size={18} strokeWidth={2.25} aria-hidden="true" />
+          </span>
+        </Link>
+      </li>
     </Shelf>
   );
 }

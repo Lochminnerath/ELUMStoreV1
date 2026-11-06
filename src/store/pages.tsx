@@ -6,7 +6,7 @@ import { StoreMark } from '../components/Brand';
 import { Loader } from '../components/Loader';
 import { useToast } from '../components/Toast';
 import { formatWhenInline } from '../lib/time';
-import { APPS, findApp, searchCatalog, TEMPLATE_KINDS, TEMPLATES, type TemplateKind } from './catalog';
+import { APPS, findApp, searchCatalog, TEMPLATE_KINDS, templateKey, TEMPLATES, type TemplateKind } from './catalog';
 import { AppCard, AppMark, appStyle, GetButton, HealthPill, openApp, StageTag, StorePage, SYMBOLS, TemplateCard, useTitle } from './parts';
 import { useMyApps } from './state';
 import { AppCircles, LatestShelf, PicksShelf, StoreHeading } from './home';
@@ -40,7 +40,7 @@ export function HomePage() {
             {yours.map((a) => (
               <li key={a.id} style={appStyle(a)}>
                 <button type="button" className="your-app" onClick={() => openApp(a, 'here')}>
-                  <AppMark id={a.id} size={48} />
+                  <AppMark id={a.id} size={52} fit />
                   <span>{a.name}</span>
                 </button>
               </li>
@@ -97,7 +97,7 @@ export function AppPage() {
         <section className="app-hero">
           <span className="app-hero__art" aria-hidden="true">
             <span className="app-hero__ring" />
-            <AppMark id={app.id} size={120} />
+            <AppMark id={app.id} size={132} fit />
           </span>
           <div className="app-hero__text">
             <p className="store-eyebrow app-hero__kind">{app.kind}</p>
@@ -141,14 +141,14 @@ export function AppPage() {
               </ul>
             </section>
 
-            {app.id === 'make' && (
+            {(app.id === 'make' || app.id === 'write') && (
               <section aria-labelledby="app-templates" className="store-section">
                 <h2 id="app-templates" className="store-h2">
                   Start from a template
                 </h2>
                 <ul className="tpl-grid">
-                  {TEMPLATES.map((t, i) => (
-                    <TemplateCard key={t.id} template={t} index={i} />
+                  {TEMPLATES.filter((t) => t.app === app.id).map((t, i) => (
+                    <TemplateCard key={templateKey(t)} template={t} index={i} />
                   ))}
                 </ul>
               </section>
@@ -159,7 +159,7 @@ export function AppPage() {
             <dl>
               <div>
                 <dt>Price</dt>
-                <dd>Free with your ELUM account</dd>
+                <dd>Free for ELUM Account users</dd>
               </div>
               <div>
                 <dt>Address</dt>
@@ -214,8 +214,8 @@ export function TemplatesPage() {
     <StorePage>
       <section className="store-intro">
         <p className="store-eyebrow">Templates</p>
-        <h1>Start something in Make</h1>
-        <p className="store-lede">Pick a template and Make opens with it, ready for your words and colours.</p>
+        <h1>Start from a template</h1>
+        <p className="store-lede">Pick one and it opens in ELUM Make or ELUM Write, ready for your own words and colours.</p>
       </section>
       <div className="segmented store-filter" role="group" aria-label="Kind of template">
         {[{ id: 'all' as const, name: 'All' }, ...TEMPLATE_KINDS].map((k) => (
@@ -226,7 +226,7 @@ export function TemplatesPage() {
       </div>
       <ul className="tpl-grid tpl-grid--wide">
         {shown.map((t, i) => (
-          <TemplateCard key={t.id} template={t} index={i} />
+          <TemplateCard key={templateKey(t)} template={t} index={i} />
         ))}
       </ul>
     </StorePage>
@@ -267,7 +267,7 @@ export function LibraryPage() {
             return (
               <li key={a.id} className="library__row" style={appStyle(a)}>
                 <button type="button" className="library__app" onClick={() => navigate(`/apps/${a.id}`)}>
-                  <AppMark id={a.id} size={44} />
+                  <AppMark id={a.id} size={48} fit />
                   <span>
                     <span className="library__name">ELUM {a.name}</span>
                     <span className="library__seen muted">{a.included ? 'Comes with your account' : seen ? `Last used ${formatWhenInline(seen)}` : 'Not opened yet'}</span>
@@ -335,11 +335,11 @@ export function SearchPage() {
           {found.templates.length > 0 && (
             <section aria-labelledby="found-templates" className="store-section">
               <h2 id="found-templates" className="store-h2">
-                Templates for Make
+                Templates
               </h2>
               <ul className="tpl-grid">
                 {found.templates.map((t, i) => (
-                  <TemplateCard key={t.id} template={t} index={i} />
+                  <TemplateCard key={templateKey(t)} template={t} index={i} />
                 ))}
               </ul>
             </section>

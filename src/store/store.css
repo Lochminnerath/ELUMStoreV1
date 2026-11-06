@@ -632,6 +632,32 @@
   border-radius: 99px;
   background: var(--accent);
 }
+/* A page from Write: a title, a short rule, then lines of text. */
+.tpl-cover--page {
+  justify-content: flex-start;
+  gap: 0.32em;
+  padding: 1em 0.9em;
+}
+.tpl-cover--page .tpl-cover__title {
+  font-size: 0.78em;
+}
+.tpl-cover--page .tpl-cover__accent {
+  width: 1em;
+  height: 0.16em;
+  margin-bottom: 0.15em;
+}
+.tpl-cover--page .tpl-cover__sub {
+  font-size: 0.32em;
+  margin-bottom: 0.3em;
+}
+.tpl-cover--page .tpl-cover__line {
+  height: 0.16em;
+  width: 92%;
+  opacity: 0.18;
+}
+.tpl-cover--page .tpl-cover__line--short {
+  width: 62%;
+}
 .tpl-cover--banner .tpl-cover__title {
   font-size: 0.9em;
 }
@@ -1009,6 +1035,12 @@
   line-height: 1;
   letter-spacing: -0.035em;
   color: var(--store-bright);
+  /* A soft run of Store yellow, lighter at the top, like light on the logo. */
+  background: linear-gradient(170deg, color-mix(in srgb, var(--store-bright) 70%, #ffffff), var(--store-bright) 55%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-bottom: 0.06em;
 }
 .sh-head__art {
   display: grid;
@@ -1071,9 +1103,11 @@
 .sh-row {
   margin: 24px 0 8px;
 }
-/* One line runs through the middle of every circle; the apps slide out of Store along it. */
+/* One line runs through the middle of every circle; the apps slide out of Store along it. Its own
+   stacking layer keeps the circles' order inside the row, so they scroll under the header. */
 .sh-row__list {
   position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: repeat(var(--count, 9), minmax(96px, 1fr));
   gap: 8px;
@@ -1193,6 +1227,7 @@
   color: var(--ink-muted);
 }
 .sh-shelf__list {
+  isolation: isolate;
   display: flex;
   gap: 20px;
   margin: 0 -32px;
@@ -1583,4 +1618,174 @@
   .sh-circle {
     animation: none;
   }
+}
+
+/* ======================================================= Store home: polish */
+
+/* A tick on the apps already in your ELUM account. */
+.sh-circle__yours {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--app);
+  color: #ffffff;
+  box-shadow: 0 0 0 3px var(--surface), 0 4px 10px -4px color-mix(in srgb, var(--app) 80%, transparent);
+  animation: sh-pop 420ms cubic-bezier(0.3, 1.4, 0.5, 1) both;
+  animation-delay: 900ms;
+}
+@keyframes sh-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+/* Write templates sit on Write's own warm wash. */
+.sh-tpl__frame[data-app='write'] {
+  background:
+    radial-gradient(circle at 30% 20%, color-mix(in srgb, #ffffff 70%, transparent), transparent 60%),
+    color-mix(in srgb, var(--write) 16%, var(--surface));
+}
+.sh-tpl__kind[data-app='write'] {
+  color: var(--write-deep);
+}
+
+/* See more: a small stack of the other templates, and how many there are. */
+.sh-more {
+  width: 240px;
+}
+.sh-more__link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 4px;
+  height: 460px;
+  padding: 24px;
+  overflow: hidden;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--store) 22%, transparent), transparent 65%),
+    var(--surface-glass);
+  color: var(--ink);
+  text-decoration: none;
+  box-shadow: inset 0 0 0 1px var(--hairline);
+  transition: transform var(--dur-panel) var(--ease), box-shadow var(--dur-panel) var(--ease);
+}
+.sh-more__link:hover,
+.sh-more__link:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 44px -24px rgba(20, 26, 46, 0.4), inset 0 0 0 1px var(--hairline);
+}
+.sh-more__stack {
+  position: absolute;
+  inset: 40px 24px 150px;
+}
+.sh-more__sheet {
+  container-type: size;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transition: transform 500ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.sh-more__sheet .tpl-cover {
+  --w: min(70cqw, calc(80cqh * var(--ratio)));
+  box-shadow: 0 14px 26px -14px rgba(20, 26, 46, 0.5);
+}
+.sh-more__sheet--0 {
+  transform: rotate(-8deg) translateX(-14%);
+}
+.sh-more__sheet--1 {
+  z-index: 1;
+  transform: rotate(6deg) translateX(14%);
+}
+.sh-more__sheet--2 {
+  z-index: 2;
+  transform: translateY(6%);
+}
+.sh-more__link:hover .sh-more__sheet--0 {
+  transform: rotate(-12deg) translateX(-22%);
+}
+.sh-more__link:hover .sh-more__sheet--1 {
+  transform: rotate(10deg) translateX(22%);
+}
+.sh-more__link:hover .sh-more__sheet--2 {
+  transform: translateY(0) scale(1.04);
+}
+.sh-more__count {
+  color: var(--ink-muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+.sh-more__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+/* Smoother movement everywhere on the home page: one gentle curve, and cards that settle. */
+.store-main--wide {
+  --sh-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sh-latest__link,
+.sh-tpl__link,
+.sh-promo__link,
+.sh-more__link {
+  transition:
+    transform 520ms var(--sh-ease),
+    box-shadow 520ms var(--sh-ease);
+}
+.sh-circle__disc {
+  transition:
+    transform 420ms var(--sh-ease),
+    box-shadow 420ms var(--sh-ease);
+}
+.sh-shelf__list {
+  scroll-behavior: smooth;
+}
+
+/* Each shelf rises into place as it scrolls into view, where the browser can do it. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .sh-shelf,
+    #store-all {
+      animation: sh-into-view linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}
+@keyframes sh-into-view {
+  from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sh-circle__yours,
+  .sh-more__sheet {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* Write's templates in Write's own colour. */
+.tpl-card[data-app='write'] .tpl-card__go {
+  color: var(--write-deep);
+}
+.tpl-card[data-app='write'] .tpl-card__link:hover .tpl-card__frame,
+.tpl-card[data-app='write'] .tpl-card__link:focus-visible .tpl-card__frame {
+  border-color: var(--write);
+  box-shadow: 0 10px 30px -18px var(--write);
 }

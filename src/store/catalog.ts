@@ -4,7 +4,7 @@ import { ELUM_APPS } from '../lib/platform';
 const urlOf = (id: string) => ELUM_APPS.find((a) => a.id === id)!.url;
 
 /**
- * What ELUM Store offers: the ELUM apps, and templates for Make. Words and links only; whether
+ * What ELUM Store offers: the ELUM apps, and templates for Make and Write. Words and links only; whether
  * someone has an app comes from the platform (api.myApps), and whether it is running from the
  * elum-status function. Keep every line to something the app does today.
  */
@@ -233,32 +233,40 @@ export function findApp(id: string | undefined): StoreApp | null {
 
 // ------------------------------------------------------------------ templates
 
-export type TemplateKind = 'presentation' | 'poster' | 'social';
+export type TemplateKind = 'presentation' | 'poster' | 'social' | 'document';
+
+/** The app a template opens in. */
+export type TemplateApp = 'make' | 'write';
 
 /**
- * Templates for Make, by the ids Make knows (ELUMMakeV1 src/editor/templates.ts). "Use in Make"
- * opens Make with ?template=<id>&from=<click>, and Make starts a new design from it, once per click.
+ * Templates for Make and Write, by the ids each app knows (ELUMMakeV1 src/editor/templates.ts and
+ * ELUMWritev1 src/lib/templates.ts). "Use" opens the app with ?template=<id>&from=<click>, and it
+ * starts a new design or document from it, once per click.
  */
 export interface StoreTemplate {
+  /** The template's id in its app (Make and Write each have their own, so a few repeat). */
   id: string;
+  app: TemplateApp;
   name: string;
   description: string;
   kind: TemplateKind;
   /** Width over height. */
   ratio: number;
   /** How its cover looks, for the card: the ground, the ink, the accent, the layout and the big words on it. */
-  look: { ground: string; ink: string; accent: string; layout: 'title' | 'lesson' | 'poster' | 'quote' | 'document' | 'banner'; words: string; sub?: string; font?: 'serif' | 'tall' };
+  look: { ground: string; ink: string; accent: string; layout: 'title' | 'lesson' | 'poster' | 'quote' | 'document' | 'banner' | 'page'; words: string; sub?: string; font?: 'serif' | 'tall' };
 }
 
 export const TEMPLATE_KINDS: { id: TemplateKind; name: string }[] = [
   { id: 'presentation', name: 'Presentations' },
   { id: 'poster', name: 'Posters' },
   { id: 'social', name: 'Social posts' },
+  { id: 'document', name: 'Documents' },
 ];
 
 export const TEMPLATES: StoreTemplate[] = [
   {
     id: 'pitch',
+    app: 'make',
     name: 'Pitch deck',
     description: 'A title, the problem, the idea and next steps.',
     kind: 'presentation',
@@ -267,6 +275,7 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'lesson',
+    app: 'make',
     name: 'Lesson slides',
     description: 'Clean slides for teaching or a talk.',
     kind: 'presentation',
@@ -275,6 +284,7 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'minimal-deck',
+    app: 'make',
     name: 'Minimal presentation',
     description: 'Lots of white space and one idea per slide.',
     kind: 'presentation',
@@ -283,6 +293,7 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'annual-report',
+    app: 'make',
     name: 'Annual report',
     description: 'The year in numbers, highlights and what comes next.',
     kind: 'presentation',
@@ -291,6 +302,7 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'workshop',
+    app: 'make',
     name: 'Workshop slides',
     description: 'An agenda, exercises and a wrap-up.',
     kind: 'presentation',
@@ -299,6 +311,7 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'product-launch',
+    app: 'make',
     name: 'Product launch',
     description: 'Introduce something new and why people will love it.',
     kind: 'presentation',
@@ -307,6 +320,7 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'event-poster',
+    app: 'make',
     name: 'Event poster',
     description: 'Bold heading, date and place.',
     kind: 'poster',
@@ -315,6 +329,7 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'conference-poster',
+    app: 'make',
     name: 'Conference poster',
     description: 'A research poster with the key finding up top.',
     kind: 'poster',
@@ -323,6 +338,7 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'recipe',
+    app: 'make',
     name: 'Recipe card',
     description: 'Ingredients and steps for a favourite dish.',
     kind: 'poster',
@@ -331,6 +347,7 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'workshop-flyer',
+    app: 'make',
     name: 'Workshop flyer',
     description: 'Get people to sign up for a class or workshop.',
     kind: 'poster',
@@ -339,6 +356,7 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'menu',
+    app: 'make',
     name: 'Menu',
     description: 'A café or restaurant menu.',
     kind: 'poster',
@@ -347,6 +365,7 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'invitation',
+    app: 'make',
     name: 'Wedding invitation',
     description: 'An elegant invitation with names, date and place.',
     kind: 'poster',
@@ -355,6 +374,7 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'proposal',
+    app: 'make',
     name: 'Proposal',
     description: 'A one-page project proposal.',
     kind: 'poster',
@@ -363,6 +383,7 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'resume',
+    app: 'make',
     name: 'Resume',
     description: 'A clean one-page resume.',
     kind: 'poster',
@@ -371,6 +392,7 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'invoice',
+    app: 'make',
     name: 'Invoice',
     description: 'A simple invoice for freelance work.',
     kind: 'poster',
@@ -379,6 +401,7 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'newsletter',
+    app: 'make',
     name: 'Newsletter',
     description: 'A monthly update with a few short stories.',
     kind: 'poster',
@@ -387,6 +410,7 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'quote-post',
+    app: 'make',
     name: 'Quote post',
     description: 'A square post for a quote or announcement.',
     kind: 'social',
@@ -395,6 +419,7 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'birthday',
+    app: 'make',
     name: 'Birthday card',
     description: 'A bright card to say happy birthday.',
     kind: 'social',
@@ -403,6 +428,7 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'header',
+    app: 'make',
     name: 'Profile header',
     description: 'A wide header for your profile or page.',
     kind: 'social',
@@ -411,23 +437,156 @@ export const TEMPLATES: StoreTemplate[] = [
   },
   {
     id: 'thumbnail',
+    app: 'make',
     name: 'Video thumbnail',
     description: 'A bold 16:9 thumbnail that reads at a glance.',
     kind: 'social',
     ratio: 16 / 9,
     look: { ground: '#141a2e', ink: '#ffffff', accent: '#e9b949', layout: 'banner', words: 'How I did it', sub: 'In 10 minutes' },
   },
+  {
+    id: 'notes',
+    app: 'write',
+    name: 'Meeting notes',
+    description: 'Agenda, notes and next steps.',
+    kind: 'document',
+    ratio: 1275 / 1650,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#f59a52', layout: 'page', words: 'Meeting notes', sub: 'Agenda · Notes · Next steps' },
+  },
+  {
+    id: 'letter',
+    app: 'write',
+    name: 'Letter',
+    description: 'Addresses, date and a greeting.',
+    kind: 'document',
+    ratio: 1275 / 1650,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#3b5bd6', layout: 'page', words: 'Dear Sam,', sub: '12 November 2026' },
+  },
+  {
+    id: 'brief',
+    app: 'write',
+    name: 'Project brief',
+    description: 'Goal, scope and timeline.',
+    kind: 'document',
+    ratio: 1275 / 1650,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#3fc4a0', layout: 'page', words: 'Project brief', sub: 'Goal · Scope · Timeline' },
+  },
+  {
+    id: 'resume',
+    app: 'write',
+    name: 'Resume',
+    description: 'Experience, skills and education.',
+    kind: 'document',
+    ratio: 1275 / 1650,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#141a2e', layout: 'page', words: 'Your Name', sub: 'Experience · Skills' },
+  },
+  {
+    id: 'cover-letter',
+    app: 'write',
+    name: 'Cover letter',
+    description: 'For a job you would love.',
+    kind: 'document',
+    ratio: 1275 / 1650,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#9b84ee', layout: 'page', words: 'Cover letter', sub: 'For the role of …' },
+  },
+  {
+    id: 'agenda',
+    app: 'write',
+    name: 'Meeting agenda',
+    description: 'Topics, times and who leads.',
+    kind: 'document',
+    ratio: 1275 / 1650,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#f59a52', layout: 'page', words: 'Agenda', sub: 'Topics · Times · Who leads' },
+  },
+  {
+    id: 'essay',
+    app: 'write',
+    name: 'Essay',
+    description: 'Introduction, argument and conclusion.',
+    kind: 'document',
+    ratio: 1275 / 1650,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#ec7fa9', layout: 'page', words: 'Essay title', sub: 'Introduction' },
+  },
+  {
+    id: 'lesson',
+    app: 'write',
+    name: 'Lesson plan',
+    description: 'Aims, activities and checks.',
+    kind: 'document',
+    ratio: 1275 / 1650,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#48bfe3', layout: 'page', words: 'Lesson plan', sub: 'Aims · Activities' },
+  },
+  {
+    id: 'recipe',
+    app: 'write',
+    name: 'Recipe',
+    description: 'Ingredients and method.',
+    kind: 'document',
+    ratio: 1275 / 1650,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#f06a5f', layout: 'page', words: 'Recipe', sub: 'Ingredients · Method' },
+  },
+  {
+    id: 'invoice',
+    app: 'write',
+    name: 'Invoice',
+    description: 'Work done, amounts and payment.',
+    kind: 'document',
+    ratio: 1275 / 1650,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#3fc4a0', layout: 'page', words: 'Invoice', sub: 'Work · Amount · Due' },
+  },
+  {
+    id: 'newsletter',
+    app: 'write',
+    name: 'Newsletter',
+    description: 'News, highlights and dates.',
+    kind: 'document',
+    ratio: 1275 / 1650,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#ec7fa9', layout: 'page', words: 'Newsletter', sub: 'This month' },
+  },
+  {
+    id: 'week',
+    app: 'write',
+    name: 'Weekly planner',
+    description: 'Priorities and a day-by-day list.',
+    kind: 'document',
+    ratio: 1275 / 1650,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#e9b949', layout: 'page', words: 'This week', sub: 'Monday · Tuesday · …' },
+  },
+  {
+    id: 'trip',
+    app: 'write',
+    name: 'Trip itinerary',
+    description: 'Travel, stays and plans by day.',
+    kind: 'document',
+    ratio: 1275 / 1650,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#48bfe3', layout: 'page', words: 'Trip itinerary', sub: 'Day one · Day two' },
+  },
+  {
+    id: 'thanks',
+    app: 'write',
+    name: 'Thank-you letter',
+    description: 'A short, heartfelt note.',
+    kind: 'document',
+    ratio: 1275 / 1650,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: '#ec7fa9', layout: 'page', words: 'Thank you', sub: 'With warm wishes' },
+  },
 ];
 
 /**
- * The address that opens Make with a template ready to edit. `click` names this one click, so Make
- * makes one design for it even if Back brings the address round again.
+ * The address that opens Make or Write with a template ready to edit. `click` names this one click,
+ * so the app starts one design or document for it even if Back brings the address round again.
  */
-export function templateUrl(id: string, click?: string): string {
-  const query = new URLSearchParams({ template: id });
+export function templateUrl(template: Pick<StoreTemplate, 'id' | 'app'>, click?: string): string {
+  const query = new URLSearchParams({ template: template.id });
   if (click) query.set('from', click);
-  return `${MAKE_URL}/?${query.toString()}`;
+  return `${template.app === 'write' ? WRITE_URL : MAKE_URL}/?${query.toString()}`;
 }
+
+/** The app a template opens in, by name. */
+export const templateAppName = (t: Pick<StoreTemplate, 'app'>) => (t.app === 'write' ? 'Write' : 'Make');
+
+/** A key for a template that is unique across Make and Write. */
+export const templateKey = (t: Pick<StoreTemplate, 'id' | 'app'>) => `${t.app}:${t.id}`;
 
 // --------------------------------------------------------------------- search
 
@@ -438,6 +597,6 @@ export function searchCatalog(query: string): { apps: StoreApp[]; templates: Sto
   const matches = (text: string) => words.every((w) => text.toLowerCase().includes(w));
   return {
     apps: APPS.filter((a) => matches([a.name, a.kind, a.tagline, a.about, ...a.highlights.map((h) => h.title)].join(' '))),
-    templates: TEMPLATES.filter((t) => matches([t.name, t.description, t.kind, 'template make'].join(' '))),
+    templates: TEMPLATES.filter((t) => matches([t.name, t.description, t.kind, 'template', templateAppName(t)].join(' '))),
   };
 }
