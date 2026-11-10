@@ -131,9 +131,9 @@ export const DEFAULTS = {
       {
         id: 'browse',
         app: 'browse',
-        eyebrow: 'Updated',
+        eyebrow: 'New look',
         title: 'ELUM Browse',
-        text: 'Search the web and open pages in tabs, grouped the way you work. Results ranked by plain rules, not by AI.',
+        text: 'Search the web in a browser with your background, your colours and your tabs. No AI answers, ever.',
         note: 'Free for ELUM Account users',
         color: '#e6e0fb',
         band: '#9b84ee',
