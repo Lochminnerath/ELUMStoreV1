@@ -164,7 +164,7 @@ export const APPS: StoreApp[] = [
     host: 'browse.elum.space',
     featured: true,
     highlights: [
-      { symbol: 'star', title: 'Your own look', text: 'Seven backgrounds or your own picture, ten accent colours or any colour, and a colour for your tabs.' },
+      { symbol: 'star', title: 'Your own look', text: 'Live backgrounds in every ELUM colour or your own picture, ten accent colours or any colour, and a colour for your tabs.' },
       { symbol: 'saved', title: 'Settings in one place', text: 'SafeSearch, pictures, where results open, the address bar, theme and less motion. Kept on your device.' },
       { symbol: 'visible', title: 'Just the web', text: 'Results from Google, without AI Overviews or Gemini.' },
       { symbol: 'open', title: 'Pages stay in Browse', text: 'Results and typed addresses open in a Browse tab, or as a clean reading view when a site refuses.' },
