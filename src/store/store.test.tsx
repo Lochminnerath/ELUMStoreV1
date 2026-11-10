@@ -25,7 +25,7 @@ describe('the catalogue', () => {
 
   it('opens templates in Make and Write by the ids each app knows', () => {
     // Every template in Make (ELUMMakeV1 src/editor/templates.ts), and no others.
-    expect(TEMPLATES.filter((t) => t.app === 'make').map((t) => t.id).sort()).toEqual(['annual-report', 'birthday', 'conference-poster', 'event-poster', 'header', 'invitation', 'invoice', 'lesson', 'menu', 'minimal-deck', 'newsletter', 'pitch', 'product-launch', 'proposal', 'quote-post', 'recipe', 'resume', 'thumbnail', 'workshop', 'workshop-flyer']);
+    expect(TEMPLATES.filter((t) => t.app === 'make').map((t) => t.id).sort()).toEqual(['annual-report', 'app-screen', 'birthday', 'business-card', 'certificate', 'conference-poster', 'event-poster', 'event-ticket', 'header', 'infographic', 'invitation', 'invoice', 'landing-page', 'lesson', 'logo', 'menu', 'minimal-deck', 'mood-board', 'newsletter', 'pitch', 'product-launch', 'proposal', 'quote-post', 'quote-story', 'recipe', 'resume', 'sale-post', 'thumbnail', 'workshop', 'workshop-flyer']);
     // Every template in Write (ELUMWritev1 src/lib/templates.ts).
     expect(TEMPLATES.filter((t) => t.app === 'write').map((t) => t.id).sort()).toEqual(['agenda', 'brief', 'cover-letter', 'essay', 'invoice', 'lesson', 'letter', 'newsletter', 'notes', 'recipe', 'resume', 'thanks', 'trip', 'week']);
     expect(templateUrl({ id: 'event-poster', app: 'make' })).toBe('https://elummake.netlify.app/?template=event-poster');

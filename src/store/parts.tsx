@@ -409,6 +409,26 @@ export function TemplateCover({ template }: { template: StoreTemplate }) {
           <span className="tpl-cover__line tpl-cover__line--short" />
         </>
       )}
+      {layout === 'mark' && (
+        <>
+          <span className="tpl-cover__burst" />
+          <span className="tpl-cover__title">{words}</span>
+          {sub && <span className="tpl-cover__sub">{sub}</span>}
+        </>
+      )}
+      {layout === 'screen' && (
+        <>
+          <span className="tpl-cover__chrome" />
+          {sub && <span className="tpl-cover__sub">{sub}</span>}
+          <span className="tpl-cover__title">{words}</span>
+          <span className="tpl-cover__cards">
+            <span />
+            <span />
+            <span />
+          </span>
+          <span className="tpl-cover__button" />
+        </>
+      )}
       {layout === 'banner' && (
         <>
           <span className="tpl-cover__bar" />

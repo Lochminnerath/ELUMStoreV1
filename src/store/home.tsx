@@ -245,7 +245,7 @@ const pick = (app: 'make' | 'write', id: string) => TEMPLATES.find((t) => t.app 
 /** The three templates fanned out on the red card. */
 const FAN = [pick('make', 'event-poster'), pick('make', 'pitch'), pick('write', 'letter')].filter((t): t is StoreTemplate => !!t);
 /** The five templates on the home page, from both apps; See more opens the rest. */
-const FIVE = [pick('make', 'pitch'), pick('write', 'notes'), pick('make', 'event-poster'), pick('write', 'resume'), pick('make', 'quote-post')].filter((t): t is StoreTemplate => !!t);
+const FIVE = [pick('make', 'pitch'), pick('write', 'notes'), pick('make', 'logo'), pick('write', 'resume'), pick('make', 'sale-post')].filter((t): t is StoreTemplate => !!t);
 
 /** "Make it yours.": a bold card with templates fanned out, five templates, then See more. */
 export function PicksShelf() {

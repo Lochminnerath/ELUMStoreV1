@@ -618,6 +618,56 @@
 .tpl-cover--document .tpl-cover__line--short {
   width: 60%;
 }
+/* A logo or a bold post: a burst in the accent colour above the name. */
+.tpl-cover--mark {
+  align-items: center;
+  text-align: center;
+  gap: 0.3em;
+}
+.tpl-cover__burst {
+  width: 3.2em;
+  aspect-ratio: 1;
+  background: var(--accent);
+  clip-path: polygon(50% 0%, 61% 15%, 79% 9%, 79% 28%, 97% 33%, 87% 50%, 97% 67%, 79% 72%, 79% 91%, 61% 85%, 50% 100%, 39% 85%, 21% 91%, 21% 72%, 3% 67%, 13% 50%, 3% 33%, 21% 28%, 21% 9%, 39% 15%);
+  filter: drop-shadow(0 0.2em 0.3em rgba(20, 26, 46, 0.25));
+}
+.tpl-cover--mark .tpl-cover__title {
+  font-size: 0.9em;
+}
+/* An app screen or a web page: a bar, a heading, cards and a button. */
+.tpl-cover--screen {
+  justify-content: flex-start;
+  gap: 0.3em;
+  padding: 0.7em;
+}
+.tpl-cover__chrome {
+  height: 0.25em;
+  width: 40%;
+  border-radius: 99px;
+  background: currentColor;
+  opacity: 0.25;
+  margin-bottom: 0.4em;
+}
+.tpl-cover--screen .tpl-cover__title {
+  font-size: 0.7em;
+}
+.tpl-cover__cards {
+  display: grid;
+  gap: 0.3em;
+  margin-top: 0.3em;
+}
+.tpl-cover__cards span {
+  height: 1em;
+  border-radius: 0.25em;
+  background: #ffffff;
+  box-shadow: 0 0.1em 0.3em rgba(20, 26, 46, 0.12);
+}
+.tpl-cover__button {
+  margin-top: auto;
+  height: 0.8em;
+  border-radius: 99px;
+  background: var(--accent);
+}
 /* A wide header or thumbnail: an accent bar beside one bold line. */
 .tpl-cover--banner {
   gap: 0.3em;

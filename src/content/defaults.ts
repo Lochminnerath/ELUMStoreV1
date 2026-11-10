@@ -120,9 +120,9 @@ export const DEFAULTS = {
       {
         id: 'make',
         app: 'make',
-        eyebrow: 'Updated',
+        eyebrow: 'New tools',
         title: 'ELUM Make',
-        text: 'Slides, posters and posts on a free canvas, with templates to start from and present straight from the browser.',
+        text: 'A design studio for slides, posts, logos and screens. Draw with the pen, fill with gradients, add shadows and blend modes.',
         note: 'Free for ELUM Account users',
         color: '#fadbe7',
         band: '#ec7fa9',

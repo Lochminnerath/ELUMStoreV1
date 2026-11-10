@@ -131,19 +131,23 @@ export const APPS: StoreApp[] = [
     name: 'Make',
     color: '#ec7fa9',
     mist: '#fceaf1',
-    kind: 'Slides and posts',
-    tagline: 'Slides, posters and posts on a real canvas.',
-    about: 'Design presentations, posters, flyers and social posts on a canvas that snaps things into line. Present full screen, share with anyone who has an ELUM account, or download PNG and PDF.',
+    kind: 'Design studio',
+    tagline: 'A design studio: slides, posts, logos and screens.',
+    about: 'Design presentations, posters, logos, business cards, app screens and web pages on a canvas that snaps things into line. Draw your own shapes with the pen and the brush, fill them with gradients, add shadows, blur and blend modes, and give pictures filters and shapes. Present full screen, share with anyone who has an ELUM account, or download PNG and PDF.',
     url: MAKE_URL,
     host: 'make.elum.space',
     featured: true,
     highlights: [
-      { symbol: 'present', title: 'Present', text: 'Fills the screen until you press Esc. Arrows, space or a click move through your pages.' },
+      { symbol: 'compose', title: 'The pen and the brush', text: 'Click to place points and draw any shape, or draw freehand. Double-click a drawing to move its points.' },
+      { symbol: 'star', title: 'Effects', text: 'Gradients, shadows, blur, blend modes, outlines and highlights, on anything you place.' },
+      { symbol: 'visible', title: 'Pictures', text: 'Eight filters, sliders for light and colour, and shapes to show a picture inside.' },
+      { symbol: 'present', title: 'Present', text: 'Fills the screen until you press Esc. Elements can link to a web page or another page.' },
       { symbol: 'duplicate', title: 'Pages and layers', text: 'Duplicate, reorder and delete pages, with speaker notes, and keep elements in order with layers.' },
       { symbol: 'compose', title: 'Your words, your colours', text: 'Double-click any text to edit it, and pick any colour from the wheel or by its code.' },
       { symbol: 'download', title: 'Download', text: 'Save a page as PNG or the whole design as PDF.' },
     ],
     news: [
+      { date: '10 November 2026', text: 'A design studio: the pen, the brush, twelve shapes, gradients, effects, picture filters and ten new templates.' },
       { date: '20 October 2026', text: 'Edit text in place and keep your own colours.' },
       { date: '20 October 2026', text: 'Deleting a design now removes its pictures too.' },
     ],
@@ -233,7 +237,7 @@ export function findApp(id: string | undefined): StoreApp | null {
 
 // ------------------------------------------------------------------ templates
 
-export type TemplateKind = 'presentation' | 'poster' | 'social' | 'document';
+export type TemplateKind = 'presentation' | 'poster' | 'social' | 'design' | 'document';
 
 /** The app a template opens in. */
 export type TemplateApp = 'make' | 'write';
@@ -253,13 +257,14 @@ export interface StoreTemplate {
   /** Width over height. */
   ratio: number;
   /** How its cover looks, for the card: the ground, the ink, the accent, the layout and the big words on it. */
-  look: { ground: string; ink: string; accent: string; layout: 'title' | 'lesson' | 'poster' | 'quote' | 'document' | 'banner' | 'page'; words: string; sub?: string; font?: 'serif' | 'tall' };
+  look: { ground: string; ink: string; accent: string; layout: 'title' | 'lesson' | 'poster' | 'quote' | 'document' | 'banner' | 'page' | 'mark' | 'screen'; words: string; sub?: string; font?: 'serif' | 'tall' };
 }
 
 export const TEMPLATE_KINDS: { id: TemplateKind; name: string }[] = [
   { id: 'presentation', name: 'Presentations' },
   { id: 'poster', name: 'Posters' },
   { id: 'social', name: 'Social posts' },
+  { id: 'design', name: 'Logos and screens' },
   { id: 'document', name: 'Documents' },
 ];
 
@@ -443,6 +448,96 @@ export const TEMPLATES: StoreTemplate[] = [
     kind: 'social',
     ratio: 16 / 9,
     look: { ground: '#141a2e', ink: '#ffffff', accent: '#e9b949', layout: 'banner', words: 'How I did it', sub: 'In 10 minutes' },
+  },
+  {
+    id: 'logo',
+    app: 'make',
+    name: 'Logo',
+    description: 'A mark drawn with the pen, and a name to go with it.',
+    kind: 'design',
+    ratio: 1,
+    look: { ground: '#fffaf5', ink: '#141a2e', accent: 'linear-gradient(135deg, #f59a52, #ec7fa9)', layout: 'mark', words: 'Fern & Field', sub: 'Flowers · Plants', font: 'serif' },
+  },
+  {
+    id: 'business-card',
+    app: 'make',
+    name: 'Business card',
+    description: 'A front and a back, with a gradient and your details.',
+    kind: 'design',
+    ratio: 1050 / 600,
+    look: { ground: 'linear-gradient(135deg, #141a2e, #3b5bd6)', ink: '#ffffff', accent: '#3fc4a0', layout: 'banner', words: 'Sam Rivera', sub: 'Product designer' },
+  },
+  {
+    id: 'app-screen',
+    app: 'make',
+    name: 'App screen',
+    description: 'Two phone screens that link to each other when presenting.',
+    kind: 'design',
+    ratio: 390 / 844,
+    look: { ground: '#f4f5f8', ink: '#141a2e', accent: '#3b5bd6', layout: 'screen', words: 'Your plans', sub: 'Good morning' },
+  },
+  {
+    id: 'landing-page',
+    app: 'make',
+    name: 'Website landing page',
+    description: 'A hero, a button and three features, with soft colour behind.',
+    kind: 'design',
+    ratio: 1440 / 1024,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: 'linear-gradient(135deg, #ec7fa9, #9b84ee)', layout: 'screen', words: 'Design that feels like you made it.', sub: 'Northwind' },
+  },
+  {
+    id: 'certificate',
+    app: 'make',
+    name: 'Certificate',
+    description: 'A framed certificate with a name in script and a seal.',
+    kind: 'poster',
+    ratio: 1650 / 1275,
+    look: { ground: '#fffdf7', ink: '#141a2e', accent: '#c9a77c', layout: 'title', words: 'Alex Morgan', sub: 'Certificate of achievement', font: 'serif' },
+  },
+  {
+    id: 'mood-board',
+    app: 'make',
+    name: 'Mood board',
+    description: 'Shapes ready for your pictures, and a palette.',
+    kind: 'presentation',
+    ratio: 16 / 9,
+    look: { ground: '#f6f1ea', ink: '#2b2118', accent: '#f59a52', layout: 'lesson', words: 'Mood board', sub: 'Warm, quiet, a little wild', font: 'serif' },
+  },
+  {
+    id: 'sale-post',
+    app: 'make',
+    name: 'Sale post',
+    description: 'A bold square post with an outlined headline and a burst.',
+    kind: 'social',
+    ratio: 1,
+    look: { ground: 'linear-gradient(135deg, #7093f8, #9b84ee)', ink: '#ffffff', accent: '#e9b949', layout: 'mark', words: 'Summer sale', sub: '50% off', font: 'tall' },
+  },
+  {
+    id: 'quote-story',
+    app: 'make',
+    name: 'Quote story',
+    description: 'A tall story with a quote and a flowing wave.',
+    kind: 'social',
+    ratio: 9 / 16,
+    look: { ground: 'linear-gradient(180deg, #141a2e, #3b5bd6)', ink: '#ffffff', accent: '#ec7fa9', layout: 'quote', words: 'Make the thing you wish you could find.', font: 'serif' },
+  },
+  {
+    id: 'infographic',
+    app: 'make',
+    name: 'Step-by-step infographic',
+    description: 'Four numbered steps joined by arrows.',
+    kind: 'poster',
+    ratio: 0.707,
+    look: { ground: '#ffffff', ink: '#141a2e', accent: 'linear-gradient(135deg, #3fc4a0, #7093f8)', layout: 'document', words: 'How to start a garden' },
+  },
+  {
+    id: 'event-ticket',
+    app: 'make',
+    name: 'Event ticket',
+    description: 'A wide ticket with the date, the place and a stub.',
+    kind: 'design',
+    ratio: 3,
+    look: { ground: 'linear-gradient(120deg, #ec7fa9, #9b84ee)', ink: '#ffffff', accent: '#141a2e', layout: 'banner', words: 'Night Market', sub: 'Friday 14 June · 6 pm' },
   },
   {
     id: 'notes',

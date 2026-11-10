@@ -19,7 +19,7 @@ export interface ElumApp {
 export const ELUM_APPS: ElumApp[] = [
   { id: 'write', name: 'Write', note: 'Documents', url: at('VITE_ELUM_WRITE_URL', 'https://writebyelum.netlify.app'), color: '#f59a52' },
   { id: 'type', name: 'Type', note: 'Mail', url: at('VITE_ELUM_TYPE_URL', 'https://typebyelum.netlify.app'), color: '#3fc4a0' },
-  { id: 'make', name: 'Make', note: 'Slides and posts', url: at('VITE_ELUM_MAKE_URL', 'https://makebyelum.netlify.app'), color: '#ec7fa9' },
+  { id: 'make', name: 'Make', note: 'Design studio', url: at('VITE_ELUM_MAKE_URL', 'https://makebyelum.netlify.app'), color: '#ec7fa9' },
   { id: 'account', name: 'Account', note: 'You, everywhere', url: at('VITE_ELUM_ACCOUNT_URL', 'https://accountsbyelum.netlify.app'), color: '#94c858' },
   { id: 'browse', name: 'Browse', note: 'Search', url: at('VITE_ELUM_BROWSE_URL', 'https://browsebyelum.netlify.app'), color: '#9b84ee' },
   { id: 'store', name: 'Store', note: 'Apps and more', url: at('VITE_ELUM_STORE_URL', 'https://storebyelum.netlify.app'), color: '#e9b949' },
