@@ -908,6 +908,21 @@
 .store-foot a {
   color: inherit;
 }
+.store-foot__legal {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 16px;
+  font-size: 12px;
+}
+.store-foot__legal a {
+  text-decoration: none;
+}
+.store-foot__legal a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
 
 /* ---- Small screens: iPhone and up ---- */
 @media (max-width: 900px) {

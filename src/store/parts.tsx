@@ -15,6 +15,7 @@ import { accountsSignIn, BROWSE_URL, openElsewhere, signInThroughAccount } from 
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { templateAppName, templateUrl, type StoreApp, type StoreTemplate, type Symbol } from './catalog';
 import { useMyApps, useRunning } from './state';
+import { LEGAL_PAGES, legalUrl } from '../lib/legal';
 
 export const SYMBOLS: Record<Symbol, ComponentType<IconProps>> = {
   compose: Icons.ComposeIcon,
@@ -212,6 +213,13 @@ export function StoreFooter() {
           ELUM Docs
         </a>
       </span>
+      <nav className="store-foot__legal" aria-label="Policies">
+        {(['terms', 'service-terms', 'privacy', 'ads', 'do-not-sell', 'disclaimer'] as const).map((path) => (
+          <a key={path} href={legalUrl(path, 'store')} target="_blank" rel="noopener">
+            {LEGAL_PAGES.find((p) => p.path === path)!.label}
+          </a>
+        ))}
+      </nav>
     </footer>
   );
 }
