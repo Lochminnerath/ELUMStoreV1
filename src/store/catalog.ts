@@ -165,7 +165,7 @@ export const APPS: StoreApp[] = [
     featured: true,
     highlights: [
       { symbol: 'star', title: 'Your own look', text: 'Live backgrounds in every ELUM colour or your own picture, ten accent colours or any colour, and a colour for your tabs.' },
-      { symbol: 'saved', title: 'Settings in one place', text: 'SafeSearch, pictures, where results open, the address bar, theme and less motion. Kept on your device.' },
+      { symbol: 'saved', title: 'One settings page', text: 'SafeSearch, pictures, where results open, the address bar, theme and less motion. Kept on your device.' },
       { symbol: 'visible', title: 'Just the web', text: 'Results from Google, without AI Overviews or Gemini.' },
       { symbol: 'open', title: 'Pages stay in Browse', text: 'Results and typed addresses open in a Browse tab, or as a clean reading view when a site refuses.' },
       { symbol: 'star', title: 'Tabs and groups', text: 'Group tabs, then give the group a name, a colour and a symbol.' },
@@ -202,7 +202,7 @@ export const APPS: StoreApp[] = [
     mist: '#e4f7f1',
     kind: 'Messages and email',
     tagline: 'Messages and email in one calm inbox.',
-    about: 'Messages and email together, with your own ELUM Type address. Read whole conversations in one place, keep spam out, and approve new sign-ins from a device you trust.',
+    about: 'Messages and email together, with your own ELUM Type address. Read a whole conversation together, keep spam out, and approve new sign-ins from a device you trust.',
     url: TYPE_URL,
     host: 'type.elum.space',
     highlights: [
@@ -220,7 +220,7 @@ export const APPS: StoreApp[] = [
     mist: '#eef7e4',
     kind: 'You, everywhere',
     tagline: 'One account for every ELUM app.',
-    about: 'Your name and picture, the people you know, and how you sign in, in one place for every ELUM app. Every ELUM account comes with it.',
+    about: 'Your name and picture, the people you know, and how you sign in, shared by every ELUM app. Every ELUM account comes with it.',
     url: ACCOUNT_HOME,
     host: 'account.elum.space',
     included: true,
