@@ -13,8 +13,9 @@ import { useToast } from '../components/Toast';
 import { UserMenu } from '../components/UserMenu';
 import { accountsSignIn, BROWSE_URL, openElsewhere, signInThroughAccount } from '../lib/elum';
 import { ThemeToggle } from '../theme/ThemeToggle';
-import { templateUrl, type StoreApp, type StoreTemplate, type Symbol } from './catalog';
+import { templateAppName, templateUrl, type StoreApp, type StoreTemplate, type Symbol } from './catalog';
 import { useMyApps, useRunning } from './state';
+import { LEGAL_PAGES, legalUrl } from '../lib/legal';
 
 export const SYMBOLS: Record<Symbol, ComponentType<IconProps>> = {
   compose: Icons.ComposeIcon,
@@ -44,12 +45,50 @@ export function useTitle(title: string) {
 /** The colours an app's page and cards are drawn in. */
 export const appStyle = (app: Pick<StoreApp, 'color' | 'mist'>) => ({ '--app': app.color, '--mist': app.mist }) as CSSProperties;
 
-/** An ELUM app's mark, in light or dark. */
-export function AppMark({ id, size }: { id: string; size: number }) {
+/**
+ * Where each mark's drawing really sits inside its 8–112 box (x0, y0, x1, y1). The marks are drawn
+ * off centre on purpose, so inside a circle they are moved to its middle and made small enough for
+ * every corner to stay inside it.
+ */
+const MARK_BOX: Record<string, [number, number, number, number]> = {
+  write: [11, 29, 109, 83],
+  type: [12, 21, 109, 90],
+  make: [13, 13, 107, 107],
+  browse: [17, 17, 98, 98],
+  inquire: [15.8, 15, 104.2, 98.5],
+  tune: [17, 21, 103, 105],
+  code: [9, 32, 111, 99.5],
+  capture: [19, 19, 98, 99],
+  account: [29, 17, 91, 103],
+};
+
+/** The move and size that centre a mark in a circle as wide as it is. */
+export function fitInCircle(id: string): string | undefined {
+  const box = MARK_BOX[id];
+  if (!box) return undefined;
+  const [x0, y0, x1, y1] = box;
+  const halfDiagonal = Math.hypot(x1 - x0, y1 - y0) / 2;
+  const scale = Math.min(1.2, 46 / halfDiagonal);
+  const dx = ((60 - (x0 + x1) / 2) * scale * 100) / 104;
+  const dy = ((60 - (y0 + y1) / 2) * scale * 100) / 104;
+  return `translate(${dx.toFixed(2)}%, ${dy.toFixed(2)}%) scale(${scale.toFixed(3)})`;
+}
+
+/** An ELUM app's mark, in light or dark. `fit` centres it for a circle (see fitInCircle). */
+export function AppMark({ id, size, light, fit }: { id: string; size: number; light?: boolean; fit?: boolean }) {
+  const style = fit ? { transform: fitInCircle(id) } : undefined;
+  // On a light circle or card the mark stays light, whatever the theme.
+  if (light) {
+    return (
+      <span className="app-mark" style={{ width: size, height: size }} aria-hidden="true">
+        <img src={`/brand/apps/${id}.svg`} width={size} height={size} alt="" style={style} />
+      </span>
+    );
+  }
   return (
     <span className="app-mark" style={{ width: size, height: size }} aria-hidden="true">
-      <img className="theme-light-only" src={`/brand/apps/${id}.svg`} width={size} height={size} alt="" />
-      <img className="theme-dark-only" src={`/brand/apps/${id}-reversed.svg`} width={size} height={size} alt="" />
+      <img className="theme-light-only" src={`/brand/apps/${id}.svg`} width={size} height={size} alt="" style={style} />
+      <img className="theme-dark-only" src={`/brand/apps/${id}-reversed.svg`} width={size} height={size} alt="" style={style} />
     </span>
   );
 }
@@ -174,6 +213,13 @@ export function StoreFooter() {
           ELUM Docs
         </a>
       </span>
+      <nav className="store-foot__legal" aria-label="Policies">
+        {(['terms', 'service-terms', 'privacy', 'ads', 'do-not-sell', 'disclaimer'] as const).map((path) => (
+          <a key={path} href={legalUrl(path, 'store')} target="_blank" rel="noopener">
+            {LEGAL_PAGES.find((p) => p.path === path)!.label}
+          </a>
+        ))}
+      </nav>
     </footer>
   );
 }
@@ -206,7 +252,8 @@ export function StageTag({ app }: { app: StoreApp }) {
   const mine = useMyApps();
   const stage = mine.stage(app.id);
   if (app.included) return <span className="stage-tag">Included</span>;
-  if (stage === 'beta') return <span className="stage-tag stage-tag--beta">Beta</span>;
+  // Only Tune is still marked as being tried out; every other app is ready to use.
+  if (stage === 'beta' && app.id === 'tune') return <span className="stage-tag stage-tag--beta">Beta</span>;
   if (stage === 'planned') return <span className="stage-tag stage-tag--soon">Coming soon</span>;
   return <span className="stage-tag">Free</span>;
 }
@@ -292,7 +339,7 @@ export function AppCard({ app, index = 0 }: { app: StoreApp; index?: number }) {
   return (
     <li className="app-card" style={{ ...appStyle(app), '--i': index } as CSSProperties}>
       <Link to={`/apps/${app.id}`} className="app-card__link">
-        <AppMark id={app.id} size={56} />
+        <AppMark id={app.id} size={60} fit />
         <span className="app-card__text">
           <span className="app-card__name">
             {app.name} <StageTag app={app} />
@@ -310,19 +357,21 @@ export function AppCard({ app, index = 0 }: { app: StoreApp; index?: number }) {
 
 /** A template's cover, drawn from its look: the shapes of its first page. */
 export function TemplateCover({ template }: { template: StoreTemplate }) {
-  const { ground, ink, accent, layout } = template.look;
+  const { ground, ink, accent, layout, words, sub, font } = template.look;
+  const cls = `tpl-cover tpl-cover--${layout}${font ? ` tpl-cover--${font}` : ''}`;
   return (
-    <span className={`tpl-cover tpl-cover--${layout}`} style={{ background: ground, color: ink, '--ratio': template.ratio, '--accent': accent } as CSSProperties} aria-hidden="true">
+    <span className={cls} style={{ background: ground, color: ink, '--ratio': template.ratio, '--accent': accent } as CSSProperties} aria-hidden="true">
       {layout === 'title' && (
         <>
           <span className="tpl-cover__accent" />
-          <span className="tpl-cover__title">{template.name}</span>
-          <span className="tpl-cover__line" />
+          <span className="tpl-cover__title">{words}</span>
+          {sub && <span className="tpl-cover__sub">{sub}</span>}
         </>
       )}
       {layout === 'lesson' && (
         <>
-          <span className="tpl-cover__title">Lesson one</span>
+          <span className="tpl-cover__title">{words}</span>
+          {sub && <span className="tpl-cover__sub">{sub}</span>}
           <span className="tpl-cover__line" />
           <span className="tpl-cover__line tpl-cover__line--short" />
           <span className="tpl-cover__disc" />
@@ -330,18 +379,69 @@ export function TemplateCover({ template }: { template: StoreTemplate }) {
       )}
       {layout === 'poster' && (
         <>
-          <span className="tpl-cover__title">Big night</span>
+          <span className="tpl-cover__title">{words}</span>
           <span className="tpl-cover__accent" />
-          <span className="tpl-cover__line" />
-          <span className="tpl-cover__line tpl-cover__line--short" />
+          {sub && <span className="tpl-cover__sub">{sub}</span>}
         </>
       )}
       {layout === 'quote' && (
         <>
           <span className="tpl-cover__mark">“</span>
+          <span className="tpl-cover__title">{words}</span>
+          <span className="tpl-cover__line tpl-cover__line--short" />
+        </>
+      )}
+      {layout === 'document' && (
+        <>
+          <span className="tpl-cover__band">
+            <span className="tpl-cover__title">{words}</span>
+          </span>
+          {[0, 1, 2].map((i) => (
+            <span key={i} className="tpl-cover__part">
+              <span className="tpl-cover__head" />
+              <span className="tpl-cover__line" />
+              <span className="tpl-cover__line tpl-cover__line--short" />
+            </span>
+          ))}
+        </>
+      )}
+      {layout === 'page' && (
+        <>
+          <span className="tpl-cover__title">{words}</span>
+          <span className="tpl-cover__accent" />
+          {sub && <span className="tpl-cover__sub">{sub}</span>}
           <span className="tpl-cover__line" />
           <span className="tpl-cover__line" />
           <span className="tpl-cover__line tpl-cover__line--short" />
+          <span className="tpl-cover__line" />
+          <span className="tpl-cover__line tpl-cover__line--short" />
+        </>
+      )}
+      {layout === 'mark' && (
+        <>
+          <span className="tpl-cover__burst" />
+          <span className="tpl-cover__title">{words}</span>
+          {sub && <span className="tpl-cover__sub">{sub}</span>}
+        </>
+      )}
+      {layout === 'screen' && (
+        <>
+          <span className="tpl-cover__chrome" />
+          {sub && <span className="tpl-cover__sub">{sub}</span>}
+          <span className="tpl-cover__title">{words}</span>
+          <span className="tpl-cover__cards">
+            <span />
+            <span />
+            <span />
+          </span>
+          <span className="tpl-cover__button" />
+        </>
+      )}
+      {layout === 'banner' && (
+        <>
+          <span className="tpl-cover__bar" />
+          <span className="tpl-cover__title">{words}</span>
+          {sub && <span className="tpl-cover__sub">{sub}</span>}
         </>
       )}
     </span>
@@ -349,15 +449,15 @@ export function TemplateCover({ template }: { template: StoreTemplate }) {
 }
 
 export function TemplateCard({ template, index = 0 }: { template: StoreTemplate; index?: number }) {
-  const href = templateUrl(template.id);
+  const href = templateUrl(template);
   return (
-    <li className="tpl-card" style={{ '--i': index } as CSSProperties}>
+    <li className="tpl-card" data-app={template.app} style={{ '--i': index } as CSSProperties}>
       <a
         href={href}
         className="tpl-card__link"
         onClick={(e) => {
           e.preventDefault();
-          void openElsewhere(templateUrl(template.id, crypto.randomUUID().slice(0, 8)));
+          void openElsewhere(templateUrl(template, crypto.randomUUID().slice(0, 8)));
         }}
       >
         <span className="tpl-card__frame">
@@ -365,7 +465,7 @@ export function TemplateCard({ template, index = 0 }: { template: StoreTemplate;
         </span>
         <span className="tpl-card__name">{template.name}</span>
         <span className="tpl-card__text muted">{template.description}</span>
-        <span className="tpl-card__go">Use in Make</span>
+        <span className="tpl-card__go">Use in {templateAppName(template)}</span>
       </a>
     </li>
   );

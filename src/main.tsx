@@ -6,6 +6,10 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/components.css';
 
+import { loadContent } from './content/content';
+
+void loadContent();
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
